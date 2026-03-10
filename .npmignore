@@ -1,0 +1,10 @@
+src/native/
+CMakeLists.txt
+tests/
+coverage/
+*.ts
+tsconfig*.json
+jest.config.ts
+.gitignore
+docker-compose.yml
+viewer/
