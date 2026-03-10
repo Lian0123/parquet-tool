@@ -68,6 +68,26 @@ appender.close();
 //
 // 此程式會建立 `examples/sample.parquet`，並讀回內容顯示於 console。
 
+## 提交與發行
+
+本專案使用 [Commitizen](https://github.com/commitizen/cz-cli) 來產生符合
+[cZ Conventional Changelog](https://www.conventionalcommits.org/) 格式的
+提交訊息。執行：
+
+```bash
+npm run cz
+```
+
+然後根據提示輸入主題。團隊成員可透過此機制保持版本歷史一致。
+
+自動化發行由 `semantic-release` 控制，會根據提交類型計算版本號，
+生成更改日誌，並將 artefact 發佈到 npm。觸發發行請執行：
+
+```bash
+npm run release
+```
+
+
 // 切檔
 const files = splitParquetFile('output.parquet', { maxRowsPerFile: 1000 });
 
