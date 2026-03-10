@@ -59,6 +59,15 @@ const appender = ParquetWriter.openForAppend('output.parquet');
 appender.write({ id: 3, name: 'Charlie', score: 88.0 });
 appender.close();
 
+// 範例程式
+// 範例程式位於 `examples/example.ts`，可以用以下命令執行：
+//
+// ```bash
+// ts-node examples/example.ts
+// ```
+//
+// 此程式會建立 `examples/sample.parquet`，並讀回內容顯示於 console。
+
 // 切檔
 const files = splitParquetFile('output.parquet', { maxRowsPerFile: 1000 });
 
