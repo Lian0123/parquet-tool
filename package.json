@@ -19,7 +19,9 @@
     "clean": "rm -rf dist build",
     "prepare": "husky install",
     "prepublishOnly": "npm run build",
-    "cli": "node dist/cli/index.js"
+    "cli": "node dist/cli/index.js",
+    "ci": "npm ci && npm run lint && npm test && npm run build",
+    "ci:release": "npm run ci && npm run release"
   },
   "dependencies": {
     "commander": "^12.1.0",
