@@ -1,6 +1,12 @@
 import { native } from './binding';
 import { debugLog } from './debug';
-import { ParquetRow, ParquetSchema, WriteOptions } from './types';
+import {
+  NativeSchemaColumn,
+  ParquetColumns,
+  ParquetRow,
+  ParquetSchema,
+  WriteOptions,
+} from './types';
 
 /**
  * Write Parquet files row‑by‑row or in batches.
@@ -15,7 +21,7 @@ export class ParquetWriter {
   private handle: number | null = null;
   private schema: ParquetSchema;
   private rowGroupSize: number;
-  private buffer: Record<string, any[]> = {};
+  private buffer: ParquetColumns = {};
   private bufferSize = 0;
 
   constructor(
@@ -27,7 +33,7 @@ export class ParquetWriter {
     this.rowGroupSize = options.rowGroupSize ?? 10_000;
     debugLog('writer: create', { filePath, rowGroupSize: this.rowGroupSize });
 
-    const nativeSchema = schema.columns.map((c) => ({
+    const nativeSchema: NativeSchemaColumn[] = schema.columns.map((c) => ({
       name: c.name,
       type: c.type,
       optional: c.optional ?? false,
@@ -79,7 +85,7 @@ export class ParquetWriter {
     const result = native.openAppender(filePath);
     const meta = result.metadata;
     const schema: ParquetSchema = {
-      columns: meta.schema.map((s: any) => ({
+      columns: meta.schema.map((s) => ({
         name: s.name,
         type: s.type,
         optional: s.optional,
@@ -88,13 +94,13 @@ export class ParquetWriter {
 
     // Build writer manually without calling the constructor's createWriter
     const writer = Object.create(ParquetWriter.prototype) as ParquetWriter;
-    (writer as any).handle = result.handle;
-    (writer as any).schema = schema;
-    (writer as any).rowGroupSize = options.rowGroupSize ?? 10_000;
-    (writer as any).buffer = {};
-    (writer as any).bufferSize = 0;
+    writer.handle = result.handle;
+    writer.schema = schema;
+    writer.rowGroupSize = options.rowGroupSize ?? 10_000;
+    writer.buffer = {};
+    writer.bufferSize = 0;
     for (const col of schema.columns) {
-      (writer as any).buffer[col.name] = [];
+      writer.buffer[col.name] = [];
     }
     return writer;
   }

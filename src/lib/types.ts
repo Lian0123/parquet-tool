@@ -101,3 +101,20 @@ export interface ParquetToCsvOptions {
 export interface ArrowConversionOptions extends WriteOptions {
   schema?: ParquetSchema;
 }
+
+export interface NativeSchemaColumn {
+  name: string;
+  type: ParquetType;
+  optional: boolean;
+}
+
+export interface NativeWriteColumn {
+  values: ParquetScalar[];
+}
+
+export interface NativeReaderHandle {
+  handle: number;
+  metadata: FileMetadata;
+}
+
+export type ParallelProcessor<T> = (rows: ParquetRow[]) => T[];

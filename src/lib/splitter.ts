@@ -1,6 +1,7 @@
 import * as path from 'path';
 import { ParquetReader } from './reader';
 import { ParquetWriter } from './writer';
+import { ParquetRow } from './types';
 
 export interface SplitOptions {
   /** Max rows per output file. */
@@ -57,7 +58,7 @@ export function splitParquetFile(
       if (currentRowCount >= maxRowsPerFile) {
         startNewFile();
       }
-      const row: Record<string, any> = {};
+      const row: ParquetRow = {};
       for (const name of colNames) {
         row[name] = rg.columns[name][r];
       }

@@ -1,6 +1,12 @@
 import { native } from './binding';
 import { debugLog } from './debug';
-import { FileMetadata, ParquetRow, ParquetSchema, RowGroupData } from './types';
+import {
+  FileMetadata,
+  ParquetColumns,
+  ParquetRow,
+  ParquetSchema,
+  RowGroupData,
+} from './types';
 import { rowGroupToRows } from './rows';
 
 /**
@@ -53,7 +59,7 @@ export class ParquetReader {
   readAll(): RowGroupData {
     if (this.handle === null) throw new Error('Reader is closed');
 
-    const columns: Record<string, any[]> = {};
+    const columns: ParquetColumns = {};
     for (const col of this.meta.schema) {
       columns[col.name] = [];
     }
@@ -76,12 +82,12 @@ export class ParquetReader {
   }
 
   /** Iterate over rows one by one (generator). */
-  *[Symbol.iterator](): Generator<Record<string, any>> {
+  *[Symbol.iterator](): Generator<ParquetRow> {
     for (let i = 0; i < this.meta.numRowGroups; i++) {
       const rg = this.readRowGroup(i);
       const names = Object.keys(rg.columns);
       for (let r = 0; r < rg.numRows; r++) {
-        const row: Record<string, any> = {};
+        const row: ParquetRow = {};
         for (const n of names) {
           row[n] = rg.columns[n][r];
         }
