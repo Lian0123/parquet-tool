@@ -1,9 +1,11 @@
 # parquet-tool
 
+[![npm version](https://img.shields.io/npm/v/parquet-tool.svg)](https://www.npmjs.com/package/parquet-tool) [![license](https://img.shields.io/npm/l/parquet-tool.svg)](LICENSE) [![build status](https://img.shields.io/github/actions/workflow/status/Lian0123/parquet-tool/ci.yml?branch=master)](https://github.com/Lian0123/parquet-tool/actions)
+
 使用 TypeScript + C++ Native Addon 實作的 Parquet 檔案處理工具。
 **不依賴任何現有的 npm parquet 套件**，核心 Parquet 格式讀寫由自行實作的 C++ Addon 完成。
 
-## 功能
+## 🔧 功能
 
 - **建立 & 讀寫** Parquet 檔案（支援 BOOLEAN、INT32、INT64、FLOAT、DOUBLE、STRING 類型）
 - **Append（Apply）模式** — 追加資料到現有檔案
@@ -13,7 +15,7 @@
 - **可做為 npm 套件引入** — TypeScript API
 - **Docker Compose 查看器** — Web UI 驗證 Parquet 檔案內容
 
-## 快速開始
+## 🚀 快速開始
 
 ### 安裝與建置
 
@@ -68,7 +70,7 @@ appender.close();
 //
 // 此程式會建立 `examples/sample.parquet`，並讀回內容顯示於 console。
 
-## 提交與發行
+## 📝 提交與發行
 
 本專案使用 [Commitizen](https://github.com/commitizen/cz-cli) 來產生符合
 [cZ Conventional Changelog](https://www.conventionalcommits.org/) 格式的
@@ -87,6 +89,17 @@ npm run cz
 npm run release
 ```
 
+
+本專案也提供 CI 發行流程腳本，可在持續整合系統中運行：
+
+```bash
+npm run ci          # install, lint, test, build
+npm run ci:release  # run ci and then semantic-release
+```
+
+此外，GitHub Actions 配置位於 `.github/workflows/ci.yml`，
+於推送到 `main` 分支時執行同樣的步驟並觸發自動發行（需設置
+`NPM_TOKEN` secret）。
 
 // 切檔
 const files = splitParquetFile('output.parquet', { maxRowsPerFile: 1000 });
@@ -131,7 +144,7 @@ docker-compose up --build
 # 瀏覽 http://localhost:8080
 ```
 
-## 開發
+## 🛠 開發
 
 ```bash
 # 安裝依賴
@@ -150,7 +163,7 @@ npm test
 npm run clean
 ```
 
-## 架構
+## 🏗 架構
 
 ```
 src/
