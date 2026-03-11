@@ -1,5 +1,6 @@
 import { native } from './binding';
-import { ParquetSchema, WriteOptions } from './types';
+import { debugLog } from './debug';
+import { ParquetRow, ParquetSchema, WriteOptions } from './types';
 
 /**
  * Write Parquet files row‑by‑row or in batches.
@@ -24,6 +25,7 @@ export class ParquetWriter {
   ) {
     this.schema = schema;
     this.rowGroupSize = options.rowGroupSize ?? 10_000;
+    debugLog('writer: create', { filePath, rowGroupSize: this.rowGroupSize });
 
     const nativeSchema = schema.columns.map((c) => ({
       name: c.name,
@@ -38,7 +40,7 @@ export class ParquetWriter {
   }
 
   /** Write one or more rows. Automatically flushes row groups. */
-  write(rows: Record<string, any> | Record<string, any>[]): void {
+  write(rows: ParquetRow | ParquetRow[]): void {
     if (this.handle === null) throw new Error('Writer is closed');
     const arr = Array.isArray(rows) ? rows : [rows];
     for (const row of arr) {
@@ -61,6 +63,7 @@ export class ParquetWriter {
   close(): void {
     if (this.handle === null) return;
     this.flushRowGroup();
+    debugLog('writer: close');
     native.closeWriter(this.handle);
     this.handle = null;
   }
@@ -72,6 +75,7 @@ export class ParquetWriter {
     filePath: string,
     options: WriteOptions = {},
   ): ParquetWriter {
+    debugLog('writer: append', { filePath });
     const result = native.openAppender(filePath);
     const meta = result.metadata;
     const schema: ParquetSchema = {

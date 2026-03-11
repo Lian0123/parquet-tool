@@ -107,4 +107,23 @@ describe('CLI', () => {
     const info = cli(`info "${merged}"`);
     expect(info).toContain('3');
   });
+
+  it('should validate a parquet file', () => {
+    const output = cli(`validate "${dataFile}"`);
+    expect(output).toContain('Valid: yes');
+  });
+
+  it('should convert csv to parquet and parquet to csv', () => {
+    const csvInput = path.join(TMP, 'cli_input.csv');
+    const csvParquet = path.join(TMP, 'cli_csv.parquet');
+    const csvOutput = path.join(TMP, 'cli_output.csv');
+
+    fs.writeFileSync(csvInput, 'id,name\n1,Alice\n2,Bob\n', 'utf8');
+    const toParquet = cli(`csv-to-parquet "${csvInput}" "${csvParquet}"`);
+    expect(toParquet).toContain('Converted CSV to Parquet');
+
+    const toCsv = cli(`parquet-to-csv "${csvParquet}" "${csvOutput}"`);
+    expect(toCsv).toContain('Converted Parquet to CSV');
+    expect(fs.readFileSync(csvOutput, 'utf8')).toContain('Alice');
+  });
 });

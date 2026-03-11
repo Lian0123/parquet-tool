@@ -1,5 +1,7 @@
 import { native } from './binding';
-import { FileMetadata, ParquetSchema, RowGroupData } from './types';
+import { debugLog } from './debug';
+import { FileMetadata, ParquetRow, ParquetSchema, RowGroupData } from './types';
+import { rowGroupToRows } from './rows';
 
 /**
  * Read Parquet files — access metadata, iterate over row groups, or
@@ -22,6 +24,7 @@ export class ParquetReader {
 
   /** Open a Parquet file for reading. */
   static open(filePath: string): ParquetReader {
+    debugLog('reader: open', { filePath });
     const result = native.openReader(filePath);
     return new ParquetReader(result.handle, result.metadata as FileMetadata);
   }
@@ -67,6 +70,11 @@ export class ParquetReader {
     return { numRows: totalRows, columns };
   }
 
+  /** Read all row groups as row-oriented objects. */
+  readRows(): ParquetRow[] {
+    return rowGroupToRows(this.readAll());
+  }
+
   /** Iterate over rows one by one (generator). */
   *[Symbol.iterator](): Generator<Record<string, any>> {
     for (let i = 0; i < this.meta.numRowGroups; i++) {
@@ -85,6 +93,7 @@ export class ParquetReader {
   /** Close the reader and release resources. */
   close(): void {
     if (this.handle === null) return;
+    debugLog('reader: close');
     native.closeReader(this.handle);
     this.handle = null;
   }

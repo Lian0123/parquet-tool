@@ -23,6 +23,20 @@ parquet-tool split big.parquet -n 100000 -o ./out -p part
 
 # merge files
 parquet-tool merge merged.parquet a.parquet b.parquet
+
+# validate file
+parquet-tool validate data.parquet
+
+# CSV <-> Parquet
+parquet-tool csv-to-parquet data.csv data.parquet
+parquet-tool parquet-to-csv data.parquet data.csv
+
+# Arrow <-> Parquet
+parquet-tool arrow-to-parquet data.arrow data.parquet
+parquet-tool parquet-to-arrow data.parquet data.arrow
+
+# debug mode
+parquet-tool --debug validate data.parquet
 ```
 
 The CLI uses the same schema definitions as the library; specify schema with

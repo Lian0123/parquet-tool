@@ -9,8 +9,13 @@
 
 - **建立 & 讀寫** Parquet 檔案（支援 BOOLEAN、INT32、INT64、FLOAT、DOUBLE、STRING 類型）
 - **Append（Apply）模式** — 追加資料到現有檔案
+- **多檔合併** — 合併多個 Parquet 檔案並檢查 schema 相容性
+- **格式驗證** — 驗證 Parquet 檔案結構、row group 與欄位資料完整性
+- **CSV 轉換** — 支援 CSV 與 Parquet 雙向轉換
+- **Apache Arrow 轉換** — 支援 Arrow IPC 與 Parquet 雙向轉換
 - **切檔** — 將大檔案拆分成多個小檔案
 - **平行處理** — 平行讀取、處理、寫入
+- **Debug 模式** — CLI `--debug` 與程式庫 API 可輸出診斷資訊
 - **CLI 命令列工具** — `info`、`read`、`write`、`append`、`split`、`merge`
 - **可做為 npm 套件引入** — TypeScript API
 - **Docker Compose 查看器** — Web UI 驗證 Parquet 檔案內容
@@ -28,11 +33,17 @@ npm run build
 
 ```typescript
 import {
+  arrowToParquet,
+  configureDebugMode,
+  csvToParquet,
+  mergeParquetFiles,
   ParquetWriter,
   ParquetReader,
   Schema,
   splitParquetFile,
   parallelRead,
+  parquetToArrow,
+  validateParquetFile,
 } from 'parquet-tool';
 
 // 建立 Schema
@@ -61,14 +72,33 @@ const appender = ParquetWriter.openForAppend('output.parquet');
 appender.write({ id: 3, name: 'Charlie', score: 88.0 });
 appender.close();
 
-// 範例程式
-// 範例程式位於 `examples/example.ts`，可以用以下命令執行：
-//
-// ```bash
-// ts-node examples/example.ts
-// ```
-//
-// 此程式會建立 `examples/sample.parquet`，並讀回內容顯示於 console。
+// 驗證
+const validation = validateParquetFile('output.parquet');
+console.log(validation.valid, validation.issues);
+
+// CSV -> Parquet
+csvToParquet('input.csv', 'input.parquet');
+
+// Parquet -> Arrow
+parquetToArrow('output.parquet', 'output.arrow');
+
+// Arrow -> Parquet
+arrowToParquet('output.arrow', 'from-arrow.parquet');
+
+// 合併多個 Parquet 檔案
+mergeParquetFiles(['part-1.parquet', 'part-2.parquet'], 'merged.parquet');
+
+// Debug 模式
+configureDebugMode({ enabled: true });
+```
+
+範例程式位於 `examples/example.ts`，可以用以下命令執行：
+
+```bash
+ts-node examples/example.ts
+```
+
+此程式會建立 `examples/sample.parquet`，並讀回內容顯示於 console。
 
 ## 📝 提交與發行
 
@@ -101,13 +131,6 @@ npm run ci:release  # run ci and then semantic-release
 於推送到 `main` 分支時執行同樣的步驟並觸發自動發行（需設置
 `NPM_TOKEN` secret）。
 
-// 切檔
-const files = splitParquetFile('output.parquet', { maxRowsPerFile: 1000 });
-
-// 平行讀取
-const allData = await parallelRead('output.parquet', { concurrency: 4 });
-```
-
 ### CLI 使用
 
 ```bash
@@ -129,6 +152,20 @@ npx parquet-tool split large.parquet -n 10000 -o ./output/
 
 # 合併
 npx parquet-tool merge merged.parquet file1.parquet file2.parquet
+
+# 驗證
+npx parquet-tool validate data.parquet
+
+# CSV 與 Parquet 互轉
+npx parquet-tool csv-to-parquet data.csv data.parquet
+npx parquet-tool parquet-to-csv data.parquet data.csv
+
+# Arrow 與 Parquet 互轉
+npx parquet-tool arrow-to-parquet data.arrow data.parquet
+npx parquet-tool parquet-to-arrow data.parquet data.arrow
+
+# Debug 模式
+npx parquet-tool --debug validate data.parquet
 ```
 
 ### Docker 查看器

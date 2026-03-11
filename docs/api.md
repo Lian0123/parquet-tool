@@ -38,8 +38,24 @@ reader.close();
 ## Utilities
 
 - `splitParquetFile(input, options)` – splits file into smaller pieces
+- `mergeParquetFiles(inputs, output, options)` – merges multiple files
+- `validateParquetFile(file)` – validates metadata and row group integrity
+- `csvToParquet(csv, parquet, options)` – converts CSV into Parquet
+- `parquetToCsv(parquet, csv, options)` – exports Parquet as CSV
+- `arrowToParquet(arrow, parquet, options)` – converts Arrow IPC to Parquet
+- `parquetToArrow(parquet, arrow)` – converts Parquet to Arrow IPC
 - `parallelRead(file, options)` – reads row groups in parallel
 - `parallelProcess(file, processor, options)` – process row groups concurrently
 - `parallelWrite(file, schema, chunks, options)` – write chunks in parallel
+
+## Debug mode
+
+```ts
+import { configureDebugMode } from 'parquet-tool';
+
+configureDebugMode({ enabled: true });
+```
+
+You can also set `PARQUET_TOOL_DEBUG=1` before running your application.
 
 For type definitions see `src/lib/types.ts`.
