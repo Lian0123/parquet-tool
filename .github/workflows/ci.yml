@@ -18,9 +18,11 @@ jobs:
           node-version: '18'
           cache: 'npm'
       - run: npm ci
+      - run: npm run build:native
+      - run: npm run build:ts
+      - run: node -e "require('./build/Release/parquet_addon.node'); console.log('native addon loaded');"
       - run: npm run lint
       - run: npm test
-      - run: npm run build
 
   release:
     needs: build

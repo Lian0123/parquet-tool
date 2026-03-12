@@ -1,17 +1,24 @@
 import * as path from 'path';
+import {
+  FileMetadata,
+  NativeReaderHandle,
+  NativeSchemaColumn,
+  NativeWriteColumn,
+  RowGroupData,
+} from './types';
 
 interface NativeAddon {
-  createWriter(filePath: string, schema: any[]): number;
-  writeRowGroup(handle: number, columns: any[]): void;
+  createWriter(filePath: string, schema: NativeSchemaColumn[]): number;
+  writeRowGroup(handle: number, columns: NativeWriteColumn[]): void;
   closeWriter(handle: number): void;
 
-  openReader(filePath: string): { handle: number; metadata: any };
-  readRowGroup(handle: number, rowGroupIndex: number): any;
+  openReader(filePath: string): NativeReaderHandle;
+  readRowGroup(handle: number, rowGroupIndex: number): RowGroupData;
   closeReader(handle: number): void;
 
-  getMetadata(filePath: string): any;
+  getMetadata(filePath: string): FileMetadata;
 
-  openAppender(filePath: string): { handle: number; metadata: any };
+  openAppender(filePath: string): NativeReaderHandle;
 }
 
 let addon: NativeAddon;

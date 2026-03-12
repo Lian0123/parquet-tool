@@ -1,5 +1,13 @@
 import { native } from './binding';
-import { FileMetadata, ParquetSchema, RowGroupData } from './types';
+import { debugLog } from './debug';
+import {
+  FileMetadata,
+  ParquetColumns,
+  ParquetRow,
+  ParquetSchema,
+  RowGroupData,
+} from './types';
+import { rowGroupToRows } from './rows';
 
 /**
  * Read Parquet files — access metadata, iterate over row groups, or
@@ -22,6 +30,7 @@ export class ParquetReader {
 
   /** Open a Parquet file for reading. */
   static open(filePath: string): ParquetReader {
+    debugLog('reader: open', { filePath });
     const result = native.openReader(filePath);
     return new ParquetReader(result.handle, result.metadata as FileMetadata);
   }
@@ -50,7 +59,7 @@ export class ParquetReader {
   readAll(): RowGroupData {
     if (this.handle === null) throw new Error('Reader is closed');
 
-    const columns: Record<string, any[]> = {};
+    const columns: ParquetColumns = {};
     for (const col of this.meta.schema) {
       columns[col.name] = [];
     }
@@ -67,13 +76,18 @@ export class ParquetReader {
     return { numRows: totalRows, columns };
   }
 
+  /** Read all row groups as row-oriented objects. */
+  readRows(): ParquetRow[] {
+    return rowGroupToRows(this.readAll());
+  }
+
   /** Iterate over rows one by one (generator). */
-  *[Symbol.iterator](): Generator<Record<string, any>> {
+  *[Symbol.iterator](): Generator<ParquetRow> {
     for (let i = 0; i < this.meta.numRowGroups; i++) {
       const rg = this.readRowGroup(i);
       const names = Object.keys(rg.columns);
       for (let r = 0; r < rg.numRows; r++) {
-        const row: Record<string, any> = {};
+        const row: ParquetRow = {};
         for (const n of names) {
           row[n] = rg.columns[n][r];
         }
@@ -85,6 +99,7 @@ export class ParquetReader {
   /** Close the reader and release resources. */
   close(): void {
     if (this.handle === null) return;
+    debugLog('reader: close');
     native.closeReader(this.handle);
     this.handle = null;
   }

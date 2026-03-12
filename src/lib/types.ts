@@ -20,9 +20,15 @@ export interface ParquetSchema {
   columns: SchemaColumn[];
 }
 
+export type ParquetScalar = boolean | number | bigint | string | null;
+
+export type ParquetColumns = Record<string, ParquetScalar[]>;
+
+export type ParquetRow = Record<string, ParquetScalar>;
+
 export interface RowGroupData {
   numRows: number;
-  columns: Record<string, any[]>;
+  columns: ParquetColumns;
 }
 
 export interface FileMetadata {
@@ -57,3 +63,58 @@ export interface ReadOptions {
   columns?: string[];
   rowGroups?: number[];
 }
+
+export interface DebugOptions {
+  enabled?: boolean;
+  logger?: (message: string, payload?: unknown) => void;
+}
+
+export interface ValidationIssue {
+  level: 'error' | 'warning';
+  code: string;
+  message: string;
+}
+
+export interface ValidationResult {
+  valid: boolean;
+  filePath: string;
+  metadata: FileMetadata | null;
+  issues: ValidationIssue[];
+}
+
+export interface MergeOptions extends WriteOptions {
+  validateSchema?: boolean;
+}
+
+export interface CsvToParquetOptions extends WriteOptions {
+  schema?: ParquetSchema;
+  header?: boolean;
+  delimiter?: string;
+  inferSchema?: boolean;
+}
+
+export interface ParquetToCsvOptions {
+  delimiter?: string;
+  header?: boolean;
+}
+
+export interface ArrowConversionOptions extends WriteOptions {
+  schema?: ParquetSchema;
+}
+
+export interface NativeSchemaColumn {
+  name: string;
+  type: ParquetType;
+  optional: boolean;
+}
+
+export interface NativeWriteColumn {
+  values: ParquetScalar[];
+}
+
+export interface NativeReaderHandle {
+  handle: number;
+  metadata: FileMetadata;
+}
+
+export type ParallelProcessor<T> = (rows: ParquetRow[]) => T[];

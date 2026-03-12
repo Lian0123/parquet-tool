@@ -3,7 +3,14 @@ import * as path from 'path';
 import * as fs from 'fs';
 import { ParquetReader } from './reader';
 import { ParquetWriter } from './writer';
-import { ParquetSchema, RowGroupData } from './types';
+import {
+  ParquetColumns,
+  ParallelProcessor,
+  ParquetRow,
+  ParquetSchema,
+  RowGroupData,
+} from './types';
+import { rowGroupToRows } from './rows';
 
 export interface ParallelReadOptions {
   /** Number of concurrent readers (defaults to min(cpus, 4)). */
@@ -46,7 +53,7 @@ export async function parallelRead(
   );
 
   // Merge
-  const columns: Record<string, any[]> = {};
+  const columns: ParquetColumns = {};
   for (const col of schema.columns) {
     columns[col.name] = [];
   }
@@ -67,7 +74,7 @@ export async function parallelRead(
  */
 export async function parallelProcess<T>(
   filePath: string,
-  processor: (rows: Record<string, any>[]) => T[],
+  processor: ParallelProcessor<T>,
   options: { concurrency?: number } = {},
 ): Promise<T[]> {
   const concurrency = options.concurrency ?? Math.min(os.cpus().length, 4);
@@ -90,15 +97,7 @@ export async function parallelProcess<T>(
       const r = ParquetReader.open(filePath);
       for (const idx of indices) {
         const rg = r.readRowGroup(idx);
-        const rows: Record<string, any>[] = [];
-        const colNames = Object.keys(rg.columns);
-        for (let i = 0; i < rg.numRows; i++) {
-          const row: Record<string, any> = {};
-          for (const name of colNames) {
-            row[name] = rg.columns[name][i];
-          }
-          rows.push(row);
-        }
+        const rows = rowGroupToRows(rg);
         allResults[idx] = processor(rows);
       }
       r.close();
@@ -115,7 +114,7 @@ export async function parallelProcess<T>(
 export async function parallelWrite(
   filePath: string,
   schema: ParquetSchema,
-  dataChunks: Record<string, any>[][],
+  dataChunks: ParquetRow[][],
   options: { concurrency?: number; tempDir?: string } = {},
 ): Promise<void> {
   const concurrency =
@@ -124,7 +123,7 @@ export async function parallelWrite(
 
   const tempFiles: string[] = new Array(dataChunks.length);
 
-  const buckets: { index: number; data: Record<string, any>[] }[][] =
+  const buckets: { index: number; data: ParquetRow[] }[][] =
     Array.from({ length: concurrency }, () => []);
   for (let i = 0; i < dataChunks.length; i++) {
     buckets[i % concurrency].push({ index: i, data: dataChunks[i] });
@@ -152,15 +151,7 @@ export async function parallelWrite(
     const data = reader.readAll();
     reader.close();
 
-    const colNames = Object.keys(data.columns);
-    const rows: Record<string, any>[] = [];
-    for (let i = 0; i < data.numRows; i++) {
-      const row: Record<string, any> = {};
-      for (const name of colNames) {
-        row[name] = data.columns[name][i];
-      }
-      rows.push(row);
-    }
+    const rows = rowGroupToRows(data);
     writer.write(rows);
 
     fs.unlinkSync(tmpFile);

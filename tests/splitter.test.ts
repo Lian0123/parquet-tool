@@ -46,7 +46,7 @@ describe('splitParquetFile', () => {
       const reader = ParquetReader.open(f);
       const data = reader.readAll();
       totalRows += data.numRows;
-      allIdx.push(...data.columns['idx']);
+      allIdx.push(...data.columns['idx'].map((value) => value as number));
       reader.close();
     }
     expect(totalRows).toBe(N);
