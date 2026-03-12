@@ -1,6 +1,6 @@
 # parquet-tool
 
-[![npm version](https://img.shields.io/npm/v/parquet-tool.svg)](https://www.npmjs.com/package/parquet-tool) [![license](https://img.shields.io/npm/l/parquet-tool.svg)](LICENSE) [![build status](https://img.shields.io/github/actions/workflow/status/Lian0123/parquet-tool/ci.yml?branch=master)](https://github.com/Lian0123/parquet-tool/actions)
+[![npm version](https://img.shields.io/npm/v/parquet-tool.svg)](https://www.npmjs.com/package/parquet-tool) [![license](https://img.shields.io/npm/l/parquet-tool.svg)](LICENSE) [![build status](https://img.shields.io/github/actions/workflow/status/Lian0123/parquet-tool/ci.yml?branch=main)](https://github.com/Lian0123/parquet-tool/actions)
 
 使用 TypeScript + C++ Native Addon 實作的 Parquet 檔案處理工具。
 **不依賴任何現有的 npm parquet 套件**，核心 Parquet 格式讀寫由自行實作的 C++ Addon 完成。
@@ -119,6 +119,20 @@ npm run cz
 npm run release
 ```
 
+`semantic-release` 主要配置位於 `.releaserc.json`，已啟用：
+
+- `@semantic-release/commit-analyzer`
+- `@semantic-release/release-notes-generator`
+- `@semantic-release/changelog`
+- `@semantic-release/npm`
+- `@semantic-release/github`
+- `@semantic-release/git`
+
+分支策略：
+
+- `main`：正式版本發佈（例如 `v1.2.3`）
+- `develop`：預發版（例如 `v1.2.4-beta.1`）
+
 
 本專案也提供 CI 發行流程腳本，可在持續整合系統中運行：
 
@@ -128,8 +142,12 @@ npm run ci:release  # run ci and then semantic-release
 ```
 
 此外，GitHub Actions 配置位於 `.github/workflows/ci.yml`，
-於推送到 `main` 分支時執行同樣的步驟並觸發自動發行（需設置
-`NPM_TOKEN` secret）。
+用於執行建置與測試；自動發行流程位於 `.github/workflows/release.yml`。
+
+Release workflow 需要以下 secrets：
+
+- `NPM_TOKEN`
+- `GITHUB_TOKEN`（GitHub Actions 內建提供）
 
 ### CLI 使用
 
