@@ -1,6 +1,14 @@
 # Documentation
 
-This directory contains English documentation for the parquet-tool project.
+This directory contains project documentation and language-specific entry pages.
+
+## Language Entry Points
+
+- English: [../README.md](../README.md)
+- Traditional Chinese: [README.zh-TW.md](README.zh-TW.md)
+- Japanese: [README.ja.md](README.ja.md)
+
+## English Documentation
 
 - [Overview](overview.md)
 - [Installation](installation.md)
