@@ -1,3 +1,9 @@
+## [1.0.1](https://github.com/Lian0123/parquet-tool/compare/v1.0.0...v1.0.1) (2026-03-13)
+
+### Bug Fixes
+
+* **parquet.h:** ci build error ([c33311f](https://github.com/Lian0123/parquet-tool/commit/c33311f0de8831ba40e339e50a369a945b8268dc))
+
 ## 1.0.0 (2026-03-13)
 
 ### Features
