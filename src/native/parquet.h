@@ -918,9 +918,18 @@ inline FileMetaData readMetadataOnly(const std::string& path) {
     FILE* f = std::fopen(path.c_str(), "rb");
     if (!f) throw std::runtime_error("cannot open file: " + path);
 
-    std::fseek(f, -8, SEEK_END);
+    if (std::fseek(f, -8, SEEK_END) != 0) {
+        std::fclose(f);
+        throw std::runtime_error("invalid parquet file (cannot seek footer): " + path);
+    }
+
     uint8_t tail[8];
-    std::fread(tail, 1, 8, f);
+    const size_t tail_read = std::fread(tail, 1, 8, f);
+    if (tail_read != 8) {
+        std::fclose(f);
+        throw std::runtime_error("invalid parquet file (incomplete footer): " + path);
+    }
+
     if (std::memcmp(tail + 4, "PAR1", 4) != 0) {
         std::fclose(f);
         throw std::runtime_error("not a valid parquet file");
@@ -928,9 +937,18 @@ inline FileMetaData readMetadataOnly(const std::string& path) {
     uint32_t footer_len;
     std::memcpy(&footer_len, tail, 4);
 
-    std::fseek(f, -(8 + static_cast<long>(footer_len)), SEEK_END);
+    if (std::fseek(f, -(8 + static_cast<long>(footer_len)), SEEK_END) != 0) {
+        std::fclose(f);
+        throw std::runtime_error("invalid parquet file (cannot seek metadata): " + path);
+    }
+
     std::vector<uint8_t> buf(footer_len);
-    std::fread(buf.data(), 1, footer_len, f);
+    const size_t metadata_read = std::fread(buf.data(), 1, footer_len, f);
+    if (metadata_read != footer_len) {
+        std::fclose(f);
+        throw std::runtime_error("invalid parquet file (incomplete metadata): " + path);
+    }
+
     std::fclose(f);
 
     thrift::CompactReader tr(buf.data(), buf.size());
