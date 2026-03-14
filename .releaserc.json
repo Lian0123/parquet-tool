@@ -3,11 +3,6 @@
     {
       "name": "main",
       "channel": "latest"
-    },
-    {
-      "name": "develop",
-      "channel": "beta",
-      "prerelease": "beta"
     }
   ],
   "tagFormat": "v${version}",
@@ -50,12 +45,6 @@
       "@semantic-release/changelog",
       {
         "changelogFile": "CHANGELOG.md"
-      }
-    ],
-    [
-      "@semantic-release/npm",
-      {
-        "npmPublish": true
       }
     ],
     [

@@ -202,7 +202,6 @@ Configured semantic-release plugins:
 Branch strategy:
 
 - `main`: stable releases
-- `develop`: prereleases
 
 ## Supported Types
 
