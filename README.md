@@ -7,8 +7,8 @@ It does not depend on existing npm parquet packages; core Parquet read/write log
 
 Language docs:
 
-- Chinese (Traditional): `docs/README.zh-TW.md`
-- Japanese: `docs/README.ja.md`
+- Chinese (Traditional): [docs/README.zh-TW.md](https://github.com/Lian0123/parquet-tool/blob/main/docs/README.zh-TW.md)
+- Japanese: [docs/README.ja.md](https://github.com/Lian0123/parquet-tool/blob/main/docs/README.ja.md)
 
 ## Features
 
