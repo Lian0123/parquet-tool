@@ -1,0 +1,16 @@
+{
+  "name": "examples",
+  "version": "1.0.0",
+  "description": "",
+  "main": "example.ts",
+  "scripts": {
+    "start": "ts-node example.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "ts-node": "^10.9.2",
+    "parquet-tool": "^1.0.0"
+  },
+  "author": "",
+  "license": "MIT"
+}
