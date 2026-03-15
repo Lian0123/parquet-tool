@@ -4,6 +4,13 @@
   "description": "Parquet file processing tool with C++ native addon — read, write, append, split and parallel process Parquet files",
   "main": "dist/lib/index.js",
   "types": "dist/lib/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/lib/index.d.ts",
+      "require": "./dist/lib/index.js",
+      "default": "./dist/lib/index.js"
+    }
+  },
   "bin": {
     "parquet-tool": "dist/cli/index.js"
   },
@@ -58,6 +65,7 @@
   },
   "files": [
     "dist/",
+    "build/Release/",
     "src/native/",
     "CMakeLists.txt"
   ],
@@ -69,5 +77,24 @@
       "path": "./node_modules/cz-conventional-changelog"
     }
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Lian0123/parquet-tool.git"
+  },
+  "homepage": "https://github.com/Lian0123/parquet-tool#readme",
+  "bugs": {
+    "url": "https://github.com/Lian0123/parquet-tool/issues"
+  },
+  "keywords": [
+    "parquet",
+    "parquet-tool",
+    "apache-parquet",
+    "native",
+    "reader",
+    "writer",
+    "csv",
+    "arrow",
+    "data"
+  ],
   "license": "MIT"
 }

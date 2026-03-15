@@ -1,4 +1,4 @@
-import { Schema, ParquetWriter, ParquetReader } from '../src/lib';
+import { Schema, ParquetWriter, ParquetReader } from 'parquet-tool';
 
 (async function main() {
   // define schema

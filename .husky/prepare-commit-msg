@@ -1,19 +1,24 @@
-
 #!/bin/sh
 
-# Git passes "message" as $2 when commit message is provided with -m.
-# semantic-release uses `git commit -m`, so skip cz hook in that case.
-if [ "$2" = "message" ]; then
+# Skip in CI or when explicitly disabled.
+if [ -n "$CI" ] || [ "$HUSKY" = "0" ]; then
 	exit 0
 fi
 
-# Non-interactive environments (CI, release bots) do not have /dev/tty.
-if [ -n "$CI" ] || [ ! -t 0 ]; then
+# Only run for normal interactive commits (source is empty).
+if [ -n "$2" ]; then
 	exit 0
 fi
 
-if [ -x "./node_modules/.bin/cz" ]; then
-	exec < /dev/tty && ./node_modules/.bin/cz --hook || true
+if [ ! -x "./node_modules/.bin/cz" ]; then
+	exit 0
 fi
 
-exit 0
+# Prefer using the controlling TTY for interactive prompts.
+if [ -e /dev/tty ]; then
+	exec < /dev/tty
+fi
+
+if [ -t 0 ] || [ -t 1 ]; then
+	./node_modules/.bin/cz --hook || true
+fi
