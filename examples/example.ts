@@ -8,7 +8,7 @@ import { Schema, ParquetWriter, ParquetReader } from 'parquet-tool';
     score: { type: 'DOUBLE', optional: true },
   });
 
-  const file = 'examples/sample.parquet';
+  const file = './sample.parquet';
 
   // write some rows
   const writer = new ParquetWriter(file, schema);
