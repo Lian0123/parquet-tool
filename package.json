@@ -50,7 +50,7 @@
     "@types/node": "^20.17.0",
     "@typescript-eslint/eslint-plugin": "^6.1.0",
     "@typescript-eslint/parser": "^6.1.0",
-    "cmake-js": "^7.3.0",
+    "cmake-js": "^8.0.0",
     "commitizen": "^4.2.5",
     "conventional-changelog-conventionalcommits": "^9.3.0",
     "cz-conventional-changelog": "^3.3.0",
