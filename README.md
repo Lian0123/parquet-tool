@@ -27,8 +27,7 @@ Language docs:
 ## Quick Start
 
 ```bash
-npm install
-npm run build
+npm install parquet-tool
 ```
 
 ## Examples
