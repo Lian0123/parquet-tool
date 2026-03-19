@@ -93,6 +93,12 @@ function coerceValue(raw: string, type: ParquetType): ParquetRow[string] {
   }
 }
 
+/**
+ * Convert a CSV file into a Parquet file.
+ *
+ * - When `options.schema` is not provided, the schema is inferred (unless `inferSchema=false`).
+ * - Returns the schema used to write the Parquet file.
+ */
 export function csvToParquet(
   csvPath: string,
   parquetPath: string,
@@ -129,6 +135,11 @@ export function csvToParquet(
   return schema;
 }
 
+/**
+ * Convert a Parquet file into a CSV file.
+ *
+ * Supports controlling header output and delimiter.
+ */
 export function parquetToCsv(
   parquetPath: string,
   csvPath: string,

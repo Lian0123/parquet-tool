@@ -15,6 +15,7 @@
     "parquet-tool": "dist/cli/index.js"
   },
   "scripts": {
+    "install": "node scripts/install.cjs",
     "build": "npm run build:native && npm run build:ts",
     "build:ts": "tsc -p tsconfig.build.json",
     "build:native": "cmake-js compile",
@@ -37,7 +38,8 @@
     "commander": "^12.1.0",
     "csv-parse": "^5.5.6",
     "csv-stringify": "^6.5.2",
-    "node-addon-api": "^8.3.0"
+    "node-addon-api": "^8.3.0",
+    "node-gyp-build": "^4.8.4"
   },
   "devDependencies": {
     "@semantic-release/changelog": "^6.0.3",
@@ -65,9 +67,11 @@
   },
   "files": [
     "dist/",
+    "prebuilds/",
     "build/Release/",
     "src/native/",
-    "CMakeLists.txt"
+    "CMakeLists.txt",
+    "scripts/install.cjs"
   ],
   "engines": {
     "node": ">=18.0.0"

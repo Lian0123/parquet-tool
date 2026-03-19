@@ -17,18 +17,25 @@ concurrency:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
-          node-version: '24'
+          node-version: '24.10.0'
           cache: 'npm'
       - run: npm ci
       - run: npm run build:native
       - run: npm run build:ts
-      - run: node -e "require('./build/Release/parquet_addon.node'); console.log('native addon loaded');"
+      - name: Verify native addon loads
+        run: node -e "require('./build/Release/parquet_addon.node'); console.log('native addon loaded');"
+        shell: bash
       - run: npm run lint
+        if: matrix.os == 'ubuntu-latest'
       - run: npm test

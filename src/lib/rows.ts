@@ -1,5 +1,6 @@
 import { ParquetColumns, ParquetRow, RowGroupData } from './types';
 
+/** Convert a columnar `RowGroupData` into a row-oriented array of objects. */
 export function rowGroupToRows(rowGroup: RowGroupData): ParquetRow[] {
   const names = Object.keys(rowGroup.columns);
   const rows: ParquetRow[] = [];
@@ -15,6 +16,7 @@ export function rowGroupToRows(rowGroup: RowGroupData): ParquetRow[] {
   return rows;
 }
 
+/** Convert row-oriented objects into a columnar representation. */
 export function rowsToColumns(rows: ParquetRow[]): ParquetColumns {
   const columns: ParquetColumns = {};
 

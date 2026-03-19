@@ -17,6 +17,47 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  # ── Build pre-compiled binaries for every supported platform ────────────────
+  prebuild:
+    name: Prebuild ${{ matrix.platform }}-${{ matrix.arch }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            platform: linux
+            arch: x64
+          - os: macos-14          # Apple Silicon (arm64)
+            platform: darwin
+            arch: arm64
+          - os: macos-13          # Intel (x64)
+            platform: darwin
+            arch: x64
+          - os: windows-latest
+            platform: win32
+            arch: x64
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24.10.0'
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run build:native
+      - name: Stage prebuild artifact
+        shell: bash
+        run: |
+          mkdir -p prebuilds/${{ matrix.platform }}-${{ matrix.arch }}
+          cp build/Release/parquet_addon.node \
+             prebuilds/${{ matrix.platform }}-${{ matrix.arch }}/parquet_addon.node
+      - uses: actions/upload-artifact@v4
+        with:
+          name: prebuild-${{ matrix.platform }}-${{ matrix.arch }}
+          path: prebuilds/
+          retention-days: 1
+
+  # ── Verify full build, lint, and tests ────────────────────────────────────
   verify:
     runs-on: ubuntu-latest
     steps:
@@ -34,8 +75,9 @@ jobs:
       - run: npm run lint
       - run: npm test
 
+  # ── Semantic release (publishes to npm with all platform prebuilds) ────────
   release:
-    needs: verify
+    needs: [verify, prebuild]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -46,6 +88,20 @@ jobs:
           node-version: '24.10.0'
           cache: 'npm'
       - run: npm ci
+
+      # Download all platform prebuilds built above and merge into prebuilds/
+      - name: Download all prebuilds
+        uses: actions/download-artifact@v4
+        with:
+          pattern: prebuild-*
+          merge-multiple: true
+          path: prebuilds/
+      - name: Verify prebuilds
+        run: |
+          echo "Bundled prebuilds:"
+          find prebuilds/ -name '*.node' | sort
+
       - run: npm run release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

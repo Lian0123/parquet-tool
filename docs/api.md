@@ -1,5 +1,9 @@
 # API Reference
 
+This page documents the public APIs exported from the library entry.
+
+If you use TypeScript, you'll also get inline API docs via TSDoc.
+
 ## Schema
 
 Build a schema definition used for writing/reading.
@@ -12,6 +16,11 @@ const schema = Schema.create({
   name: { type: 'STRING', optional: true },
 });
 ```
+
+### Functions
+
+- `Schema.create(definition)` – create a schema from a plain object
+- `Schema.parseType(type)` – parse a string type name into `ParquetType`
 
 ## ParquetWriter
 
@@ -26,6 +35,14 @@ appender.write([{ id: 2 }, { id: 3 }]);
 appender.close();
 ```
 
+### Methods
+
+- `new ParquetWriter(filePath, schema, options?)` – create a new file writer
+- `write(rowOrRows)` – write one row or a batch of rows
+- `flush()` – force flush buffered rows into a row group
+- `close()` – flush & close the file
+- `ParquetWriter.openForAppend(filePath, options?)` – append new row groups to an existing file
+
 ## ParquetReader
 
 ```ts
@@ -35,18 +52,47 @@ const data = reader.readAll();
 reader.close();
 ```
 
+### Methods
+
+- `ParquetReader.open(filePath)` – open a file reader
+- `getMetadata()` – file-level metadata (schema, row groups, row counts)
+- `getSchema()` – schema only
+- `readRowGroup(index)` – read a specific row group
+- `readAll()` – read and merge all row groups
+- `readRows()` – read as row-oriented objects
+- `close()` – close and release native resources
+- `ParquetReader.readMetadata(filePath)` – metadata-only read (no full reader)
+
+## Buffer utilities
+
+Raw byte-level conversion helpers.
+
+- `paquetToBuffer(filePath, options?)` – read a Parquet file as `Buffer` (optionally validate first)
+- `bufferToPaquet(buffer, filePath, options?)` – write a `Buffer` to a Parquet file (optionally validate after writing)
+
 ## Utilities
 
-- `splitParquetFile(input, options)` – splits file into smaller pieces
-- `mergeParquetFiles(inputs, output, options)` – merges multiple files
-- `validateParquetFile(file)` – validates metadata and row group integrity
-- `csvToParquet(csv, parquet, options)` – converts CSV into Parquet
-- `parquetToCsv(parquet, csv, options)` – exports Parquet as CSV
-- `arrowToParquet(arrow, parquet, options)` – converts Arrow IPC to Parquet
-- `parquetToArrow(parquet, arrow)` – converts Parquet to Arrow IPC
-- `parallelRead(file, options)` – reads row groups in parallel
-- `parallelProcess(file, processor, options)` – process row groups concurrently
-- `parallelWrite(file, schema, chunks, options)` – write chunks in parallel
+### File helpers
+
+- `splitParquetFile(inputPath, options?)` – split a file into multiple smaller Parquet files
+- `mergeParquetFiles(inputPaths, outputPath, options?)` – merge multiple files (with optional schema validation)
+- `validateParquetFile(filePath)` – validate structure, schema, and row groups
+
+### CSV
+
+- `csvToParquet(csvPath, parquetPath, options?)` – convert CSV → Parquet (optional schema inference)
+- `parquetToCsv(parquetPath, csvPath, options?)` – convert Parquet → CSV
+
+### Arrow IPC
+
+- `arrowToParquet(arrowPath, parquetPath, options?)` – convert Arrow IPC → Parquet
+- `parquetToArrow(parquetPath, arrowPath)` – convert Parquet → Arrow IPC
+
+### Parallel helpers
+
+- `parallelRead(filePath, options?)` – read row groups concurrently into a merged result
+- `parallelProcess(filePath, processor, options?)` – process row groups concurrently with a user function
+- `parallelWrite(filePath, schema, dataChunks, options?)` – write chunks concurrently via temp files, then merge
 
 ## Debug mode
 

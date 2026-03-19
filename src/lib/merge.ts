@@ -9,6 +9,11 @@ function schemasEqual(left: ParquetSchema, right: ParquetSchema): boolean {
   return JSON.stringify(left.columns) === JSON.stringify(right.columns);
 }
 
+/**
+ * Merge multiple Parquet files into a single output file.
+ *
+ * By default, this validates inputs and enforces schema compatibility.
+ */
 export function mergeParquetFiles(
   inputPaths: string[],
   outputPath: string,
