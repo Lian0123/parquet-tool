@@ -30,9 +30,6 @@ jobs:
           - os: macos-14          # Apple Silicon (arm64)
             platform: darwin
             arch: arm64
-          - os: macos-13          # Intel (x64)
-            platform: darwin
-            arch: x64
           - os: windows-latest
             platform: win32
             arch: x64
