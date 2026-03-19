@@ -1,3 +1,13 @@
+## [1.1.0](https://github.com/Lian0123/parquet-tool/compare/v1.0.1...v1.1.0) (2026-03-19)
+
+### Features
+
+* add buffer data process ([70942dd](https://github.com/Lian0123/parquet-tool/commit/70942dd9215736215b4b641db0fdf690a5f22a43))
+
+### Bug Fixes
+
+* **example.ts:** file path ([c066cad](https://github.com/Lian0123/parquet-tool/commit/c066cad075a840381fb6462b8df0f9215a7028ef))
+
 ## [1.0.1](https://github.com/Lian0123/parquet-tool/compare/v1.0.0...v1.0.1) (2026-03-15)
 
 ### Bug Fixes
