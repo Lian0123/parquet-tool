@@ -2,6 +2,16 @@ import { debugLog } from './debug';
 import { ParquetReader } from './reader';
 import { ValidationIssue, ValidationResult } from './types';
 
+/**
+ * Validate a Parquet file.
+ *
+ * Checks:
+ * - schema is non-empty
+ * - row group column counts match schema
+ * - each row group can be read
+ * - column value lengths match row counts
+ * - total row counts match metadata
+ */
 export function validateParquetFile(filePath: string): ValidationResult {
   const issues: ValidationIssue[] = [];
   let reader: ParquetReader | null = null;

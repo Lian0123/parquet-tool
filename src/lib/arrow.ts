@@ -30,6 +30,9 @@ function inferSchemaFromRows(rows: ParquetRow[]): ParquetSchema {
   return builder.build();
 }
 
+/**
+ * Convert a Parquet file into an Apache Arrow IPC file.
+ */
 export function parquetToArrow(parquetPath: string, arrowPath: string): void {
   const reader = ParquetReader.open(parquetPath);
   const rows: ParquetRow[] = [];
@@ -55,6 +58,12 @@ export function parquetToArrow(parquetPath: string, arrowPath: string): void {
   fs.writeFileSync(arrowPath, Buffer.from(tableToIPC(table)));
 }
 
+/**
+ * Convert an Apache Arrow IPC file into a Parquet file.
+ *
+ * - When `options.schema` is not provided, the schema is inferred from the first row.
+ * - Returns the schema used to write the Parquet file.
+ */
 export function arrowToParquet(
   arrowPath: string,
   parquetPath: string,
