@@ -39,3 +39,9 @@ export {
   parallelWrite,
   ParallelReadOptions,
 } from './parallel';
+export {
+  bufferToPaquet,
+  paquetToBuffer,
+  BufferToPaquetOptions,
+  PaquetToBufferOptions,
+} from './buffer';
