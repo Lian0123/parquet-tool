@@ -1,3 +1,5 @@
+## [1.1.1](https://github.com/Lian0123/parquet-tool/compare/v1.1.0...v1.1.1) (2026-03-24)
+
 ## [1.1.0](https://github.com/Lian0123/parquet-tool/compare/v1.0.1...v1.1.0) (2026-03-19)
 
 ### Features
