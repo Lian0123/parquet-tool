@@ -6,3 +6,8 @@ coverage/
 .DS_Store
 *.log
 tmp/
+examples/**/*.parquet
+examples/**/*.arrow
+examples/**/*.csv
+examples/**/parts/
+examples/**/tmp/

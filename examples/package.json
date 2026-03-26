@@ -2,9 +2,14 @@
   "name": "examples",
   "version": "1.0.0",
   "description": "",
-  "main": "example.ts",
+  "main": "README.md",
   "scripts": {
-    "start": "ts-node example.ts",
+    "start": "npm run basic",
+    "basic": "ts-node basic-read-write/index.ts",
+    "merge": "ts-node merge-and-validate/index.ts",
+    "convert": "ts-node conversions/index.ts",
+    "parallel": "ts-node split-and-parallel/index.ts",
+    "buffer": "ts-node buffer-roundtrip/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
