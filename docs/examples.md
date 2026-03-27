@@ -1,15 +1,28 @@
 # Examples
 
-## TypeScript example
+Repository examples are organized into separate folders so each workflow can be
+run independently.
 
-See `examples/example.ts` which demonstrates writing and reading a Parquet
-file:
+## TypeScript examples
+
+- `examples/basic-read-write/index.ts` - write, append, and read rows
+- `examples/merge-and-validate/index.ts` - merge files and validate output
+- `examples/conversions/index.ts` - CSV, Parquet, and Arrow conversions
+- `examples/split-and-parallel/index.ts` - split files and use parallel helpers
+- `examples/buffer-roundtrip/index.ts` - copy Parquet bytes through a buffer
+
+Run any example from the repository root:
 
 ```bash
-npx ts-node examples/example.ts
+npx ts-node examples/basic-read-write/index.ts
+npx ts-node examples/merge-and-validate/index.ts
+npx ts-node examples/conversions/index.ts
+npx ts-node examples/split-and-parallel/index.ts
+npx ts-node examples/buffer-roundtrip/index.ts
 ```
 
-This generates `examples/sample.parquet` and prints its metadata and contents.
+The legacy `examples/example.ts` entry point remains available and delegates to
+the basic read/write example.
 
 ## Docker viewer
 

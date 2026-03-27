@@ -2,40 +2,39 @@
 
 [![npm version](https://img.shields.io/npm/v/parquet-tool.svg)](https://www.npmjs.com/package/parquet-tool) [![license](https://img.shields.io/npm/l/parquet-tool.svg)](LICENSE) [![build status](https://img.shields.io/github/actions/workflow/status/Lian0123/parquet-tool/ci.yml?branch=main)](https://github.com/Lian0123/parquet-tool/actions)
 
-A Parquet processing toolkit built with TypeScript + C++ Native Addon.
-It does not depend on existing npm parquet packages; core Parquet read/write logic is implemented in this repository.
+以 TypeScript + C++ Native Addon 打造的 Parquet 處理工具包。
+本專案不依賴現有的 npm parquet 套件；核心 Parquet 讀寫邏輯直接在此儲存庫中實作。
 
-Language docs:
+語言文件：
 
-- Chinese (Traditional): [docs/README.zh-TW.md](https://github.com/Lian0123/parquet-tool/blob/main/docs/README.zh-TW.md)
-- Japanese: [docs/README.ja.md](https://github.com/Lian0123/parquet-tool/blob/main/docs/README.ja.md)
+- 繁體中文：[docs/README.zh-TW.md](https://github.com/Lian0123/parquet-tool/blob/main/docs/README.zh-TW.md)
+- 日文：[docs/README.ja.md](https://github.com/Lian0123/parquet-tool/blob/main/docs/README.ja.md)
 
-## Features
+## 功能
 
-- Create and read/write Parquet files
-- Append mode (called "apply" in earlier requirements) for adding new row groups to existing files
-- Merge multiple Parquet files with schema compatibility checks
-- Validate Parquet structure, metadata, and row groups
-- Convert between CSV and Parquet
-- Convert between Apache Arrow IPC and Parquet
-- Split large Parquet files into smaller files
-- Parallel read/process/write helpers
-- Debug mode for CLI and library APIs
-- CLI commands: `info`, `read`, `write`, `append`, `split`, `merge`, `validate`, `csv-to-parquet`, `parquet-to-csv`, `arrow-to-parquet`, `parquet-to-arrow`
-- Docker Compose viewer for quick verification
+- 建立並讀取/寫入 Parquet 檔案
+- Append 模式（在較早的需求中稱為 "apply"），可為既有檔案新增新的 row group
+- 合併多個 Parquet 檔案，並檢查 schema 相容性
+- 驗證 Parquet 結構、中繼資料與 row group
+- CSV 與 Parquet 互轉
+- Apache Arrow IPC 與 Parquet 互轉
+- 將大型 Parquet 檔案切分為較小檔案
+- 提供平行讀取/處理/寫入輔助工具
+- CLI 與函式庫 API 都支援除錯模式
+- CLI 指令：`info`、`read`、`write`、`append`、`split`、`merge`、`validate`、`csv-to-parquet`、`parquet-to-csv`、`arrow-to-parquet`、`parquet-to-arrow`
+- 提供 Docker Compose viewer 以便快速檢查結果
 
-## Quick Start
+## 快速開始
 
 ```bash
 npm install parquet-tool
 ```
 
-## Examples
+## 範例
 
-Repository examples are also available as runnable scripts under `examples/`,
-organized by workflow.
+儲存庫另外在 `examples/` 下提供可直接執行的腳本，並依工作流程分資料夾整理。
 
-### 1. Basic write, read, and append
+### 1. 基本寫入、讀取與 append
 
 ```ts
 import { ParquetReader, ParquetWriter, Schema } from 'parquet-tool';
@@ -63,7 +62,7 @@ console.log(all.numRows, all.columns);
 reader.close();
 ```
 
-### 2. Merge and validate
+### 2. 合併與驗證
 
 ```ts
 import { mergeParquetFiles, validateParquetFile } from 'parquet-tool';
@@ -76,7 +75,7 @@ if (!report.valid) {
 }
 ```
 
-### 3. CSV and Arrow conversions
+### 3. CSV 與 Arrow 轉換
 
 ```ts
 import {
@@ -93,7 +92,7 @@ parquetToArrow('input.parquet', 'input.arrow');
 arrowToParquet('input.arrow', 'from-arrow.parquet');
 ```
 
-### 4. Split and parallel processing
+### 4. 切檔與平行處理
 
 ```ts
 import {
@@ -120,7 +119,7 @@ const names = await parallelProcess(
 console.log(names.length);
 ```
 
-### 5. Run the repository examples
+### 5. 執行儲存庫內建範例
 
 ```bash
 npx ts-node examples/basic-read-write/index.ts
@@ -130,7 +129,7 @@ npx ts-node examples/split-and-parallel/index.ts
 npx ts-node examples/buffer-roundtrip/index.ts
 ```
 
-Available example folders:
+可用的範例資料夾：
 
 - `examples/basic-read-write/`
 - `examples/merge-and-validate/`
@@ -138,30 +137,29 @@ Available example folders:
 - `examples/split-and-parallel/`
 - `examples/buffer-roundtrip/`
 
-The legacy `examples/example.ts` entry point still works and delegates to the
-basic example.
+舊版的 `examples/example.ts` 入口仍可使用，並會轉送到基本範例。
 
-## CLI Usage
+## CLI 用法
 
 ```bash
-# Metadata
+# 中繼資料
 npx parquet-tool info data.parquet
 
-# Read rows
+# 讀取資料列
 npx parquet-tool read data.parquet --json
 npx parquet-tool read data.parquet --limit 50
 
-# Write from JSON
+# 從 JSON 寫入
 npx parquet-tool write out.parquet -i input.json -s "id:INT32,name:STRING"
 
-# Append rows
+# Append 資料列
 npx parquet-tool append out.parquet -i more.json
 
-# Split / Merge
+# 切檔 / 合併
 npx parquet-tool split large.parquet -n 10000 -o ./output
 npx parquet-tool merge merged.parquet part1.parquet part2.parquet
 
-# Validation
+# 驗證
 npx parquet-tool validate merged.parquet
 
 # CSV <-> Parquet
@@ -172,7 +170,7 @@ npx parquet-tool parquet-to-csv output.parquet output.csv
 npx parquet-tool arrow-to-parquet input.arrow output.parquet
 npx parquet-tool parquet-to-arrow output.parquet output.arrow
 
-# Debug mode
+# 除錯模式
 npx parquet-tool --debug validate data.parquet
 ```
 
@@ -184,9 +182,9 @@ cp your_file.parquet data/
 docker-compose up --build
 ```
 
-Open `http://localhost:8080`.
+開啟 `http://localhost:8080`。
 
-## Development
+## 開發
 
 ```bash
 npm install
@@ -196,16 +194,16 @@ npm test
 npm run clean
 ```
 
-## Release
+## 發佈
 
-This project uses Commitizen + semantic-release.
+本專案使用 Commitizen + semantic-release。
 
 ```bash
 npm run cz
 npm run release
 ```
 
-Configured semantic-release plugins:
+已設定的 semantic-release 外掛：
 
 - `@semantic-release/commit-analyzer`
 - `@semantic-release/release-notes-generator`
@@ -214,21 +212,21 @@ Configured semantic-release plugins:
 - `@semantic-release/github`
 - `@semantic-release/git`
 
-Branch strategy:
+分支策略：
 
-- `main`: stable releases
+- `main`：穩定版本發佈
 
-## Supported Types
+## 支援型別
 
-| Parquet Type | TypeScript Type | Notes |
+| Parquet 型別 | TypeScript 型別 | 說明 |
 |---|---|---|
-| BOOLEAN | boolean | Boolean values |
-| INT32 | number | 32-bit integer |
-| INT64 | bigint | 64-bit integer |
-| FLOAT | number | 32-bit float |
-| DOUBLE | number | 64-bit float |
-| BYTE_ARRAY | string | UTF-8 string |
+| BOOLEAN | boolean | 布林值 |
+| INT32 | number | 32 位元整數 |
+| INT64 | bigint | 64 位元整數 |
+| FLOAT | number | 32 位元浮點數 |
+| DOUBLE | number | 64 位元浮點數 |
+| BYTE_ARRAY | string | UTF-8 字串 |
 
-## License
+## 授權
 
 MIT
