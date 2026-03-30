@@ -6,9 +6,12 @@ import {
   arrowToParquet,
   configureDebugMode,
   csvToParquet,
+  jsonToParquet,
   mergeParquetFiles,
   parquetToArrow,
   parquetToCsv,
+  parquetToJson,
+  parquetToXml,
   ParquetReader,
   ParquetRow,
   ParquetSchema,
@@ -17,6 +20,7 @@ import {
   Schema,
   splitParquetFile,
   validateParquetFile,
+  xmlToParquet,
 } from '../lib';
 
 const program = new Command();
@@ -291,6 +295,68 @@ program
   .action((parquet: string, arrow: string) => {
     parquetToArrow(path.resolve(parquet), path.resolve(arrow));
     console.log(`Converted Parquet to Arrow: ${arrow}`);
+  });
+
+program
+  .command('json-to-parquet')
+  .description('Convert a JSON file to a Parquet file')
+  .argument('<json>', 'Input JSON file path')
+  .argument('<parquet>', 'Output Parquet file path')
+  .option('-s, --schema <def>', 'Schema definition, e.g. "id:INT32,name:STRING"')
+  .action((json: string, parquet: string, opts) => {
+    const schema = jsonToParquet(path.resolve(json), path.resolve(parquet), {
+      schema: opts.schema ? parseSchemaDefinition(opts.schema) : undefined,
+    });
+    console.log(`Converted JSON to Parquet: ${parquet}`);
+    console.log(`Schema columns: ${schema.columns.map((column) => column.name).join(', ')}`);
+  });
+
+program
+  .command('parquet-to-json')
+  .description('Convert a Parquet file to a JSON file')
+  .argument('<parquet>', 'Input Parquet file path')
+  .argument('<json>', 'Output JSON file path')
+  .option('--rows-only', 'Write only row data without schema metadata')
+  .action((parquet: string, json: string, opts) => {
+    parquetToJson(path.resolve(parquet), path.resolve(json), {
+      includeSchema: !opts.rowsOnly,
+    });
+    console.log(`Converted Parquet to JSON: ${json}`);
+  });
+
+program
+  .command('xml-to-parquet')
+  .description('Convert an XML file to a Parquet file')
+  .argument('<xml>', 'Input XML file path')
+  .argument('<parquet>', 'Output Parquet file path')
+  .option('-s, --schema <def>', 'Schema definition, e.g. "id:INT32,name:STRING"')
+  .option('--root-name <name>', 'Root element name', 'parquet')
+  .option('--row-tag <name>', 'Row element name', 'row')
+  .action((xml: string, parquet: string, opts) => {
+    const schema = xmlToParquet(path.resolve(xml), path.resolve(parquet), {
+      schema: opts.schema ? parseSchemaDefinition(opts.schema) : undefined,
+      rootName: opts.rootName,
+      rowTag: opts.rowTag,
+    });
+    console.log(`Converted XML to Parquet: ${parquet}`);
+    console.log(`Schema columns: ${schema.columns.map((column) => column.name).join(', ')}`);
+  });
+
+program
+  .command('parquet-to-xml')
+  .description('Convert a Parquet file to an XML file')
+  .argument('<parquet>', 'Input Parquet file path')
+  .argument('<xml>', 'Output XML file path')
+  .option('--rows-only', 'Write only row data without schema metadata')
+  .option('--root-name <name>', 'Root element name', 'parquet')
+  .option('--row-tag <name>', 'Row element name', 'row')
+  .action((parquet: string, xml: string, opts) => {
+    parquetToXml(path.resolve(parquet), path.resolve(xml), {
+      includeSchema: !opts.rowsOnly,
+      rootName: opts.rootName,
+      rowTag: opts.rowTag,
+    });
+    console.log(`Converted Parquet to XML: ${xml}`);
   });
 
 program.parse();
