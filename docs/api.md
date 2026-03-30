@@ -83,6 +83,16 @@ Raw byte-level conversion helpers.
 - `csvToParquet(csvPath, parquetPath, options?)` – convert CSV → Parquet (optional schema inference)
 - `parquetToCsv(parquetPath, csvPath, options?)` – convert Parquet → CSV
 
+### JSON
+
+- `jsonToParquet(jsonPath, parquetPath, options?)` – convert JSON → Parquet (accepts either an array of rows or a `{ schema, rows }` document)
+- `parquetToJson(parquetPath, jsonPath, options?)` – convert Parquet → JSON (includes schema by default so round-trip can preserve types)
+
+### XML
+
+- `xmlToParquet(xmlPath, parquetPath, options?)` – convert XML → Parquet (accepts row data with optional embedded schema)
+- `parquetToXml(parquetPath, xmlPath, options?)` – convert Parquet → XML (includes schema by default so round-trip can preserve types)
+
 ### Arrow IPC
 
 - `arrowToParquet(arrowPath, parquetPath, options?)` – convert Arrow IPC → Parquet

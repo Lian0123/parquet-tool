@@ -17,11 +17,13 @@ Language docs:
 - Merge multiple Parquet files with schema compatibility checks
 - Validate Parquet structure, metadata, and row groups
 - Convert between CSV and Parquet
+- Convert between JSON and Parquet
+- Convert between XML and Parquet
 - Convert between Apache Arrow IPC and Parquet
 - Split large Parquet files into smaller files
 - Parallel read/process/write helpers
 - Debug mode for CLI and library APIs
-- CLI commands: `info`, `read`, `write`, `append`, `split`, `merge`, `validate`, `csv-to-parquet`, `parquet-to-csv`, `arrow-to-parquet`, `parquet-to-arrow`
+- CLI commands: `info`, `read`, `write`, `append`, `split`, `merge`, `validate`, `csv-to-parquet`, `parquet-to-csv`, `json-to-parquet`, `parquet-to-json`, `xml-to-parquet`, `parquet-to-xml`, `arrow-to-parquet`, `parquet-to-arrow`
 - Docker Compose viewer for quick verification
 
 ## Quick Start
@@ -76,18 +78,28 @@ if (!report.valid) {
 }
 ```
 
-### 3. CSV and Arrow conversions
+### 3. CSV, JSON, XML, and Arrow conversions
 
 ```ts
 import {
   arrowToParquet,
   csvToParquet,
+  jsonToParquet,
   parquetToArrow,
   parquetToCsv,
+  parquetToJson,
+  parquetToXml,
+  xmlToParquet,
 } from 'parquet-tool';
 
 csvToParquet('input.csv', 'input.parquet');
 parquetToCsv('input.parquet', 'roundtrip.csv');
+
+parquetToJson('input.parquet', 'input.json');
+jsonToParquet('input.json', 'from-json.parquet');
+
+parquetToXml('input.parquet', 'input.xml');
+xmlToParquet('input.xml', 'from-xml.parquet');
 
 parquetToArrow('input.parquet', 'input.arrow');
 arrowToParquet('input.arrow', 'from-arrow.parquet');
@@ -167,6 +179,14 @@ npx parquet-tool validate merged.parquet
 # CSV <-> Parquet
 npx parquet-tool csv-to-parquet input.csv output.parquet
 npx parquet-tool parquet-to-csv output.parquet output.csv
+
+# JSON <-> Parquet
+npx parquet-tool json-to-parquet input.json output.parquet
+npx parquet-tool parquet-to-json output.parquet output.json
+
+# XML <-> Parquet
+npx parquet-tool xml-to-parquet input.xml output.parquet
+npx parquet-tool parquet-to-xml output.parquet output.xml
 
 # Arrow <-> Parquet
 npx parquet-tool arrow-to-parquet input.arrow output.parquet

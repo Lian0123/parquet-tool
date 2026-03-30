@@ -7,7 +7,7 @@ its own folder.
 
 - `basic-read-write/` - Create a file, append rows, then read rows and metadata
 - `merge-and-validate/` - Build multiple files, merge them, and validate the result
-- `conversions/` - Convert between CSV, Parquet, and Arrow IPC
+- `conversions/` - Convert between CSV, JSON, XML, Parquet, and Arrow IPC
 - `split-and-parallel/` - Split large files and process row groups in parallel
 - `buffer-roundtrip/` - Read and write raw Parquet bytes with validation
 

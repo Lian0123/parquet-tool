@@ -31,6 +31,14 @@ parquet-tool validate data.parquet
 parquet-tool csv-to-parquet data.csv data.parquet
 parquet-tool parquet-to-csv data.parquet data.csv
 
+# JSON <-> Parquet
+parquet-tool json-to-parquet data.json data.parquet
+parquet-tool parquet-to-json data.parquet data.json
+
+# XML <-> Parquet
+parquet-tool xml-to-parquet data.xml data.parquet
+parquet-tool parquet-to-xml data.parquet data.xml
+
 # Arrow <-> Parquet
 parquet-tool arrow-to-parquet data.arrow data.parquet
 parquet-tool parquet-to-arrow data.parquet data.arrow
