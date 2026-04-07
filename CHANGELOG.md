@@ -1,3 +1,9 @@
+## [1.2.0](https://github.com/Lian0123/parquet-tool/compare/v1.1.1...v1.2.0) (2026-04-07)
+
+### Features
+
+* add json and xml support ([54e05df](https://github.com/Lian0123/parquet-tool/commit/54e05df964d5844c5d6ecd32c3750c5db73b7e1a))
+
 ## [1.1.1](https://github.com/Lian0123/parquet-tool/compare/v1.1.0...v1.1.1) (2026-03-24)
 
 ## [1.1.0](https://github.com/Lian0123/parquet-tool/compare/v1.0.1...v1.1.0) (2026-03-19)
