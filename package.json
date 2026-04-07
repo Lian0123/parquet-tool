@@ -35,10 +35,11 @@
   },
   "dependencies": {
     "apache-arrow": "^17.0.0",
-    "commander": "^12.1.0",
     "cmake-js": "^8.0.0",
+    "commander": "^12.1.0",
     "csv-parse": "^5.5.6",
     "csv-stringify": "^6.5.2",
+    "fast-xml-parser": "^5.5.9",
     "node-addon-api": "^8.3.0",
     "node-gyp-build": "^4.8.4"
   },

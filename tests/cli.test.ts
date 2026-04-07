@@ -126,4 +126,33 @@ describe('CLI', () => {
     expect(toCsv).toContain('Converted Parquet to CSV');
     expect(fs.readFileSync(csvOutput, 'utf8')).toContain('Alice');
   });
+
+  it('should convert parquet to json and json to parquet', () => {
+    const jsonOutput = path.join(TMP, 'cli_output.json');
+    const jsonParquet = path.join(TMP, 'cli_json.parquet');
+
+    const toJson = cli(`parquet-to-json "${dataFile}" "${jsonOutput}"`);
+    expect(toJson).toContain('Converted Parquet to JSON');
+
+    const toParquet = cli(`json-to-parquet "${jsonOutput}" "${jsonParquet}"`);
+    expect(toParquet).toContain('Converted JSON to Parquet');
+
+    const rows = JSON.parse(cli(`read "${jsonParquet}" --json`));
+    expect(rows[0].name).toBe('Alice');
+  });
+
+  it('should convert parquet to xml and xml to parquet', () => {
+    const xmlOutput = path.join(TMP, 'cli_output.xml');
+    const xmlParquet = path.join(TMP, 'cli_xml.parquet');
+
+    const toXml = cli(`parquet-to-xml "${dataFile}" "${xmlOutput}"`);
+    expect(toXml).toContain('Converted Parquet to XML');
+    expect(fs.readFileSync(xmlOutput, 'utf8')).toContain('<schema>');
+
+    const toParquet = cli(`xml-to-parquet "${xmlOutput}" "${xmlParquet}"`);
+    expect(toParquet).toContain('Converted XML to Parquet');
+
+    const rows = JSON.parse(cli(`read "${xmlParquet}" --json`));
+    expect(rows[0].name).toBe('Alice');
+  });
 });

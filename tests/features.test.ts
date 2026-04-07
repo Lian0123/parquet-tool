@@ -6,14 +6,18 @@ import {
   configureDebugMode,
   csvToParquet,
   isDebugEnabled,
+  jsonToParquet,
   mergeParquetFiles,
   parquetToArrow,
   parquetToCsv,
+  parquetToJson,
+  parquetToXml,
   ParquetReader,
   ParquetWriter,
   Schema,
   setDebugMode,
   validateParquetFile,
+  xmlToParquet,
 } from '../src/lib';
 
 const TMP = path.join(__dirname, '..', 'tmp', 'features');
@@ -119,6 +123,77 @@ describe('Arrow conversion', () => {
     expect(data.columns['id']).toEqual([1, 2]);
     expect(data.columns['name']).toEqual(['Alice', 'Bob']);
     reader.close();
+  });
+});
+
+describe('JSON conversion', () => {
+  it('should convert between JSON and Parquet with schema preservation', () => {
+    const parquetPath = path.join(TMP, 'data_json.parquet');
+    const jsonPath = path.join(TMP, 'data.json');
+    const roundtripPath = path.join(TMP, 'data_json_roundtrip.parquet');
+
+    const schema = Schema.create({
+      id: 'INT32',
+      name: 'STRING',
+      visits: 'INT64',
+      active: { type: 'BOOLEAN', optional: true },
+    });
+    const writer = new ParquetWriter(parquetPath, schema);
+    writer.write([
+      { id: 1, name: 'Alice', visits: BigInt(9007199254740991), active: true },
+      { id: 2, name: 'Bob', visits: BigInt(42), active: null },
+    ]);
+    writer.close();
+
+    parquetToJson(parquetPath, jsonPath);
+    jsonToParquet(jsonPath, roundtripPath);
+
+    const reader = ParquetReader.open(roundtripPath);
+    const data = reader.readRows();
+    expect(data).toEqual([
+      { id: 1, name: 'Alice', visits: BigInt(9007199254740991), active: true },
+      { id: 2, name: 'Bob', visits: BigInt(42), active: null },
+    ]);
+    reader.close();
+
+    const json = JSON.parse(fs.readFileSync(jsonPath, 'utf8')) as { rows: Array<Record<string, unknown>> };
+    expect(json.rows[0]?.visits).toBe('9007199254740991');
+  });
+});
+
+describe('XML conversion', () => {
+  it('should convert between XML and Parquet with schema preservation', () => {
+    const parquetPath = path.join(TMP, 'data_xml.parquet');
+    const xmlPath = path.join(TMP, 'data.xml');
+    const roundtripPath = path.join(TMP, 'data_xml_roundtrip.parquet');
+
+    const schema = Schema.create({
+      id: 'INT32',
+      name: 'STRING',
+      score: { type: 'DOUBLE', optional: true },
+      active: { type: 'BOOLEAN', optional: true },
+    });
+    const writer = new ParquetWriter(parquetPath, schema);
+    writer.write([
+      { id: 1, name: 'Alice', score: 95.5, active: true },
+      { id: 2, name: 'Bob', score: null, active: false },
+    ]);
+    writer.close();
+
+    parquetToXml(parquetPath, xmlPath);
+    xmlToParquet(xmlPath, roundtripPath);
+
+    const reader = ParquetReader.open(roundtripPath);
+    const data = reader.readRows();
+    expect(data).toEqual([
+      { id: 1, name: 'Alice', score: 95.5, active: true },
+      { id: 2, name: 'Bob', score: null, active: false },
+    ]);
+    reader.close();
+
+    const xml = fs.readFileSync(xmlPath, 'utf8');
+    expect(xml).toContain('<schema>');
+    expect(xml).toContain('type="INT32"');
   });
 });
 

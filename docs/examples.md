@@ -7,7 +7,7 @@ run independently.
 
 - `examples/basic-read-write/index.ts` - write, append, and read rows
 - `examples/merge-and-validate/index.ts` - merge files and validate output
-- `examples/conversions/index.ts` - CSV, Parquet, and Arrow conversions
+- `examples/conversions/index.ts` - CSV, JSON, XML, Parquet, and Arrow conversions
 - `examples/split-and-parallel/index.ts` - split files and use parallel helpers
 - `examples/buffer-roundtrip/index.ts` - copy Parquet bytes through a buffer
 
@@ -31,7 +31,7 @@ A simple Flask web app lets you browse Parquet files mounted under `./data`.
 ```bash
 # copy files to `data` folder
 mkdir -p data
-cp examples/sample.parquet data/
+cp examples/basic-read-write/basic.parquet data/
 
 docker-compose up --build
 ```

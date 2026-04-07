@@ -9,5 +9,7 @@ tmp/
 examples/**/*.parquet
 examples/**/*.arrow
 examples/**/*.csv
+examples/**/table.json
+examples/**/table.xml
 examples/**/parts/
 examples/**/tmp/

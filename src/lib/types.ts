@@ -102,6 +102,28 @@ export interface ArrowConversionOptions extends WriteOptions {
   schema?: ParquetSchema;
 }
 
+export interface JsonToParquetOptions extends WriteOptions {
+  schema?: ParquetSchema;
+}
+
+export interface ParquetToJsonOptions {
+  includeSchema?: boolean;
+  pretty?: number;
+}
+
+export interface XmlToParquetOptions extends WriteOptions {
+  schema?: ParquetSchema;
+  rootName?: string;
+  rowTag?: string;
+}
+
+export interface ParquetToXmlOptions {
+  includeSchema?: boolean;
+  pretty?: boolean;
+  rootName?: string;
+  rowTag?: string;
+}
+
 export interface NativeSchemaColumn {
   name: string;
   type: ParquetType;
