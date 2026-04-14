@@ -1,12 +1,12 @@
 import * as fs from 'fs';
 import { validateParquetFile } from './validate';
 
-export interface PaquetToBufferOptions {
+export interface ParquetToBufferOptions {
   /** When true, validate the Parquet structure before returning the buffer. */
   validate?: boolean;
 }
 
-export interface BufferToPaquetOptions {
+export interface BufferToParquetOptions {
   /** When false (default), throws if the output file already exists. */
   overwrite?: boolean;
   /** When true, validate the written Parquet file after writing. */
@@ -19,9 +19,9 @@ export interface BufferToPaquetOptions {
  * Note: this is a byte-level conversion (no decoding). Use `ParquetReader`
  * if you want to read rows/columns.
  */
-export function paquetToBuffer(
+export function parquetToBuffer(
   filePath: string,
-  options: PaquetToBufferOptions = {},
+  options: ParquetToBufferOptions = {},
 ): Buffer {
   if (!filePath) {
     throw new TypeError('filePath is required');
@@ -44,10 +44,10 @@ export function paquetToBuffer(
  * Note: this is a byte-level conversion (no encoding). Use `ParquetWriter`
  * if you want to build a Parquet file from rows.
  */
-export function bufferToPaquet(
+export function bufferToParquet(
   buffer: Buffer,
   filePath: string,
-  options: BufferToPaquetOptions = {},
+  options: BufferToParquetOptions = {},
 ): void {
   if (!Buffer.isBuffer(buffer)) {
     throw new TypeError('buffer must be a Buffer');

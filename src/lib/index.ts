@@ -46,8 +46,8 @@ export {
   ParallelReadOptions,
 } from './parallel';
 export {
-  bufferToPaquet,
-  paquetToBuffer,
-  BufferToPaquetOptions,
-  PaquetToBufferOptions,
+  bufferToParquet,
+  parquetToBuffer,
+  BufferToParquetOptions,
+  ParquetToBufferOptions,
 } from './buffer';

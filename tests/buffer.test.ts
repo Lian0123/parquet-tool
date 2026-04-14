@@ -1,8 +1,8 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import {
-  bufferToPaquet,
-  paquetToBuffer,
+  bufferToParquet,
+  parquetToBuffer,
   ParquetReader,
   ParquetWriter,
   Schema,
@@ -18,7 +18,7 @@ afterAll(() => {
   fs.rmSync(TMP, { recursive: true, force: true });
 });
 
-describe('paquetToBuffer & bufferToPaquet', () => {
+describe('parquetToBuffer & bufferToParquet', () => {
   it('should round-trip a parquet file through Buffer', () => {
     const src = path.join(TMP, 'src.parquet');
     const dst = path.join(TMP, 'dst.parquet');
@@ -31,8 +31,8 @@ describe('paquetToBuffer & bufferToPaquet', () => {
     ]);
     writer.close();
 
-    const buf = paquetToBuffer(src, { validate: true });
-    bufferToPaquet(buf, dst, { overwrite: false, validate: true });
+    const buf = parquetToBuffer(src, { validate: true });
+    bufferToParquet(buf, dst, { overwrite: false, validate: true });
 
     const reader = ParquetReader.open(dst);
     const data = reader.readAll();
@@ -46,13 +46,13 @@ describe('paquetToBuffer & bufferToPaquet', () => {
   it('should not overwrite by default', () => {
     const file = path.join(TMP, 'no_overwrite.parquet');
     fs.writeFileSync(file, Buffer.from('not parquet'));
-    expect(() => bufferToPaquet(Buffer.from('abc'), file)).toThrow();
+    expect(() => bufferToParquet(Buffer.from('abc'), file)).toThrow();
   });
 
   it('should fail validation for non-parquet input when validate=true', () => {
     const file = path.join(TMP, 'not_parquet.bin');
     fs.writeFileSync(file, Buffer.from('not parquet'));
-    expect(() => paquetToBuffer(file, { validate: true })).toThrow(
+    expect(() => parquetToBuffer(file, { validate: true })).toThrow(
       /Invalid Parquet file/,
     );
   });

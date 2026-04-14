@@ -1,7 +1,7 @@
 import * as path from 'path';
 import {
-  bufferToPaquet,
-  paquetToBuffer,
+  bufferToParquet,
+  parquetToBuffer,
   ParquetReader,
   ParquetWriter,
   Schema,
@@ -24,8 +24,8 @@ writer.write([
 ]);
 writer.close();
 
-const buffer = paquetToBuffer(sourcePath, { validate: true });
-bufferToPaquet(buffer, copyPath, { overwrite: true, validate: true });
+const buffer = parquetToBuffer(sourcePath, { validate: true });
+bufferToParquet(buffer, copyPath, { overwrite: true, validate: true });
 
 const report = validateParquetFile(copyPath);
 const reader = ParquetReader.open(copyPath);
