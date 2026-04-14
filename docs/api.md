@@ -67,8 +67,8 @@ reader.close();
 
 Raw byte-level conversion helpers.
 
-- `paquetToBuffer(filePath, options?)` – read a Parquet file as `Buffer` (optionally validate first)
-- `bufferToPaquet(buffer, filePath, options?)` – write a `Buffer` to a Parquet file (optionally validate after writing)
+- `parquetToBuffer(filePath, options?)` – read a Parquet file as `Buffer` (optionally validate first)
+- `bufferToParquet(buffer, filePath, options?)` – write a `Buffer` to a Parquet file (optionally validate after writing)
 
 ## Utilities
 
