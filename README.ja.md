@@ -7,8 +7,8 @@ TypeScript + C++ Native Addon で構築された Parquet 処理ツールキッ�
 
 言語ドキュメント:
 
-- 中国語（繁体字）: [docs/README.zh-TW.md](https://github.com/Lian0123/parquet-tool/blob/main/docs/README.zh-TW.md)
-- 日本語: [docs/README.ja.md](https://github.com/Lian0123/parquet-tool/blob/main/docs/README.ja.md)
+- 中国語（繁体字）: [docs/README.zh-TW.md](https://github.com/Lian0123/parquet-tool/blob/main/README.zh-TW.md)
+- 日本語: [docs/README.ja.md](https://github.com/Lian0123/parquet-tool/blob/main/README.ja.md)
 
 ## 機能
 

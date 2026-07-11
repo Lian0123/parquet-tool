@@ -7,8 +7,8 @@
 
 語言文件：
 
-- 繁體中文：[docs/README.zh-TW.md](https://github.com/Lian0123/parquet-tool/blob/main/docs/README.zh-TW.md)
-- 日文：[docs/README.ja.md](https://github.com/Lian0123/parquet-tool/blob/main/docs/README.ja.md)
+- 繁體中文：[docs/README.zh-TW.md](https://github.com/Lian0123/parquet-tool/blob/main/README.zh-TW.md)
+- 日文：[docs/README.ja.md](https://github.com/Lian0123/parquet-tool/blob/main/README.ja.md)
 
 ## 功能
 
