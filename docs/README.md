@@ -2,6 +2,10 @@
 
 This directory contains project documentation and language-specific entry pages.
 
+AI maintainers and contributors should start from the
+[AI maintenance entry](ai-maintenance/entry.md). It provides progressive, source-linked
+navigation designed for low-token living documentation workflows.
+
 ## Language Entry Points
 
 - English: [../README.md](../README.md)
