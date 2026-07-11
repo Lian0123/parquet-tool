@@ -2,6 +2,11 @@ export { ParquetReader } from './reader';
 export { ParquetWriter } from './writer';
 export { Schema } from './schema';
 export {
+  SUPPORTED_PARQUET_TYPES,
+  assertSupportedParquetType,
+  isParquetTypeSupported,
+} from './type-support';
+export {
   configureDebugMode,
   debugLog,
   isDebugEnabled,

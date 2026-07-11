@@ -27,10 +27,10 @@ export async function parallelRead(
 ): Promise<RowGroupData> {
   const concurrency = options.concurrency ?? Math.min(os.cpus().length, 4);
 
-  const reader = ParquetReader.open(filePath);
-  const metadata = reader.getMetadata();
-  const schema = reader.getSchema();
-  reader.close();
+  const { metadata, schema } = ParquetReader.withReader(filePath, (reader) => ({
+    metadata: reader.getMetadata(),
+    schema: reader.getSchema(),
+  }));
 
   const numRG = metadata.numRowGroups;
   const results: RowGroupData[] = new Array(numRG);
@@ -44,11 +44,11 @@ export async function parallelRead(
   await Promise.all(
     buckets.map(async (indices) => {
       if (indices.length === 0) return;
-      const r = ParquetReader.open(filePath);
-      for (const idx of indices) {
-        results[idx] = r.readRowGroup(idx);
-      }
-      r.close();
+      ParquetReader.withReader(filePath, (reader) => {
+        for (const idx of indices) {
+          results[idx] = reader.readRowGroup(idx);
+        }
+      });
     }),
   );
 
@@ -79,9 +79,9 @@ export async function parallelProcess<T>(
 ): Promise<T[]> {
   const concurrency = options.concurrency ?? Math.min(os.cpus().length, 4);
 
-  const reader = ParquetReader.open(filePath);
-  const metadata = reader.getMetadata();
-  reader.close();
+  const metadata = ParquetReader.withReader(filePath, (reader) =>
+    reader.getMetadata(),
+  );
 
   const numRG = metadata.numRowGroups;
   const allResults: T[][] = new Array(numRG);
@@ -94,13 +94,13 @@ export async function parallelProcess<T>(
   await Promise.all(
     buckets.map(async (indices) => {
       if (indices.length === 0) return;
-      const r = ParquetReader.open(filePath);
-      for (const idx of indices) {
-        const rg = r.readRowGroup(idx);
-        const rows = rowGroupToRows(rg);
-        allResults[idx] = processor(rows);
-      }
-      r.close();
+      ParquetReader.withReader(filePath, (reader) => {
+        for (const idx of indices) {
+          const rg = reader.readRowGroup(idx);
+          const rows = rowGroupToRows(rg);
+          allResults[idx] = processor(rows);
+        }
+      });
     }),
   );
 
@@ -129,32 +129,36 @@ export async function parallelWrite(
     buckets[i % concurrency].push({ index: i, data: dataChunks[i] });
   }
 
-  await Promise.all(
-    buckets.map(async (items) => {
-      for (const item of items) {
-        const tmpPath = path.join(
-          tempDir,
-          `pq_tmp_${item.index}_${Date.now()}_${Math.random().toString(36).slice(2, 8)}.parquet`,
-        );
-        const w = new ParquetWriter(tmpPath, schema);
-        w.write(item.data);
-        w.close();
-        tempFiles[item.index] = tmpPath;
+  try {
+    await Promise.all(
+      buckets.map(async (items) => {
+        for (const item of items) {
+          const tmpPath = path.join(
+            tempDir,
+            `pq_tmp_${item.index}_${Date.now()}_${Math.random().toString(36).slice(2, 8)}.parquet`,
+          );
+          ParquetWriter.withWriter(tmpPath, schema, (writer) => {
+            writer.write(item.data);
+          });
+          tempFiles[item.index] = tmpPath;
+        }
+      }),
+    );
+
+    ParquetWriter.withWriter(filePath, schema, (writer) => {
+      for (const tmpFile of tempFiles) {
+        ParquetReader.withReader(tmpFile, (reader) => {
+          for (const rowGroup of reader.iterateRowGroups()) {
+            writer.write(rowGroupToRows(rowGroup));
+          }
+        });
       }
-    }),
-  );
-
-  // Merge
-  const writer = new ParquetWriter(filePath, schema);
-  for (const tmpFile of tempFiles) {
-    const reader = ParquetReader.open(tmpFile);
-    const data = reader.readAll();
-    reader.close();
-
-    const rows = rowGroupToRows(data);
-    writer.write(rows);
-
-    fs.unlinkSync(tmpFile);
+    });
+  } finally {
+    for (const tmpFile of tempFiles) {
+      if (tmpFile && fs.existsSync(tmpFile)) {
+        fs.unlinkSync(tmpFile);
+      }
+    }
   }
-  writer.close();
 }

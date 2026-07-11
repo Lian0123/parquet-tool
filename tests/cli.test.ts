@@ -34,6 +34,14 @@ describe('CLI', () => {
     fs.writeFileSync(jsonInput, JSON.stringify(rows));
   });
 
+  it('should report the package version', () => {
+    const output = cli('--version').trim();
+    const pkg = JSON.parse(
+      fs.readFileSync(path.join(__dirname, '..', 'package.json'), 'utf-8'),
+    ) as { version: string };
+    expect(output).toBe(pkg.version);
+  });
+
   it('should write a parquet file from JSON', () => {
     const output = cli(
       `write "${dataFile}" -i "${jsonInput}" -s "id:INT32,name:STRING,score:DOUBLE"`,

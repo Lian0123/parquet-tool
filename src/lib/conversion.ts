@@ -1,6 +1,5 @@
 import * as fs from 'fs';
 import { ParquetReader } from './reader';
-import { rowGroupToRows } from './rows';
 import { Schema } from './schema';
 import { ParquetRow, ParquetScalar, ParquetSchema, ParquetType } from './types';
 import { ParquetWriter } from './writer';
@@ -84,18 +83,11 @@ export function inferSchemaFromRows(rows: ParquetRow[]): ParquetSchema {
 }
 
 export function readParquetRows(parquetPath: string): { rows: ParquetRow[]; schema: ParquetSchema } {
-  const reader = ParquetReader.open(parquetPath);
-
-  try {
+  return ParquetReader.withReader(parquetPath, (reader) => {
     const schema = reader.getSchema();
-    const rows: ParquetRow[] = [];
-    for (let index = 0; index < reader.getMetadata().numRowGroups; index++) {
-      rows.push(...rowGroupToRows(reader.readRowGroup(index)));
-    }
+    const rows = Array.from(reader.iterateRows());
     return { rows, schema };
-  } finally {
-    reader.close();
-  }
+  });
 }
 
 export function writeRowsToParquet(
@@ -104,9 +96,9 @@ export function writeRowsToParquet(
   schema: ParquetSchema,
   options: { rowGroupSize?: number } = {},
 ): ParquetSchema {
-  const writer = new ParquetWriter(parquetPath, schema, options);
-  writer.write(rows);
-  writer.close();
+  ParquetWriter.withWriter(parquetPath, schema, options, (writer) => {
+    writer.write(rows);
+  });
   return schema;
 }
 

@@ -27,47 +27,51 @@ export function splitParquetFile(
     prefix = path.basename(inputPath, '.parquet'),
   } = options;
 
-  const reader = ParquetReader.open(inputPath);
-  const schema = reader.getSchema();
-  const metadata = reader.getMetadata();
   const outputFiles: string[] = [];
+  ParquetReader.withReader(inputPath, (reader) => {
+    const schema = reader.getSchema();
+    const metadata = reader.getMetadata();
 
-  let currentWriter: ParquetWriter | null = null;
-  let currentRowCount = 0;
-  let fileIndex = 0;
+    let currentWriter: ParquetWriter | null = null;
+    let currentRowCount = 0;
+    let fileIndex = 0;
 
-  const startNewFile = (): void => {
-    if (currentWriter) currentWriter.close();
-    const fileName = `${prefix}_part${String(fileIndex).padStart(4, '0')}.parquet`;
-    const filePath = path.join(outputDir, fileName);
-    currentWriter = new ParquetWriter(filePath, schema, {
-      rowGroupSize: maxRowsPerFile,
-    });
-    outputFiles.push(filePath);
-    currentRowCount = 0;
-    fileIndex++;
-  };
+    const startNewFile = (): void => {
+      if (currentWriter) currentWriter.close();
+      const fileName = `${prefix}_part${String(fileIndex).padStart(4, '0')}.parquet`;
+      const filePath = path.join(outputDir, fileName);
+      currentWriter = new ParquetWriter(filePath, schema, {
+        rowGroupSize: maxRowsPerFile,
+      });
+      outputFiles.push(filePath);
+      currentRowCount = 0;
+      fileIndex++;
+    };
 
-  startNewFile();
+    try {
+      startNewFile();
 
-  for (let i = 0; i < metadata.numRowGroups; i++) {
-    const rg = reader.readRowGroup(i);
-    const colNames = Object.keys(rg.columns);
+      for (let i = 0; i < metadata.numRowGroups; i++) {
+        const rg = reader.readRowGroup(i);
+        const colNames = Object.keys(rg.columns);
 
-    for (let r = 0; r < rg.numRows; r++) {
-      if (currentRowCount >= maxRowsPerFile) {
-        startNewFile();
+        for (let r = 0; r < rg.numRows; r++) {
+          if (currentRowCount >= maxRowsPerFile) {
+            startNewFile();
+          }
+          const row: ParquetRow = {};
+          for (const name of colNames) {
+            row[name] = rg.columns[name][r];
+          }
+          currentWriter!.write(row);
+          currentRowCount++;
+        }
       }
-      const row: ParquetRow = {};
-      for (const name of colNames) {
-        row[name] = rg.columns[name][r];
+    } finally {
+      if (currentWriter !== null) {
+        currentWriter.close();
       }
-      currentWriter!.write(row);
-      currentRowCount++;
     }
-  }
-
-  (currentWriter as ParquetWriter | null)?.close();
-  reader.close();
+  });
   return outputFiles;
 }

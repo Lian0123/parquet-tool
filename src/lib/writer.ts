@@ -7,6 +7,7 @@ import {
   ParquetSchema,
   WriteOptions,
 } from './types';
+import { assertSupportedParquetType } from './type-support';
 
 /**
  * Write Parquet files row‑by‑row or in batches.
@@ -32,6 +33,12 @@ export class ParquetWriter {
     this.schema = schema;
     this.rowGroupSize = options.rowGroupSize ?? 10_000;
     debugLog('writer: create', { filePath, rowGroupSize: this.rowGroupSize });
+    this.schema.columns.forEach((column) => {
+      assertSupportedParquetType(
+        column.type,
+        `ParquetWriter for column "${column.name}"`,
+      );
+    });
 
     const nativeSchema: NativeSchemaColumn[] = schema.columns.map((c) => ({
       name: c.name,
@@ -91,6 +98,12 @@ export class ParquetWriter {
         optional: s.optional,
       })),
     };
+    schema.columns.forEach((column) => {
+      assertSupportedParquetType(
+        column.type,
+        `ParquetWriter append mode for column "${column.name}"`,
+      );
+    });
 
     // Build writer manually without calling the constructor's createWriter
     const writer = Object.create(ParquetWriter.prototype) as ParquetWriter;
@@ -103,6 +116,71 @@ export class ParquetWriter {
       writer.buffer[col.name] = [];
     }
     return writer;
+  }
+
+  /**
+   * Create a writer for the duration of a callback and always close it.
+   */
+  static withWriter<T>(
+    filePath: string,
+    schema: ParquetSchema,
+    options: WriteOptions,
+    fn: (writer: ParquetWriter) => T,
+  ): T;
+  static withWriter<T>(
+    filePath: string,
+    schema: ParquetSchema,
+    fn: (writer: ParquetWriter) => T,
+  ): T;
+  static withWriter<T>(
+    filePath: string,
+    schema: ParquetSchema,
+    optionsOrFn: WriteOptions | ((writer: ParquetWriter) => T),
+    maybeFn?: (writer: ParquetWriter) => T,
+  ): T {
+    const options = typeof optionsOrFn === 'function' ? {} : optionsOrFn;
+    const fn = typeof optionsOrFn === 'function' ? optionsOrFn : maybeFn;
+    if (!fn) {
+      throw new TypeError('Writer callback is required.');
+    }
+
+    const writer = new ParquetWriter(filePath, schema, options);
+    try {
+      return fn(writer);
+    } finally {
+      writer.close();
+    }
+  }
+
+  /**
+   * Open an appender for the duration of a callback and always close it.
+   */
+  static withAppender<T>(
+    filePath: string,
+    options: WriteOptions,
+    fn: (writer: ParquetWriter) => T,
+  ): T;
+  static withAppender<T>(
+    filePath: string,
+    fn: (writer: ParquetWriter) => T,
+  ): T;
+  static withAppender<T>(
+    filePath: string,
+    optionsOrFn: WriteOptions | ((writer: ParquetWriter) => T),
+    maybeFn?: (writer: ParquetWriter) => T,
+  ): T {
+    const options = typeof optionsOrFn === 'function' ? {} : optionsOrFn;
+    const fn = typeof optionsOrFn === 'function' ? optionsOrFn : maybeFn;
+    if (!fn) {
+      throw new TypeError('Writer callback is required.');
+    }
+
+    const writer = ParquetWriter.openForAppend(filePath, options);
+    try {
+      return fn(writer);
+    } finally {
+      writer.close();
+    }
   }
 
   private flushRowGroup(): void {

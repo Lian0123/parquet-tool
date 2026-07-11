@@ -1,4 +1,5 @@
 import { ParquetType, SchemaColumn, ParquetSchema } from './types';
+import { assertSupportedParquetType } from './type-support';
 
 /** Fluent builder for Parquet schemas. */
 export class Schema {
@@ -7,6 +8,7 @@ export class Schema {
   /** Add a column to the schema. */
   addColumn(name: string, type: ParquetType | string, optional = false): this {
     const resolvedType = typeof type === 'string' ? Schema.parseType(type) : type;
+    assertSupportedParquetType(resolvedType, `Schema column "${name}"`);
     this.columns.push({ name, type: resolvedType, optional });
     return this;
   }
@@ -25,6 +27,8 @@ export class Schema {
       case 'LONG':
       case 'BIGINT':
         return ParquetType.INT64;
+      case 'INT96':
+        return ParquetType.INT96;
       case 'FLOAT':
         return ParquetType.FLOAT;
       case 'DOUBLE':
@@ -33,6 +37,8 @@ export class Schema {
       case 'STRING':
       case 'UTF8':
         return ParquetType.BYTE_ARRAY;
+      case 'FIXED_LEN_BYTE_ARRAY':
+        return ParquetType.FIXED_LEN_BYTE_ARRAY;
       default:
         throw new Error(`Unknown Parquet type: ${type}`);
     }

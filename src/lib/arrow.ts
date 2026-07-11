@@ -34,16 +34,12 @@ function inferSchemaFromRows(rows: ParquetRow[]): ParquetSchema {
  * Convert a Parquet file into an Apache Arrow IPC file.
  */
 export function parquetToArrow(parquetPath: string, arrowPath: string): void {
-  const reader = ParquetReader.open(parquetPath);
   const rows: ParquetRow[] = [];
-
-  try {
+  ParquetReader.withReader(parquetPath, (reader) => {
     for (let index = 0; index < reader.getMetadata().numRowGroups; index++) {
       rows.push(...rowGroupToRows(reader.readRowGroup(index)));
     }
-  } finally {
-    reader.close();
-  }
+  });
 
   const columns: Record<string, ParquetScalar[]> = {};
   for (const row of rows) {
@@ -75,8 +71,8 @@ export function arrowToParquet(
   const schema = options.schema ?? inferSchemaFromRows(rows);
 
   debugLog('arrowToParquet: converting', { arrowPath, parquetPath, rows: rows.length });
-  const writer = new ParquetWriter(parquetPath, schema, options);
-  writer.write(rows);
-  writer.close();
+  ParquetWriter.withWriter(parquetPath, schema, options, (writer) => {
+    writer.write(rows);
+  });
   return schema;
 }

@@ -41,3 +41,18 @@ jobs:
       - run: npm run lint
         if: matrix.os == 'ubuntu-latest'
       - run: npm test
+
+  node18-compat:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '18.20.8'
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run build:native
+      - run: npm run build:ts
+      - run: npm test -- --runInBand
