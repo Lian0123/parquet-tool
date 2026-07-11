@@ -22,6 +22,7 @@
     "rebuild": "cmake-js rebuild",
     "test": "jest --forceExit",
     "lint": "eslint 'src/**/*.ts'",
+    "docs:check": "node scripts/check-ai-docs.cjs",
     "cz": "cz",
     "release": "NODE_OPTIONS='--require ./scripts/marked-compat.cjs' semantic-release",
     "release:dry-run": "npm run release -- --dry-run",
@@ -30,7 +31,7 @@
     "prepare": "husky",
     "prepublishOnly": "npm run build",
     "cli": "node dist/cli/index.js",
-    "ci": "npm ci && npm run build && npm run lint && npm test",
+    "ci": "npm ci && npm run build && npm run lint && npm test && npm run docs:check",
     "ci:release": "npm run ci && npm run release"
   },
   "dependencies": {
