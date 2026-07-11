@@ -7,11 +7,34 @@ verification.
 import os
 from flask import Flask, render_template, request, jsonify
 import pyarrow.parquet as pq
-import pandas as pd
 
 app = Flask(__name__)
 
 PARQUET_DIR = os.environ.get("PARQUET_DIR", "/data")
+MAX_PREVIEW_ROWS = 5000
+
+
+def _resolve_parquet_path(filename: str) -> str | None:
+    if not filename:
+        return None
+
+    root = os.path.realpath(PARQUET_DIR)
+    filepath = os.path.realpath(os.path.join(root, filename))
+    if os.path.commonpath([root, filepath]) != root:
+        return None
+    return filepath
+
+
+def _parse_limit(raw_value: str | None, default: int) -> int:
+    try:
+        limit = int(raw_value or str(default))
+    except (TypeError, ValueError):
+        raise ValueError("limit must be an integer")
+
+    if limit < 1:
+        raise ValueError("limit must be greater than 0")
+
+    return min(limit, MAX_PREVIEW_ROWS)
 
 
 def _list_parquet_files() -> list[str]:
@@ -37,14 +60,17 @@ def view_file():
     if not filename:
         return "Missing file parameter", 400
 
-    filepath = os.path.normpath(os.path.join(PARQUET_DIR, filename))
-    if not filepath.startswith(os.path.normpath(PARQUET_DIR)):
+    filepath = _resolve_parquet_path(filename)
+    if filepath is None:
         return "Invalid path", 403
 
     if not os.path.isfile(filepath):
         return f"File not found: {filename}", 404
 
-    limit = int(request.args.get("limit", "100"))
+    try:
+        limit = _parse_limit(request.args.get("limit"), 100)
+    except ValueError as exc:
+        return str(exc), 400
 
     pf = pq.ParquetFile(filepath)
     meta = pf.metadata
@@ -63,7 +89,8 @@ def view_file():
         field = schema.field(i)
         info["schema"].append({"name": field.name, "type": str(field.type)})
 
-    df = pf.read().to_pandas().head(limit)
+    table = pf.read().slice(0, limit)
+    df = table.to_pandas()
     table_html = df.to_html(
         classes="table table-striped table-bordered table-sm",
         index=False,
@@ -92,13 +119,20 @@ def api_read():
     if not filename:
         return jsonify({"error": "Missing file parameter"}), 400
 
-    filepath = os.path.normpath(os.path.join(PARQUET_DIR, filename))
-    if not filepath.startswith(os.path.normpath(PARQUET_DIR)):
+    filepath = _resolve_parquet_path(filename)
+    if filepath is None:
         return jsonify({"error": "Invalid path"}), 403
 
-    limit = int(request.args.get("limit", "1000"))
+    if not os.path.isfile(filepath):
+        return jsonify({"error": f"File not found: {filename}"}), 404
+
+    try:
+        limit = _parse_limit(request.args.get("limit"), 1000)
+    except ValueError as exc:
+        return jsonify({"error": str(exc)}), 400
+
     pf = pq.ParquetFile(filepath)
-    df = pf.read().to_pandas().head(limit)
+    df = pf.read().slice(0, limit).to_pandas()
     return jsonify(df.to_dict(orient="records"))
 
 

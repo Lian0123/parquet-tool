@@ -129,9 +129,9 @@ export function csvToParquet(
   });
 
   debugLog('csvToParquet: parsed rows', { csvPath, rows: rows.length });
-  const writer = new ParquetWriter(parquetPath, schema, options);
-  writer.write(rows);
-  writer.close();
+  ParquetWriter.withWriter(parquetPath, schema, options, (writer) => {
+    writer.write(rows);
+  });
   return schema;
 }
 
@@ -145,18 +145,15 @@ export function parquetToCsv(
   csvPath: string,
   options: ParquetToCsvOptions = {},
 ): void {
-  const reader = ParquetReader.open(parquetPath);
   const rows: ParquetRow[] = [];
   const header = options.header ?? true;
   const delimiter = options.delimiter ?? ',';
 
-  try {
+  ParquetReader.withReader(parquetPath, (reader) => {
     for (let index = 0; index < reader.getMetadata().numRowGroups; index++) {
       rows.push(...rowGroupToRows(reader.readRowGroup(index)));
     }
-  } finally {
-    reader.close();
-  }
+  });
 
   const output = stringify(rows, {
     header,

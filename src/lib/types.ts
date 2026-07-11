@@ -60,7 +60,9 @@ export interface WriteOptions {
 }
 
 export interface ReadOptions {
+  /** Read only the listed columns. Defaults to all columns. */
   columns?: string[];
+  /** Read only the listed row group indexes. Defaults to all row groups. */
   rowGroups?: number[];
 }
 

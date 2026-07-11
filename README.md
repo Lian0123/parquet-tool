@@ -60,8 +60,9 @@ appender.write({ id: 3, name: 'Charlie', score: 75.0 });
 appender.close();
 
 const reader = ParquetReader.open('output.parquet');
-const all = reader.readAll();
-console.log(all.numRows, all.columns);
+for (const row of reader.iterateRows({ columns: ['id', 'name'] })) {
+  console.log(row);
+}
 reader.close();
 ```
 

@@ -24,6 +24,10 @@ import {
 } from '../lib';
 
 const program = new Command();
+const packageJsonPath = path.resolve(__dirname, '..', '..', 'package.json');
+const packageVersion = JSON.parse(
+  fs.readFileSync(packageJsonPath, 'utf-8'),
+) as { version?: string };
 
 function parseSchemaDefinition(definition: string): ParquetSchema {
   const schemaDef: Record<string, string> = {};
@@ -49,7 +53,7 @@ function readJsonRows(inputPath?: string): ParquetRow[] {
 program
   .name('parquet-tool')
   .description('CLI tool for reading, writing and processing Parquet files')
-  .version('1.0.0')
+  .version(packageVersion.version ?? '0.0.0')
   .option('--debug', 'Enable debug mode');
 
 program.hook('preAction', (thisCommand) => {
@@ -89,46 +93,54 @@ program
   .option('--json', 'Output as JSON array')
   .option('--row-group <index>', 'Read specific row group')
   .action((file: string, opts) => {
-    const reader = ParquetReader.open(path.resolve(file));
     const limit = parseInt(opts.limit, 10);
-
-    let data;
-    if (opts.rowGroup !== undefined) {
-      data = reader.readRowGroup(parseInt(opts.rowGroup, 10));
-    } else {
-      data = reader.readAll();
-    }
-    reader.close();
-
-    const colNames = Object.keys(data.columns);
-    const rowCount = Math.min(data.numRows, limit);
+    const rows = ParquetReader.withReader(path.resolve(file), (reader) => {
+      const readOptions =
+        opts.rowGroup !== undefined
+          ? { rowGroups: [parseInt(opts.rowGroup, 10)] }
+          : {};
+      const limitedRows: ParquetRow[] = [];
+      for (const row of reader.iterateRows(readOptions)) {
+        limitedRows.push(row);
+        if (limitedRows.length >= limit) {
+          break;
+        }
+      }
+      return limitedRows;
+    });
+    const colNames = Array.from(
+      rows.reduce((names, row) => {
+        Object.keys(row).forEach((name) => names.add(name));
+        return names;
+      }, new Set<string>()),
+    );
 
     if (opts.json) {
-      const rows: ParquetRow[] = [];
-      for (let r = 0; r < rowCount; r++) {
-        const row: ParquetRow = {};
-        for (const c of colNames) {
-          const v = data.columns[c][r];
-          // Convert BigInt to string for JSON
-          row[c] = typeof v === 'bigint' ? v.toString() : v;
-        }
-        rows.push(row);
-      }
-      console.log(JSON.stringify(rows, null, 2));
+      console.log(
+        JSON.stringify(
+          rows.map((row) => {
+            const serialized: ParquetRow = {};
+            for (const [name, value] of Object.entries(row)) {
+              serialized[name] =
+                typeof value === 'bigint' ? value.toString() : value;
+            }
+            return serialized;
+          }),
+          null,
+          2,
+        ),
+      );
     } else {
       // Table output
       const header = colNames.join('\t');
       console.log(header);
       console.log('-'.repeat(header.length));
-      for (let r = 0; r < rowCount; r++) {
+      for (const row of rows) {
         const vals = colNames.map((c) => {
-          const v = data.columns[c][r];
+          const v = row[c];
           return v === null ? 'NULL' : String(v);
         });
         console.log(vals.join('\t'));
-      }
-      if (data.numRows > limit) {
-        console.log(`... (${data.numRows - limit} more rows)`);
       }
     }
   });
@@ -151,11 +163,11 @@ program
     const rows = readJsonRows(opts.input);
 
     const rgSize = parseInt(opts.rowGroupSize, 10);
-    const writer = new ParquetWriter(path.resolve(file), schema, {
+    ParquetWriter.withWriter(path.resolve(file), schema, {
       rowGroupSize: rgSize,
+    }, (writer) => {
+      writer.write(rows);
     });
-    writer.write(rows);
-    writer.close();
     console.log(`Wrote ${rows.length} rows to ${file}`);
   });
 
@@ -168,9 +180,9 @@ program
   .action((file: string, opts) => {
     const rows = readJsonRows(opts.input);
 
-    const writer = ParquetWriter.openForAppend(path.resolve(file));
-    writer.write(rows);
-    writer.close();
+    ParquetWriter.withAppender(path.resolve(file), (writer) => {
+      writer.write(rows);
+    });
     console.log(`Appended ${rows.length} rows to ${file}`);
   });
 

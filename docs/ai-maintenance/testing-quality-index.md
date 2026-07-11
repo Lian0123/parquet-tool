@@ -7,7 +7,7 @@
 | TypeScript module | `npm run build:ts`, relevant test, `npm run lint` |
 | Public API or CLI | Build, relevant tests, lint, docs check |
 | Native or format behavior | Native build, TypeScript build, full tests, lint |
-| Build or release | `npm run ci` and workflow review |
+| Build or release | `npm run ci` and workflow review, including the dedicated Node 18 job |
 | Viewer | Python syntax, Docker build, route smoke tests |
 
 Normal, boundary, and error paths need evidence. Check handles, temporary files, buffers, generated artifacts, secrets, and `git diff --check` before completion.

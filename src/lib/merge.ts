@@ -36,28 +36,27 @@ export function mergeParquetFiles(
     }
   }
 
-  const firstReader = ParquetReader.open(inputPaths[0]);
-  const schema = firstReader.getSchema();
-  firstReader.close();
+  const schema = ParquetReader.withReader(inputPaths[0], (firstReader) =>
+    firstReader.getSchema(),
+  );
 
   const writer = new ParquetWriter(outputPath, schema, options);
 
   try {
     for (const inputPath of inputPaths) {
-      const reader = ParquetReader.open(inputPath);
-      const currentSchema = reader.getSchema();
+      ParquetReader.withReader(inputPath, (reader) => {
+        const currentSchema = reader.getSchema();
 
-      if (validateSchema && !schemasEqual(schema, currentSchema)) {
-        reader.close();
-        throw new Error(`Schema mismatch while merging file: ${inputPath}`);
-      }
+        if (validateSchema && !schemasEqual(schema, currentSchema)) {
+          throw new Error(`Schema mismatch while merging file: ${inputPath}`);
+        }
 
-      debugLog('merge: reading source file', { inputPath });
-      for (let index = 0; index < reader.getMetadata().numRowGroups; index++) {
-        const rows = rowGroupToRows(reader.readRowGroup(index));
-        writer.write(rows);
-      }
-      reader.close();
+        debugLog('merge: reading source file', { inputPath });
+        for (let index = 0; index < reader.getMetadata().numRowGroups; index++) {
+          const rows = rowGroupToRows(reader.readRowGroup(index));
+          writer.write(rows);
+        }
+      });
     }
   } finally {
     writer.close();

@@ -89,4 +89,22 @@ describe('parallelWrite', () => {
     expect(data.columns['s']).toEqual(['a', 'b', 'c', 'd', 'e']);
     reader.close();
   });
+
+  it('should clean up temp files when merging fails', async () => {
+    const file = path.join(TMP, 'parallel_write_failure.parquet');
+    const schema = Schema.create({ k: 'INT32' });
+    const chunks = [[{ k: 1 }], [{ k: 2 }]];
+
+    await expect(
+      parallelWrite(file, schema, chunks, {
+        concurrency: 2,
+        tempDir: path.join(TMP, 'missing-dir'),
+      }),
+    ).rejects.toThrow();
+
+    const leftovers = fs
+      .readdirSync(TMP, { withFileTypes: true })
+      .filter((entry) => entry.isFile() && entry.name.startsWith('pq_tmp_'));
+    expect(leftovers).toHaveLength(0);
+  });
 });

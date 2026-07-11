@@ -133,6 +133,9 @@ describe('ParquetWriter & ParquetReader round-trip', () => {
 
     const data = reader.readAll();
     expect(data.columns['value']).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
+    expect(
+      reader.readAll({ rowGroups: [1, 3], columns: ['value'] }).columns['value'],
+    ).toEqual([3, 4, 5, 9]);
     reader.close();
   });
 
@@ -146,6 +149,9 @@ describe('ParquetWriter & ParquetReader round-trip', () => {
     const reader = ParquetReader.open(file);
     const rows = [...reader];
     expect(rows).toEqual([{ x: 10 }, { x: 20 }, { x: 30 }]);
+    expect(
+      Array.from(reader.iterateRows({ columns: ['x'], rowGroups: [0] })),
+    ).toEqual([{ x: 10 }, { x: 20 }, { x: 30 }]);
     reader.close();
   });
 
@@ -164,5 +170,47 @@ describe('ParquetWriter & ParquetReader round-trip', () => {
     expect(meta.schema[0].type).toBe(ParquetType.INT32);
     expect(meta.schema[1].name).toBe('b');
     expect(meta.schema[1].type).toBe(ParquetType.DOUBLE);
+  });
+
+  it('should close a writer created with withWriter when the callback throws', () => {
+    const file = path.join(TMP, 'roundtrip_with_writer.parquet');
+    const schema = Schema.create({ id: 'INT32' });
+
+    expect(() => {
+      ParquetWriter.withWriter(file, schema, (writer) => {
+        writer.write([{ id: 1 }, { id: 2 }]);
+        throw new Error('expected test failure');
+      });
+    }).toThrow('expected test failure');
+
+    const data = ParquetReader.withReader(file, (reader) => reader.readAll());
+    expect(data.columns['id']).toEqual([1, 2]);
+  });
+
+  it('should close a reader created with withReader when the callback throws', () => {
+    const file = path.join(TMP, 'roundtrip_with_reader.parquet');
+    const schema = Schema.create({ id: 'INT32' });
+
+    ParquetWriter.withWriter(file, schema, (writer) => {
+      writer.write([{ id: 7 }]);
+    });
+
+    expect(() => {
+      ParquetReader.withReader(file, (reader) => {
+        expect(reader.readAll().columns['id']).toEqual([7]);
+        throw new Error('reader callback failed');
+      });
+    }).toThrow('reader callback failed');
+
+    const rows = ParquetReader.withReader(file, (reader) => [...reader]);
+    expect(rows).toEqual([{ id: 7 }]);
+  });
+
+  it('should reject unsupported parquet types before writing', () => {
+    expect(() =>
+      Schema.create({
+        legacy_timestamp: { type: 'INT96' },
+      }),
+    ).toThrow('does not support INT96');
   });
 });

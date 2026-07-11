@@ -48,7 +48,9 @@ appender.close();
 ```ts
 const reader = ParquetReader.open('out.parquet');
 console.log(reader.getMetadata());
-const data = reader.readAll();
+for (const row of reader.iterateRows({ columns: ['id', 'name'] })) {
+  console.log(row);
+}
 reader.close();
 ```
 
@@ -57,10 +59,13 @@ reader.close();
 - `ParquetReader.open(filePath)` – open a file reader
 - `getMetadata()` – file-level metadata (schema, row groups, row counts)
 - `getSchema()` – schema only
-- `readRowGroup(index)` – read a specific row group
-- `readAll()` – read and merge all row groups
-- `readRows()` – read as row-oriented objects
+- `readRowGroup(index, options?)` – read a specific row group, optionally projecting columns
+- `readAll(options?)` – eagerly read and merge selected row groups
+- `readRows(options?)` – eagerly read selected rows as objects
+- `iterateRowGroups(options?)` – lazily iterate selected row groups
+- `iterateRows(options?)` – lazily iterate selected rows
 - `close()` – close and release native resources
+- `ParquetReader.withReader(filePath, fn)` – open for a callback and always close
 - `ParquetReader.readMetadata(filePath)` – metadata-only read (no full reader)
 
 ## Buffer utilities
