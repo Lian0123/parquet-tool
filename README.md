@@ -36,6 +36,10 @@ npm install parquet-tool
 
 A searchable Traditional Chinese [examples website](site/README.md) is included in
 `site/`, with CLI/Node.js recipes and sample downloads, ready for GitHub Pages.
+Its [browser converter](site/converter.html) also converts CSV/JSON/Parquet locally
+with preview and download. It uses a separate browser engine; exchange CSV/JSON with
+the current native CLI because Parquet interoperability is limited. See the
+[website guide](site/README.md) for limits and preview instructions.
 
 Repository examples are also available as runnable scripts under `examples/`,
 organized by workflow.

@@ -1,0 +1,27 @@
+.guide-main { padding-block: 32px 20px; }
+.guide-main h1 { font-size: clamp(30px, 4vw, 46px); letter-spacing: -1px; line-height: 1.35; }
+.guide-lead { max-width: 850px; color: var(--muted); font-size: 15px; line-height: 1.9; }
+.guide-setup { padding: 25px; margin-block: 28px; background: #edf2e5; border: 1px solid var(--line); border-radius: 6px; }
+.guide-setup h2 { font-size: 22px; }
+.guide-setup p { font-size: 13px; margin-bottom: 12px; }
+.guide-setup a, .guide-recipes p a { text-decoration: underline; }
+.guide-layout { display: grid; grid-template-columns: 210px minmax(0, 1fr); gap: 40px; align-items: start; }
+.guide-toc { display: grid; gap: 8px; position: sticky; top: 24px; padding-block: 20px; }
+.guide-toc h2 { font-size: 16px; margin-bottom: 10px; }
+.guide-toc a { display: flex; gap: 12px; font-size: 12px; }
+.guide-toc span { font: 10px var(--mono); color: var(--muted); }
+.guide-recipes { min-width: 0; }
+.guide-recipes article { padding-block: 30px; border-bottom: 1px solid var(--line); }
+.guide-recipes h2 { font-size: 25px; }
+.guide-recipes h3 { font: 12px var(--mono); margin: 23px 0 10px; }
+.guide-recipes p { font-size: 13px; color: var(--muted); line-height: 1.9; }
+.guide-main pre { overflow-x: auto; padding: 20px; background: var(--code); color: #edf4e8; border-radius: 5px; font: 12px/1.9 var(--mono); }
+.guide-prerequisite { border-left: 2px solid #a9bc8a; padding-left: 12px; }
+.guide-source { font-size: 11px; }
+@media (max-width: 720px) {
+  .guide-layout { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+  .guide-toc { position: static; grid-template-columns: 1fr 1fr; gap: 15px; }
+  .guide-toc h2 { grid-column: 1 / -1; }
+  .guide-main pre { font-size: 11px; padding: 15px; }
+  .guide-setup { padding: 20px; }
+}

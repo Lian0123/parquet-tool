@@ -34,6 +34,8 @@ npm install parquet-tool
 
 另提供可部署至 GitHub Pages 的[純靜態範例網站](site/README.md)：包含 12 個任務、CLI／Node.js 切換、搜尋分類與範例資料下載。
 
+網站另有[瀏覽器轉換工具](site/converter.html)，可在本機互轉 CSV／JSON／Parquet，預覽與下載結果，無需上傳檔案。網頁引擎與目前 C++ CLI 的 Parquet 互通有限，兩者請透過 CSV／JSON 交換資料；支援範圍與啟動方式見[網站說明](site/README.md)。
+
 儲存庫另外在 `examples/` 下提供可直接執行的腳本，並依工作流程分資料夾整理。
 
 ### 1. 基本寫入、讀取與 append
