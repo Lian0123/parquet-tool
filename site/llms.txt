@@ -1,0 +1,15 @@
+# parquet-tool
+
+> Parquet utilities, executable Node.js/CLI recipes, and a browser-local CSV/JSON/Parquet converter.
+
+## Pages
+
+- [Overview](https://lian0123.github.io/parquet-tool/): Traditional Chinese project overview and interactive recipes.
+- [Browser converter](https://lian0123.github.io/parquet-tool/converter.html): CSV, JSON, flat Parquet conversion in a local module worker; no file uploads. Maximum 20 MiB, 100,000 rows, 200 columns, 2,000,000 cells.
+- [Full guide](https://lian0123.github.io/parquet-tool/guide.html): All 12 CLI/CommonJS recipes, prerequisites and outcomes, available without JavaScript.
+- [Markdown guide](https://lian0123.github.io/parquet-tool/guide.md): Same recipes as plain Markdown.
+- [Source repository](https://github.com/Lian0123/parquet-tool): Public API, CLI, native implementation and issue tracker.
+
+## Accuracy notes
+
+The browser engine is separate from the Node.js C++ addon. Current native Parquet files and standard browser-engine files have interoperability limitations: exchange CSV/JSON between the two. The browser does not support nested/binary columns or preserve all source schema/metadata. INT64 exports to JSON/CSV as decimal strings. CLI recipes need Node.js 18+. This optional index does not grant crawling permissions or guarantee inclusion in AI search.

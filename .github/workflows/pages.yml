@@ -1,0 +1,59 @@
+name: Deploy examples to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'site/**'
+      - 'tools/site-converter/**'
+      - '.github/workflows/pages.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: tools/site-converter/package-lock.json
+      - name: Install browser build dependencies
+        run: npm ci --prefix tools/site-converter
+      - name: Verify generated search metadata and static guide
+        run: npm run seo:check --prefix tools/site-converter
+      - name: Rebuild browser bundle and verify reproducibility
+        run: |
+          npm run build --prefix tools/site-converter
+          git diff --exit-code -- site/vendor
+      - name: Test browser conversions and interface
+        run: npm test --prefix tools/site-converter
+      - name: Check website JavaScript syntax
+        run: |
+          node --check site/examples.js
+          node --check site/app.js
+          for file in site/converter*.mjs; do node --check "$file"; done
+          npm run docs:check
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+      - name: Upload static website
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: site
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
