@@ -34,6 +34,9 @@ npm install parquet-tool
 
 ## Examples
 
+A searchable Traditional Chinese [examples website](site/README.md) is included in
+`site/`, with CLI/Node.js recipes and sample downloads, ready for GitHub Pages.
+
 Repository examples are also available as runnable scripts under `examples/`,
 organized by workflow.
 

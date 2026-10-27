@@ -32,6 +32,8 @@ npm install parquet-tool
 
 ## 範例
 
+另提供可部署至 GitHub Pages 的[純靜態範例網站](site/README.md)：包含 12 個任務、CLI／Node.js 切換、搜尋分類與範例資料下載。
+
 儲存庫另外在 `examples/` 下提供可直接執行的腳本，並依工作流程分資料夾整理。
 
 ### 1. 基本寫入、讀取與 append
