@@ -1,3 +1,10 @@
+## [1.3.0](https://github.com/Lian0123/parquet-tool/compare/v1.2.2...v1.3.0) (2026-10-27)
+
+### Features
+
+* add online tool ([899ba00](https://github.com/Lian0123/parquet-tool/commit/899ba00cc4ba801884b4694f32abbdc98bbe6b3c))
+* add web page ([17409ce](https://github.com/Lian0123/parquet-tool/commit/17409ceb5e79a2fbb72ccd723937353f8aa4a5a8))
+
 ## [1.2.2](https://github.com/Lian0123/parquet-tool/compare/v1.2.1...v1.2.2) (2026-07-11)
 
 ## [1.2.1](https://github.com/Lian0123/parquet-tool/compare/v1.2.0...v1.2.1) (2026-04-14)
