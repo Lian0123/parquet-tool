@@ -11,12 +11,22 @@ const i18n = await readFile(new URL('../../../site/i18n.js', import.meta.url), '
 const script = await esbuild.build({ entryPoints: [new URL('../../../site/converter.mjs', import.meta.url).pathname],
   bundle: true, format: 'iife', write: false, define: { 'import.meta.url': JSON.stringify(pageUrl) } });
 
-function environment(url = pageUrl) {
+function environment(url = pageUrl, behavior = {}) {
   const dom = new JSDOM(html, { url, runScripts: 'outside-only' });
   const { window } = dom;
   const workers = [];
   const blobs = new Map();
   const revoked = [];
+  const timers = new Map();
+  let timerId = -1;
+  const schedule = window.setTimeout.bind(window);
+  const cancel = window.clearTimeout.bind(window);
+  window.setTimeout = (callback, delay, ...args) => {
+    if (delay !== 60_000) return schedule(callback, delay, ...args);
+    timers.set(timerId, callback);
+    return timerId--;
+  };
+  window.clearTimeout = id => { if (!timers.delete(id)) cancel(id); };
   class Worker {
     constructor(source, options) {
       assert.equal(String(source), new URL('./converter-worker.mjs', pageUrl).href);
@@ -24,10 +34,12 @@ function environment(url = pageUrl) {
       workers.push(this);
     }
     async postMessage(data) {
+      if (behavior.silent) return;
       await new Promise((resolve) => setTimeout(resolve, 2));
       if (this.terminated) return;
       try {
         if (data.action === 'load') {
+          this.onmessage({ data: { action: 'reading' } });
           this.table = await loadTable(await data.file.arrayBuffer(), data.file.name, data.options);
           this.onmessage({ data: { action: 'loaded', preview: previewTable(this.table) } });
         } else {
@@ -53,7 +65,9 @@ function environment(url = pageUrl) {
     Object.defineProperty(element('file-input'), 'files', { value: [file], configurable: true });
     element('file-input').dispatchEvent(new window.Event('change'));
   };
-  return { dom, window, element, workers, blobs, revoked, change, select };
+  return { dom, window, element, workers, blobs, revoked, change, select, timers,
+    expire: () => { const callbacks = [...timers.values()]; timers.clear(); for (const callback of callbacks) callback(); },
+  };
 }
 
 async function until(condition) {
@@ -172,5 +186,64 @@ test('pagehide clears worker and ready state for a back/forward cache restore', 
     assert.equal(env.workers[0].terminated, true);
     assert.equal(env.element('convert').disabled, true);
     assert.equal(env.element('preview').hidden, true);
+  } finally { env.dom.window.close(); }
+});
+
+test('silent worker times out, ignores late results and allows selecting a new file', async () => {
+  const behavior = { silent: true };
+  const env = environment(pageUrl, behavior);
+  try {
+    env.element('sample').click();
+    const old = env.workers[0];
+    assert.match(env.element('status').textContent, /載入本地轉換引擎/);
+    assert.equal(env.timers.size, 1);
+    env.expire();
+    assert.equal(old.terminated, true);
+    assert.equal(env.element('cancel').hidden, true);
+    assert.equal(env.element('convert').disabled, true);
+    assert.equal(env.element('preview').getAttribute('aria-busy'), 'false');
+    assert.match(env.element('error').textContent, /處理逾時/);
+    old.onmessage({ data: { action: 'loaded', preview: { rows: [], schema: [], rowCount: 1, format: 'json' } } });
+    assert.equal(env.element('preview').hidden, true);
+    behavior.silent = false;
+    env.element('sample').click();
+    await until(() => !env.element('convert').disabled);
+    assert.equal(env.element('error').hidden, true);
+    assert.equal(env.timers.size, 0);
+  } finally { env.dom.window.close(); }
+});
+
+test('cancel and completion clear watchdogs; conversion timeout clears stale download', async () => {
+  const behavior = {};
+  const env = environment(pageUrl, behavior);
+  try {
+    env.element('sample').click();
+    env.element('cancel').click();
+    assert.equal(env.timers.size, 0);
+    env.element('sample').click();
+    await until(() => !env.element('convert').disabled);
+    assert.equal(env.timers.size, 0);
+    env.element('convert').click();
+    await until(() => !env.element('result').hidden);
+    assert.equal(env.timers.size, 0);
+    behavior.silent = true;
+    env.element('convert').click();
+    env.expire();
+    assert.equal(env.element('result').hidden, true);
+    assert.equal(env.element('download').hasAttribute('href'), false);
+    assert.equal(env.element('convert').disabled, true);
+    assert.match(env.element('error').textContent, /處理逾時/);
+  } finally { env.dom.window.close(); }
+});
+
+test('worker message decoding failure stops the busy state', () => {
+  const env = environment(pageUrl, { silent: true });
+  try {
+    env.element('sample').click();
+    env.workers[0].onmessageerror();
+    assert.equal(env.workers[0].terminated, true);
+    assert.equal(env.timers.size, 0);
+    assert.equal(env.element('cancel').hidden, true);
+    assert.match(env.element('error').textContent, /無法接收資料/);
   } finally { env.dom.window.close(); }
 });

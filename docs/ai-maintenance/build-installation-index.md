@@ -20,6 +20,13 @@ v1 pages are supported; old project schema layouts remain readable. Browser/nati
 cross-engine and independent PyArrow fixtures cover
 format compatibility. See `site/README.md` for rebuild instructions and limits.
 
+`converter-worker.mjs` must register `self.onmessage` before loading the async
+engine graph. It dynamically imports the core inside the handler; a static import
+would await WASM before handler registration and can lose the first posted file.
+The UI distinguishes engine loading from file reading and stops the worker after
+60 seconds without completing a busy stage. Success, cancellation, reset and errors
+clear the timer; late messages from a timed-out worker are ignored.
+
 `tools/site-converter/` owns a separate lockfile and Node.js 24.15+ build/test tools.
 Run `npm ci --prefix tools/site-converter`, `npm run build --prefix tools/site-converter`,
 and `npm test --prefix tools/site-converter`. Commit generated `site/vendor/` and

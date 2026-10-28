@@ -58,4 +58,8 @@ export const runtimeEntries = [
   ['binary and non-UTF8 logical types are not supported by the project engine', 'Binary and non-UTF8 logical types are not supported.', 'バイナリ・UTF-8 以外の論理型には対応していません。'],
   ['Multiple data pages per column are not supported by the project engine', 'Multiple data pages per column are not supported.', '列ごとに複数のデータページがある形式には対応していません。'],
   ['unsupported Parquet physical type', 'Unsupported Parquet physical type.', 'この Parquet 物理型には対応していません。'],
+  ['正在載入本地轉換引擎…', 'Loading the local conversion engine…', '端末内の変換エンジンを読み込んでいます…'],
+  ['本地轉換引擎載入失敗，請重新整理頁面後再試。', 'The local conversion engine failed to load. Refresh this page and try again.', '変換エンジンを読み込めませんでした。ページを再読み込みしてお試しください。'],
+  ['處理逾時，已停止作業。請重新選擇檔案；若檔案較大，請先切分後再試。', 'Processing timed out and was stopped. Select the file again; split large files before retrying.', '処理がタイムアウトしたため停止しました。ファイルを選び直してください。大きなファイルは分割して再試行してください。'],
+  ['轉換引擎無法接收資料，請重新選擇檔案後再試。', 'The conversion engine could not receive the data. Select the file again and retry.', '変換エンジンがデータを受信できませんでした。ファイルを選び直して再試行してください。'],
 ];

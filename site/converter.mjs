@@ -12,6 +12,8 @@ let ready = false;
 let phase = 'idle';
 let resultUrl;
 let generation = 0;
+let operationTimer;
+const OPERATION_TIMEOUT_MS = 60_000;
 
 function size(bytes) {
   return bytes < 1024 ? `${bytes} B` : bytes < 1024 * 1024 ? `${(bytes / 1024).toFixed(1)} KiB` : `${(bytes / 1024 / 1024).toFixed(2)} MiB`;
@@ -40,6 +42,24 @@ function setPhase(value, message) {
   status.classList.toggle('busy', busy);
   byId('preview').setAttribute('aria-busy', String(busy));
   status.textContent = t(message);
+  clearTimeout(operationTimer);
+  if (busy) {
+    const job = generation;
+    operationTimer = setTimeout(() => {
+      if (job !== generation || phase !== value) return;
+      failWorker('處理逾時，已停止作業。請重新選擇檔案；若檔案較大，請先切分後再試。');
+    }, OPERATION_TIMEOUT_MS);
+  }
+}
+
+function failWorker(message) {
+  generation++;
+  worker?.terminate();
+  worker = undefined;
+  ready = false;
+  clearResult();
+  setPhase('error', '處理未完成，請檢查下方錯誤訊息。');
+  showError(message);
 }
 
 function reset(message = '選擇檔案後，即可查看預覽並開始轉換。') {
@@ -114,12 +134,14 @@ function load(file) {
     if (format.value === sourceFormat) format.value = sourceFormat === 'parquet' ? 'json' : 'parquet';
     for (const option of format.options) option.disabled = option.value === sourceFormat;
     updateFormat();
-    setPhase('loading', '正在本機讀取與辨識資料…');
+    setPhase('loading', '正在載入本地轉換引擎…');
     const job = generation;
     worker = new Worker(new URL('./converter-worker.mjs', import.meta.url), { type: 'module' });
     worker.onmessage = ({ data }) => {
       if (job !== generation) return;
-      if (data.action === 'loaded') {
+      if (data.action === 'reading') {
+        setPhase('loading', '正在本機讀取與辨識資料…');
+      } else if (data.action === 'loaded') {
         ready = true;
         renderPreview(data.preview);
         setPhase('ready', '資料已就緒，預覽確認後即可轉換。');
@@ -141,10 +163,10 @@ function load(file) {
     worker.onerror = (event) => {
       if (job !== generation) return;
       event.preventDefault();
-      worker.terminate();
-      ready = false;
-      setPhase('error', '轉換引擎無法執行。');
-      showError('請重新選擇檔案再試一次，並確認使用支援 JavaScript 模組與 Web Worker 的新版瀏覽器。');
+      failWorker('請重新選擇檔案再試一次，並確認使用支援 JavaScript 模組與 Web Worker 的新版瀏覽器。');
+    };
+    worker.onmessageerror = () => {
+      if (job === generation) failWorker('轉換引擎無法接收資料，請重新選擇檔案後再試。');
     };
     worker.postMessage({ action: 'load', file, options: { delimiter: delimiter('input-delimiter'), infer: byId('infer-types').checked } });
   } catch (failure) {

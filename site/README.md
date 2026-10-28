@@ -192,3 +192,22 @@ production WASM with the browser execution branch, in an isolated JS VM without
 Node process/filesystem. Unicode/null/boolean JSON → Parquet → JSON passed. This
 covers module/WASM loading and conversion logic; it is not a visual browser test.
 Root entry/workflow changes still have to reach `main` and pass the real workflow.
+
+### Worker startup fix — 2026-10-28
+
+The old static worker import waited for top-level WASM initialization before
+installing the message handler. The page's immediate file message could be lost,
+leaving the reading status forever. The worker now registers its handler first and
+awaits a dynamic core import inside it. Initialization failures are reported to the
+page; the UI displays separate engine-loading and file-reading statuses. A busy
+stage has a 60-second deadline, after which the worker is stopped and the user can
+select a file again. Reset/cancel/completion clear deadlines and stale replies are
+ignored. Status/error copy is translated in all three languages.
+
+The regression harness first failed on the old implementation with an absent
+message handler while WASM delivery was blocked. It now passes with real browser
+module-graph Parquet round trips and failed-WASM reporting. All 60 website tests,
+SEO freshness, JS syntax and maintenance documentation checks pass. This is a
+controlled JS VM/DOM check, not an actual browser visual/download test. The native
+C++ implementation is unchanged; native suites were not repeated for this fix.
+The changed worker/UI files must be deployed before the public page uses the fix.
