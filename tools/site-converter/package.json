@@ -4,14 +4,12 @@
   "type": "module",
   "scripts": {
     "build": "node build.mjs",
+    "build:wasm": "node build-wasm.mjs",
     "test": "node --test tests/*.test.mjs",
     "seo": "node seo.mjs",
     "seo:check": "node seo.mjs --check"
   },
   "dependencies": {
-    "hyparquet": "1.31.5",
-    "hyparquet-compressors": "1.1.2",
-    "hyparquet-writer": "0.17.0",
     "papaparse": "5.7.0"
   },
   "engines": { "node": ">=24.15.0" },

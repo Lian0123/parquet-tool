@@ -1092,3 +1092,5 @@ h2 {
 .search-faq details p { font-size:13px; color:var(--muted); max-width:850px; margin:14px 0 0; line-height:1.9; }
 .content-review { font-size:11px; line-height:1.9; color:var(--muted); margin-top:23px; }
 .converter-main>.search-faq { width:100%; margin-inline:0; padding-bottom:0; }
+.language-switch { display:flex; justify-content:flex-end; flex-wrap:wrap; gap:18px; padding-block:12px; font-size:12px; }
+.language-switch a[aria-current="page"] { font-weight:700; text-decoration:underline; text-underline-offset:4px; }

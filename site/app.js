@@ -2,7 +2,8 @@
 
 (() => {
   const recipes = window.PARQUET_EXAMPLES;
-  const categories = { basics: '基本讀寫', conversion: '格式轉換', processing: '資料處理' };
+  const t = window.siteTranslate || ((text) => text);
+  const categories = { basics: t('基本讀寫'), conversion: t('格式轉換'), processing: t('資料處理') };
   const byId = (id) => document.getElementById(id);
   const search = byId('search');
   const category = byId('category');
@@ -22,9 +23,9 @@
     }
     byId('code-panel').setAttribute('aria-labelledby', `tab-${language}`);
     byId('recipe-code').textContent = selected[language];
-    byId('code-hint').textContent = language === 'cli'
+    byId('code-hint').textContent = t(language === 'cli'
       ? '在工作資料夾的終端機執行。'
-      : '儲存為 example.cjs，再執行 node example.cjs。';
+      : '儲存為 example.cjs，再執行 node example.cjs。');
     const source = language === 'cli' ? 'src/cli/index.ts' : `src/lib/${selected.source}`;
     byId('source-link').href = `https://github.com/Lian0123/parquet-tool/blob/main/${source}`;
   }
@@ -34,7 +35,7 @@
     byId('recipe-category').textContent = categories[recipe.category];
     byId('recipe-title').textContent = recipe.title;
     byId('recipe-description').textContent = recipe.description;
-    byId('prerequisite').textContent = `準備：${recipe.prerequisite}`;
+    byId('prerequisite').textContent = `${t('準備：')}${recipe.prerequisite}`;
     byId('recipe-outcome').textContent = recipe.outcome;
     byId('permalink').href = `#example-${recipe.id}`;
     for (const button of list.querySelectorAll('button')) {
@@ -56,7 +57,7 @@
       return matchesCategory && text.includes(query);
     });
     list.replaceChildren();
-    byId('result-count').textContent = `${visible.length} / ${recipes.length} 個範例`;
+    byId('result-count').textContent = `${visible.length} / ${recipes.length} ${t('個範例')}`;
     byId('empty-state').hidden = visible.length !== 0;
     byId('recipe-detail').hidden = visible.length === 0;
     for (const recipe of visible) {
@@ -121,14 +122,14 @@
     clearTimeout(toastTimer);
     try {
       await navigator.clipboard.writeText(selected[language]);
-      byId('copy-status').textContent = '已複製程式碼';
+      byId('copy-status').textContent = t('已複製程式碼');
     } catch {
       const selection = window.getSelection();
       const range = document.createRange();
       range.selectNodeContents(byId('recipe-code'));
       selection.removeAllRanges();
       selection.addRange(range);
-      byId('copy-status').textContent = '請按 Ctrl+C 或 ⌘C 複製已選取的程式碼';
+      byId('copy-status').textContent = t('請按 Ctrl+C 或 ⌘C 複製已選取的程式碼');
     }
     toastTimer = setTimeout(() => { byId('copy-status').textContent = ''; }, 5000);
   });

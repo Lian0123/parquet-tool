@@ -1,4 +1,5 @@
-import { Papa, parquetMetadata, parquetReadObjects, parquetWriteBuffer, compressors } from './vendor/converter-deps.mjs';
+import { Papa } from './vendor/converter-deps.mjs';
+import { readProjectParquet, writeProjectParquet } from './project-engine.mjs';
 import { LIMITS, detectFormat } from './converter-shared.mjs';
 export { LIMITS, detectFormat } from './converter-shared.mjs';
 const forbiddenNames = new Set(['__proto__', 'prototype', 'constructor']);
@@ -85,14 +86,7 @@ export async function loadTable(buffer, filename, options = {}) {
   const format = detectFormat(filename);
   let table;
   if (format === 'parquet') {
-    let metadata;
-    try { metadata = parquetMetadata(buffer); } catch { throw new Error('無法讀取 Parquet：檔案可能已損毀或不是 Parquet 格式。'); }
-    const names = metadata.schema.slice(1).filter((item) => item.num_children === undefined).map((item) => item.name);
-    checkShape(Number(metadata.num_rows), names.length);
-    checkNames(names);
-    if (metadata.schema.slice(1).some((item) => item.num_children !== undefined)) throw new Error('目前僅支援平面 Parquet 資料表，無法轉換巢狀欄位。');
-    const rows = await parquetReadObjects({ file: buffer, metadata, compressors });
-    table = tableFromRows(rows, names);
+    table = tableFromRows(readProjectParquet(buffer));
   } else {
     let text;
     try { text = new TextDecoder('utf-8', { fatal: true }).decode(buffer).replace(/^\uFEFF/, ''); }
@@ -129,13 +123,8 @@ export function exportTable(table, format, options = {}) {
   const mime = { parquet: 'application/vnd.apache.parquet', json: 'application/json', csv: 'text/csv;charset=utf-8' }[format];
   if (!mime) throw new Error('不支援這個輸出格式。');
   if (format === 'parquet') {
-    const buffer = parquetWriteBuffer({
-      columnData: table.schema.map(({ name, type }) => ({ name, type, nullable: true, data: table.rows.map((row) => row[name]) })),
-      codec: options.compression === 'none' ? 'UNCOMPRESSED' : 'SNAPPY',
-      rowGroupSize: 10000,
-      createdBy: 'parquet-tool browser converter (hyparquet-writer)',
-    });
-    bytes = new Uint8Array(buffer);
+    if (options.compression && options.compression !== 'none') throw new Error('Only uncompressed Parquet is supported by the project engine');
+    bytes = writeProjectParquet(table.schema.map(({ name, type }) => ({ name, type, data: table.rows.map((row) => row[name]) })));
   } else if (format === 'json') {
     bytes = new TextEncoder().encode(JSON.stringify(table.rows, (_key, value) => typeof value === 'bigint' ? value.toString() : value, 2));
   } else {

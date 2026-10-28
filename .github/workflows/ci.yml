@@ -33,6 +33,7 @@ jobs:
           node-version: '24.10.0'
           cache: 'npm'
       - run: npm ci
+      - run: npm run security:check
       - run: npm run build:native
       - run: npm run build:ts
       - name: Verify native addon loads
@@ -53,6 +54,7 @@ jobs:
           node-version: '18.20.8'
           cache: 'npm'
       - run: npm ci
+      - run: npm run security:check
       - run: npm run build:native
       - run: npm run build:ts
       - run: npm test -- --runInBand

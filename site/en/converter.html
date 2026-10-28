@@ -1,0 +1,215 @@
+<!DOCTYPE html><html lang="en"><head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- SEO:START -->
+  <title>Parquet browser converter: CSV and JSON, no file uploads | parquet-tool</title>
+  <meta name="description" content="Convert CSV, JSON and Parquet for free in your browser. Drag and drop, preview and download without uploading files. Supports flat tables up to 20 MiB and 100,000 rows.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <link rel="canonical" href="https://lian0123.github.io/parquet-tool/en/converter.html">
+  <link rel="sitemap" type="application/xml" href="../sitemap.xml">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="parquet-tool">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:title" content="Parquet browser converter: CSV and JSON, no file uploads | parquet-tool">
+  <meta property="og:description" content="Convert CSV, JSON and Parquet for free in your browser. Drag and drop, preview and download without uploading files. Supports flat tables up to 20 MiB and 100,000 rows.">
+  <meta property="og:url" content="https://lian0123.github.io/parquet-tool/en/converter.html">
+  <meta property="og:image" content="https://lian0123.github.io/parquet-tool/social-card.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="parquet-tool: CSV, JSON and Parquet browser conversion and Node.js examples">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Parquet browser converter: CSV and JSON, no file uploads | parquet-tool">
+  <meta name="twitter:description" content="Convert CSV, JSON and Parquet for free in your browser. Drag and drop, preview and download without uploading files. Supports flat tables up to 20 MiB and 100,000 rows.">
+  <meta name="twitter:image" content="https://lian0123.github.io/parquet-tool/social-card.png">
+  <meta name="twitter:image:alt" content="parquet-tool: CSV, JSON and Parquet browser conversion and Node.js examples">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://lian0123.github.io/parquet-tool/en/#website",
+      "url": "https://lian0123.github.io/parquet-tool/en/",
+      "name": "parquet-tool",
+      "inLanguage": "en"
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://lian0123.github.io/parquet-tool/en/converter.html#page",
+      "url": "https://lian0123.github.io/parquet-tool/en/converter.html",
+      "name": "Parquet browser converter: CSV and JSON, no file uploads | parquet-tool",
+      "description": "Convert CSV, JSON and Parquet for free in your browser. Drag and drop, preview and download without uploading files. Supports flat tables up to 20 MiB and 100,000 rows.",
+      "inLanguage": "en",
+      "isPartOf": {
+        "@id": "https://lian0123.github.io/parquet-tool/en/#website"
+      },
+      "mainEntity": {
+        "@id": "https://lian0123.github.io/parquet-tool/en/converter.html#application"
+      }
+    },
+    {
+      "@type": "WebApplication",
+      "@id": "https://lian0123.github.io/parquet-tool/en/converter.html#application",
+      "name": "CSV, JSON and Parquet browser converter",
+      "url": "https://lian0123.github.io/parquet-tool/en/converter.html",
+      "description": "Convert CSV, JSON and Parquet for free in your browser. Drag and drop, preview and download without uploading files. Supports flat tables up to 20 MiB and 100,000 rows.",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Web",
+      "isAccessibleForFree": true,
+      "inLanguage": "en",
+      "browserRequirements": "Requires JavaScript modules and module Web Workers over HTTP(S).",
+      "softwareHelp": {
+        "@type": "CreativeWork",
+        "url": "https://lian0123.github.io/parquet-tool/en/guide.html"
+      },
+      "featureList": [
+        "Six-way conversion between CSV, JSON and flat Parquet",
+        "Local processing without file uploads",
+        "Preview and download data",
+        "Up to 20 MiB, 100,000 rows, 200 columns and 2,000,000 cells"
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://lian0123.github.io/parquet-tool/en/converter.html#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://lian0123.github.io/parquet-tool/en/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "CSV, JSON and Parquet browser converter",
+          "item": "https://lian0123.github.io/parquet-tool/en/converter.html"
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://lian0123.github.io/parquet-tool/en/converter.html#faq",
+      "isPartOf": {
+        "@id": "https://lian0123.github.io/parquet-tool/en/converter.html#page"
+      },
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How do I convert CSV to Parquet?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Choose or drop a UTF-8 CSV with a header, check the preview, select Parquet, then convert and download. The project core writes uncompressed PLAIN encoding."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I convert Parquet to JSON or CSV?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Choose a flat Parquet file, preview it, select JSON or CSV, then convert and download. CSV supports comma, semicolon and Tab delimiters; JSON exports an array of objects."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Are files uploaded to a server?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Reading, previewing and conversion run in a Web Worker in your browser. The engine is served with the site; files are not sent to a third-party conversion service."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What are the size limits?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Up to 20 MiB per file, 100,000 rows, 200 columns and 2,000,000 cells. Only flat tables are supported; nested and binary fields are not. Decoding compressed files uses more memory. You can cancel processing."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How are large integers, nulls and mixed types handled?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "INT64 exports to JSON / CSV as decimal strings. Unsafe JSON numbers are rejected; use quoted strings. Empty CSV fields and missing JSON fields become null. Mixed-type columns and dates are stored as text."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I exchange Parquet files with the current CLI?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. The browser and Node.js / CLI share this project’s C++ core, supporting uncompressed PLAIN data page v1. Legacy project schemas remain readable. Compression, nested columns and other logical types are unsupported; full metadata is not preserved."
+          }
+        }
+      ]
+    }
+  ]
+}</script>
+  <!-- SEO:END -->
+  <meta name="theme-color" content="#183f35">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="../converter.css">
+  <script src="../converter.mjs" type="module"></script>
+<link rel="alternate" hreflang="zh-Hant" href="https://lian0123.github.io/parquet-tool/converter.html"><link rel="alternate" hreflang="en" href="https://lian0123.github.io/parquet-tool/en/converter.html"><link rel="alternate" hreflang="ja" href="https://lian0123.github.io/parquet-tool/ja/converter.html"><link rel="alternate" hreflang="x-default" href="https://lian0123.github.io/parquet-tool/converter.html"><script id="locale-data" type="application/json">{"language":"en","messages":{"基本讀寫":"Read and write","格式轉換":"Format conversion","資料處理":"Data processing","在工作資料夾的終端機執行。":"Run in a terminal in your working directory.","欄式儲存，適合資料分析與資料交換。":"Columnar storage for analytics and data exchange.","選擇檔案後，即可查看預覽並開始轉換。":"Choose a file to preview and convert it.","準備：":"Before you start: ","parquet-tool 是 Node.js 18 以上可用的 TypeScript 函式庫與 CLI，核心讀寫使用 C++ 原生模組。網站轉換工具透過 WebAssembly 共用相同的 C++ 核心，以及 12 個讀寫、轉換與資料處理範例。":"parquet-tool is a TypeScript library and CLI for Node.js 18+. The browser compiles the same C++ Parquet core to WebAssembly. This site also provides 12 reading, writing, conversion and processing examples.","選擇或拖入含標題列的 UTF-8 CSV，確認資料預覽，將輸出格式設為 Parquet，再按「開始轉換」與「下載檔案」。輸出使用本專案核心的無壓縮 PLAIN 編碼。":"Choose or drop a UTF-8 CSV with a header, check the preview, select Parquet, then convert and download. The project core writes uncompressed PLAIN encoding.","Parquet INT64 在 JSON／CSV 輸出為十進位字串。JSON 超出安全精度的數值會被拒絕，請改用帶引號的字串。CSV 空欄位與 JSON 缺少的欄位轉為 null；混合型別欄位以文字保存，日期欄位以文字保存。":"INT64 exports to JSON / CSV as decimal strings. Unsafe JSON numbers are rejected; use quoted strings. Empty CSV fields and missing JSON fields become null. Mixed-type columns and dates are stored as text.","可以。網頁版與 Node.js／CLI 共用本專案 C++ 核心，支援無壓縮 PLAIN 資料頁 v1。舊版專案的 schema 仍可讀取；不支援壓縮、巢狀欄位或其他 logical types，也不保留完整 metadata。":"Yes. The browser and Node.js / CLI share this project’s C++ core, supporting uncompressed PLAIN data page v1. Legacy project schemas remain readable. Compression, nested columns and other logical types are unsupported; full metadata is not preserved.","，不必安裝 Node.js。網頁與 Node.js／CLI 共用本專案 C++ 核心；Parquet 支援無壓縮 PLAIN 資料頁 v1。混合型別、空值與容量限制詳見":" without installing Node.js. Both use the project C++ core with uncompressed PLAIN data page v1. For mixed types, nulls and limits, see ","個範例":"examples","列":"rows","欄":"columns","儲存為 example.cjs，再執行 node example.cjs。":"Save as example.cjs, then run node example.cjs.","已複製程式碼":"Code copied","請按 Ctrl+C 或 ⌘C 複製已選取的程式碼":"Press Ctrl+C or ⌘C to copy the selected code","資料已就緒，選擇格式後按「開始轉換」。":"Data is ready. Select a format and click “Convert file”.","通用文字表格，可匯入試算表或其他資料工具。":"A text table for spreadsheets and other data tools.","易讀的物件陣列，適合程式與 API 資料交換。":"Readable object arrays for applications and APIs.","正在本機讀取與辨識資料…":"Reading and inspecting your local file…","資料已就緒，預覽確認後即可轉換。":"Data is ready. Check the preview, then convert.","轉換完成。按「下載檔案」儲存結果。":"Conversion complete. Click “Download file” to save it.","處理未完成，請檢查下方錯誤訊息。":"Processing failed. Check the error below.","轉換引擎無法執行。":"The conversion engine could not run.","請重新選擇檔案再試一次，並確認使用支援 JavaScript 模組與 Web Worker 的新版瀏覽器。":"Choose the file again and use a modern browser supporting JavaScript modules, WebAssembly and Web Workers.","無法讀取檔案。":"Could not read the file.","已取消處理並清除檔案。":"Processing canceled and file cleared.","選項已更新，請重新轉換。":"Options changed. Please convert again.","正在瀏覽器背景轉換，請稍候…":"Converting in the background. Please wait…","請一次選擇一個檔案。":"Please choose one file at a time.","請透過 GitHub Pages 或本機 HTTP 伺服器開啟此頁，並使用支援 Web Worker 的新版瀏覽器。直接開啟 HTML 檔案無法執行轉換。":"Open this page through GitHub Pages or a local HTTP server in a modern browser with Web Workers and WebAssembly. Conversion is unavailable from a file:// URL.","資料超過 100,000 列，請先切分檔案。":"The table exceeds 100,000 rows. Split the file first.","資料必須包含 1 至 200 個欄位。":"The table must contain 1 to 200 columns.","資料超過 2,000,000 個儲存格，請先切分檔案。":"The table exceeds 2,000,000 cells. Split it first.","欄位名稱不能空白，也不能使用 __proto__、prototype 或 constructor。":"Column names cannot be blank or use __proto__, prototype or constructor.","欄位名稱重複，請先修正 CSV 標題列。":"Duplicate column names. Fix the CSV header first.","找不到資料列。請提供至少一筆資料。":"No rows found. Provide at least one row.","JSON 必須是物件陣列，例如 [{\"id\":1,\"name\":\"Alice\"}]。":"JSON must be an object array, for example [{\"id\":1,\"name\":\"Alice\"}].","檔案超過 20 MiB，請先切分後再轉換。":"The file exceeds 20 MiB. Split it before converting.","檔案是空的。":"The file is empty.","文字編碼無法辨識，請先將檔案另存為 UTF-8。":"Unrecognized text encoding. Save the file as UTF-8.","JSON 格式錯誤，請檢查逗號、引號與括號。":"Invalid JSON. Check commas, quotes and brackets.","CSV 格式錯誤：":"Invalid CSV: ","CSV 沒有標題列。":"The CSV has no header row.","CSV 每一列的欄位數必須與標題列一致，請確認分隔符號。":"CSV row widths must match the header. Check the delimiter.","不支援這個輸出格式。":"Unsupported output format.","請先選擇檔案。":"Choose a file first.","請選擇 .csv、.json 或 .parquet 檔案。":"Choose a .csv, .json or .parquet file.","包含無效日期。":" contains an invalid date.","包含巢狀物件、陣列或二進位資料。目前僅支援平面資料表。":" contains nested objects, arrays or binary data. Only flat tables are supported.","的數值超出 JavaScript 安全精度。請改用帶引號的十進位字串。":" exceeds safe JavaScript numeric precision. Use a quoted decimal string.","超出 INT64 範圍。":" exceeds the INT64 range.","Only uncompressed Parquet is supported by the project engine":"Only uncompressed Parquet is supported by the project engine","Only PLAIN encoding and data page v1 are supported by the project engine":"Only PLAIN encoding and data page v1 are supported by the project engine","browser table limit exceeded":"Browser table limits exceeded (100,000 rows, 200 columns, 2,000,000 cells).","與本機版本共用核心":"Shared core with the local version","瀏覽器引擎：本專案 C++ 核心（WebAssembly） / Papa Parse":"Browser engine: project C++ core (WebAssembly) / Papa Parse","網頁版透過 WebAssembly 使用本專案的 C++ 核心，與 Node.js／CLI 共用 Parquet 實作。支援無壓縮、PLAIN 編碼與資料頁 v1；壓縮或其他編碼會明確回報不支援。":"The browser uses this project’s C++ core through WebAssembly, sharing the Parquet implementation with Node.js / CLI. It supports uncompressed PLAIN data page v1; other codecs and encodings are explicitly rejected.","輸出物件陣列。INT64 轉成十進位字串，避免 JSON 數值精度流失；日期欄位以文字保存。":"Exports an object array. INT64 becomes decimal text to preserve precision; date fields stay text.","混合型別欄位以文字保存；日期請以文字保存，超大整數請在 JSON 使用字串。暫不支援巢狀或二進位欄位。最多 200 欄、2,000,000 個儲存格。":"Mixed-type columns become text. Keep dates and very large JSON integers as strings. Nested and binary fields are not supported. Limit: 200 columns and 2,000,000 cells.","Invalid Parquet file. Check that it is complete and uses a supported format.":"Invalid Parquet file. Check that it is complete and uses a supported format.","nested and repeated Parquet columns are not supported":"Nested and repeated Parquet columns are not supported.","binary and non-UTF8 logical types are not supported by the project engine":"Binary and non-UTF8 logical types are not supported.","Multiple data pages per column are not supported by the project engine":"Multiple data pages per column are not supported.","unsupported Parquet physical type":"Unsupported Parquet physical type."}}</script><script id="site-i18n" src="../i18n.js"></script></head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="header">
+    <a class="brand" href="./index.html"><span class="brand-mark" aria-hidden="true">▥</span>parquet<span class="brand-light">-tool</span><span class="brand-label">CONVERTER</span></a>
+    <nav aria-label="Main navigation"><a href="./guide.html">Complete guide</a><a href="./converter.html" aria-current="page">Converter</a><a class="github-link" href="https://github.com/Lian0123/parquet-tool">GitHub ↗</a></nav>
+  </header><nav class="language-switch wrap" aria-label="Language"><a href="../converter.html" hreflang="zh-Hant" lang="zh-Hant">繁體中文</a><a href="./converter.html" hreflang="en" lang="en" aria-current="page">English</a><a href="../ja/converter.html" hreflang="ja" lang="ja">日本語</a></nav>
+  <main id="main" class="wrap converter-main">
+    <nav class="breadcrumbs" aria-label="Breadcrumbs"><a href="./index.html">Home</a><span aria-hidden="true">/</span><span>CSV, JSON and Parquet browser converter</span></nav>
+    <section class="converter-intro" aria-labelledby="converter-title">
+      <div><p class="eyebrow"><span class="status-dot"></span> LOCAL FILES. INSTANT WORKFLOWS.</p><h1 id="converter-title">CSV、JSON、Parquet<br><span>Browser converter</span></h1><p>Convert formats for free in your browser. Your files stay on your device.<br>Choose a file, preview the data, and download your format.</p></div>
+      <span class="privacy-badge"><span aria-hidden="true">◉</span> Files stay on your device</span>
+    </section>
+    <noscript><p class="notice">This tool requires JavaScript. You can also use <a href="./index.html#examples">local CLI examples</a>。</p></noscript>
+    <p id="environment-error" class="notice" hidden=""></p>
+    <div class="converter-grid">
+      <section class="converter-card input-card" aria-labelledby="input-title">
+        <div class="card-title"><span>01</span><h2 id="input-title">Choose an input file</h2></div>
+        <div id="drop-zone" class="drop-zone">
+          <span class="drop-icon" aria-hidden="true">↥</span><h3>Drop a file here</h3><p>Supports .csv, .json and .parquet</p>
+          <label class="button primary file-label" for="file-input">Choose a file <span aria-hidden="true">＋</span></label><input id="file-input" type="file" accept=".csv,.json,.parquet" class="visually-hidden">
+          <small>Up to 20 MiB per file · 100,000 rows</small>
+        </div>
+        <div class="sample-row"><span>No file ready?</span><button id="sample" type="button">Load sample data ↗</button></div>
+        <div id="file-info" class="file-info" hidden=""><span class="file-glyph" aria-hidden="true">▤</span><div><strong id="filename"></strong><small id="filesize"></small></div><button id="clear" type="button" aria-label="Clear file and conversion result">Clear</button></div>
+        <details class="import-options"><summary>CSV import options</summary><div class="field"><label for="input-delimiter">Input delimiter</label><select id="input-delimiter"><option value="">Detect automatically</option>Comma ,<option value=";">Semicolon ;</option><option value="tab">Tab</option></select></div><label class="checkbox"><input id="infer-types" type="checkbox" checked=""> Infer numbers and true / false values</label><p>The first CSV row must contain column names. Empty fields become null. Leading zeros and unsafe integers remain text. Changing options reloads the CSV.</p></details>
+      </section>
+      <section class="converter-card output-card" aria-labelledby="output-title">
+        <div class="card-title"><span>02</span><h2 id="output-title">Choose an output format</h2></div>
+        <div class="field"><label for="output-format">Convert to</label><select id="output-format"><option value="parquet">Parquet .parquet</option><option value="csv">CSV .csv</option><option value="json">JSON .json</option></select></div>
+        <p id="format-description" class="format-description">Columnar storage for analytics and data exchange.</p>
+        <div id="parquet-options" class="field"><label for="compression">Compression</label><select id="compression"><option value="none">Uncompressed</option></select></div>
+        <div id="csv-options" hidden=""><div class="field"><label for="output-delimiter">Output delimiter</label><select id="output-delimiter"><option value=",">Comma ,</option><option value=";">Semicolon ;</option><option value="tab">Tab</option></select></div><label class="checkbox"><input id="escape-formulae" type="checkbox" checked=""> Prefix formula-like text with an apostrophe ' for spreadsheets</label><p class="option-note">Applies to text starting with =, +, -, @ and similar characters. Disable to preserve the original text. CSV output includes a UTF-8 BOM.</p></div>
+        <div id="json-options" class="option-note" hidden="">Exports an object array. INT64 becomes decimal text to preserve precision; date fields stay text.</div>
+        <button id="convert" type="button" class="button primary convert-button" disabled=""><span>Convert file</span><span aria-hidden="true">→</span></button>
+        <button id="cancel" type="button" class="cancel-button" hidden="">Cancel and clear file</button>
+        <div id="result" class="download-result" hidden=""><span class="result-check" aria-hidden="true">✓</span><div><strong>Conversion complete</strong><p id="result-info"></p></div><a id="download" class="button primary" download="">Download file ↓</a></div>
+        <p id="status" class="conversion-status" role="status" aria-live="polite">Choose a file to preview and convert it.</p>
+        <p id="error" class="conversion-error" role="alert" hidden=""></p>
+      </section>
+    </div>
+    <section id="preview" class="converter-card preview-card" aria-labelledby="preview-title" hidden="">
+      <div class="preview-heading"><div><p class="eyebrow">A QUICK LOOK AT YOUR DATA</p><h2 id="preview-title">Data preview</h2></div><span id="table-stats"></span></div>
+      <div class="table-scroll" tabindex="0" role="region" aria-label="Data preview table, scroll horizontally"><table><caption class="visually-hidden">First 10 input rows and inferred types</caption><thead id="preview-head"></thead><tbody id="preview-body"></tbody></table></div>
+      <p class="preview-note">Only the first 10 rows are shown; downloads contain all rows. Types appear below the headers. null indicates a missing value.</p>
+    </section>
+    <!-- FAQ:START -->
+<section id="faq" class="search-faq wrap" aria-labelledby="faq-title">
+      <p class="eyebrow">QUESTIONS &amp; ANSWERS</p><h2 id="faq-title">Parquet conversion FAQ</h2>
+      <details><summary>How do I convert CSV to Parquet?</summary><p>Choose or drop a UTF-8 CSV with a header, check the preview, select Parquet, then convert and download. The project core writes uncompressed PLAIN encoding.</p></details>
+      <details><summary>How do I convert Parquet to JSON or CSV?</summary><p>Choose a flat Parquet file, preview it, select JSON or CSV, then convert and download. CSV supports comma, semicolon and Tab delimiters; JSON exports an array of objects.</p></details>
+      <details><summary>Are files uploaded to a server?</summary><p>No. Reading, previewing and conversion run in a Web Worker in your browser. The engine is served with the site; files are not sent to a third-party conversion service.</p></details>
+      <details><summary>What are the size limits?</summary><p>Up to 20 MiB per file, 100,000 rows, 200 columns and 2,000,000 cells. Only flat tables are supported; nested and binary fields are not. Decoding compressed files uses more memory. You can cancel processing.</p></details>
+      <details><summary>How are large integers, nulls and mixed types handled?</summary><p>INT64 exports to JSON / CSV as decimal strings. Unsafe JSON numbers are rejected; use quoted strings. Empty CSV fields and missing JSON fields become null. Mixed-type columns and dates are stored as text.</p></details>
+      <details><summary>Can I exchange Parquet files with the current CLI?</summary><p>Yes. The browser and Node.js / CLI share this project’s C++ core, supporting uncompressed PLAIN data page v1. Legacy project schemas remain readable. Compression, nested columns and other logical types are unsupported; full metadata is not preserved.</p></details>
+      <p class="content-review">Content reviewed: <time datetime="2026-10-28">2026-10-28</time> · <a href="https://github.com/Lian0123/parquet-tool">Source and maintenance history ↗</a> · <a href="./guide.html">Complete usage guide</a></p>
+    </section>
+  <!-- FAQ:END -->
+    <section class="converter-notes" aria-label="Supported data"><div><h2>Local processing. Useful results.</h2><p>Files are not sent to a server. All conversion code is served with this site; processing does not use a third-party service.</p><h3>Shared core with the local version</h3><p>The browser uses this project’s C++ core through WebAssembly, sharing the Parquet implementation with Node.js / CLI. It supports uncompressed PLAIN data page v1; other codecs and encodings are explicitly rejected.</p></div><div><h3>Supported data</h3><p>Supports UTF-8 CSV with a header, JSON object arrays or { rows: [...] }, and flat Parquet. A JSON schema block is not applied; types are inferred from data.</p><p>Mixed-type columns become text. Keep dates and very large JSON integers as strings. Nested and binary fields are not supported. Limit: 200 columns and 2,000,000 cells.</p><p>Need larger files or Arrow / XML? See <a href="./guide.html">Complete Node.js / CLI guide ↗</a></p></div></section>
+  </main>
+  <footer class="wrap footer"><a class="brand" href="./index.html">parquet<span class="brand-light">-tool</span></a><span>Browser engine: project C++ core (WebAssembly) / Papa Parse</span><a href="../vendor/THIRD_PARTY_LICENSES.txt">Third-party licenses ↗</a></footer>
+</body></html>

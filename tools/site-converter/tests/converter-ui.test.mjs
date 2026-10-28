@@ -7,6 +7,7 @@ import { loadTable, exportTable, previewTable } from '../../../site/converter-co
 
 const pageUrl = 'https://example.github.io/parquet-tool/converter.html';
 const html = await readFile(new URL('../../../site/converter.html', import.meta.url), 'utf8');
+const i18n = await readFile(new URL('../../../site/i18n.js', import.meta.url), 'utf8');
 const script = await esbuild.build({ entryPoints: [new URL('../../../site/converter.mjs', import.meta.url).pathname],
   bundle: true, format: 'iife', write: false, define: { 'import.meta.url': JSON.stringify(pageUrl) } });
 
@@ -41,6 +42,7 @@ function environment(url = pageUrl) {
   window.Blob = Blob;
   window.URL.createObjectURL = (blob) => { const url = `blob:test-${blobs.size}`; blobs.set(url, blob); return url; };
   window.URL.revokeObjectURL = (url) => revoked.push(url);
+  window.eval(i18n);
   window.eval(script.outputFiles[0].text);
   const element = (id) => window.document.getElementById(id);
   const change = (id, value) => {

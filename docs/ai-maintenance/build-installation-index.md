@@ -1,4 +1,4 @@
-<!-- AI-DOC: owner=maintainers; verified=2026-10-27; sources=package.json,CMakeLists.txt,scripts/install.cjs,.github/workflows/ci.yml,.github/workflows/release.yml,.github/workflows/pages.yml,site,tools/site-converter -->
+<!-- AI-DOC: owner=maintainers; verified=2026-10-28; sources=package.json,CMakeLists.txt,scripts/install.cjs,.github/workflows/ci.yml,.github/workflows/release.yml,.github/workflows/pages.yml,site,tools/site-converter -->
 # Build and Installation Index
 
 | Goal | Command | Note |
@@ -13,11 +13,11 @@ Addon lookup order is `prebuilds/{platform}-{arch}`, `build/Release`, then `buil
 
 ## Static examples website
 
-`site/` is a static Traditional Chinese HTML/CSS/JavaScript guide and browser
-converter. Recipes run in Node.js. `converter.html` converts CSV/JSON/flat Parquet
-in a module worker with local bundled dependencies, independent of the native npm
-package and Flask viewer. Its Parquet files currently do not interoperate with the
-native CLI; use CSV/JSON between engines (see the risks index).
+`site/` contains static Traditional Chinese, English (`en/`) and Japanese (`ja/`)
+guides and converters. `src/wasm/browser.cpp` compiles the same `src/native/parquet.h`
+and `thrift.h` core as the addon to local WebAssembly. Only flat uncompressed PLAIN
+runtime is used. Browser/native cross-engine and independent PyArrow fixtures cover
+format compatibility. See `site/README.md` for rebuild instructions and limits.
 
 `tools/site-converter/` owns a separate lockfile and Node.js 24.15+ build/test tools.
 Run `npm ci --prefix tools/site-converter`, `npm run build --prefix tools/site-converter`,
@@ -50,3 +50,12 @@ For project Pages hosting, `/parquet-tool/robots.txt` is ineffective: robots pol
 is controlled at `https://lian0123.github.io/robots.txt` in the separate root site.
 This repository changes no host-root crawler/training policy. Public maintenance
 and post-deployment Search Console instructions are in `docs/seo.md`.
+
+## Bundled release-tool security mitigation
+
+`npm` bundled under semantic-release contains an `ip-address` version that npm
+`overrides` cannot replace. `scripts/patch-bundled-ip-address.cjs` copies the official
+patched direct development dependency into that bundle after installation. Run
+`npm run security:check` after `npm ci`; CI/release enforce this. Do not disable
+install scripts for release tooling. This mitigation does not change the upstream
+npm tarball; see `docs/security-dependencies.md` for Dependabot implications.

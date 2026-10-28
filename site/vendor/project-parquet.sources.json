@@ -1,0 +1,9 @@
+{
+  "compiler": "emscripten 3.1.74",
+  "sources": {
+    "src/wasm/browser.cpp": "18bcbc68917675e5818fd7d3ce96cf9df3577e256722c2ff5e46afcf0a582063",
+    "src/native/parquet.h": "fb10bbdcde02c47ec1ff17aba94bb14e867b20bb27a837744f53c3e5fa4b3459",
+    "src/native/thrift.h": "0a8c3a680e198725f3d05d26180d6c1d8337c6df6f6dd2dbe32055525b069aac",
+    "tools/site-converter/build-wasm.mjs": "72b1230e7f6d39cfde6bd7a2339d4ea1df34e22578549fa285172dcb517c78ba"
+  }
+}

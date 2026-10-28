@@ -9,7 +9,7 @@ npm init -y
 npm install parquet-tool
 ```
 
-網頁版與目前 C++ CLI 的 Parquet 互通有限，請透過 CSV／JSON 交換資料。
+網頁與 Node.js／CLI 共用本專案 C++ 核心；Parquet 支援無壓縮 PLAIN 資料頁 v1。
 
 ## 建立第一個 Parquet 檔案
 

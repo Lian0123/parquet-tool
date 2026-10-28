@@ -2,10 +2,10 @@
 
 This directory contains project documentation and language-specific entry pages.
 
-The [static examples website](../site/README.md) provides a Traditional Chinese,
+The [static examples website](../site/README.md) provides a Traditional Chinese, English and Japanese
 searchable CLI/Node.js recipe guide ready for GitHub Pages.
 It includes a browser-local CSV/JSON/Parquet converter with preview and download;
-see its support and native-interoperability notes before use.
+see its format support notes before use.
 
 See [search and AI-search maintenance](seo.md) for canonical URLs, structured data,
 static guide generation, sitemap submission and GitHub Pages robots policy scope.

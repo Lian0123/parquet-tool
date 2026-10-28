@@ -1,0 +1,280 @@
+<!DOCTYPE html><html lang="ja"><head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#183f35">
+  <title>Parquet ガイド：Node.js・CLI の完全な使用例 12 選 | parquet-tool</title>
+  <meta name="description" content="Parquet の作成・読み取り・追記・メタデータ・CSV / JSON / Arrow / XML 変換・分割・結合・検証・列選択・Buffer を解説。前提条件と Node.js / CLI コードを掲載。">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <link rel="canonical" href="https://lian0123.github.io/parquet-tool/ja/guide.html">
+  <link rel="sitemap" type="application/xml" href="../sitemap.xml">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="parquet-tool">
+  <meta property="og:locale" content="ja_JP">
+  <meta property="og:title" content="Parquet ガイド：Node.js・CLI の完全な使用例 12 選 | parquet-tool">
+  <meta property="og:description" content="Parquet の作成・読み取り・追記・メタデータ・CSV / JSON / Arrow / XML 変換・分割・結合・検証・列選択・Buffer を解説。前提条件と Node.js / CLI コードを掲載。">
+  <meta property="og:url" content="https://lian0123.github.io/parquet-tool/ja/guide.html">
+  <meta property="og:image" content="https://lian0123.github.io/parquet-tool/social-card.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="parquet-tool：CSV・JSON・Parquet のブラウザー変換と Node.js の使用例">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Parquet ガイド：Node.js・CLI の完全な使用例 12 選 | parquet-tool">
+  <meta name="twitter:description" content="Parquet の作成・読み取り・追記・メタデータ・CSV / JSON / Arrow / XML 変換・分割・結合・検証・列選択・Buffer を解説。前提条件と Node.js / CLI コードを掲載。">
+  <meta name="twitter:image" content="https://lian0123.github.io/parquet-tool/social-card.png">
+  <meta name="twitter:image:alt" content="parquet-tool：CSV・JSON・Parquet のブラウザー変換と Node.js の使用例">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://lian0123.github.io/parquet-tool/ja/#website",
+      "url": "https://lian0123.github.io/parquet-tool/ja/",
+      "name": "parquet-tool",
+      "inLanguage": "ja"
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://lian0123.github.io/parquet-tool/ja/guide.html#page",
+      "url": "https://lian0123.github.io/parquet-tool/ja/guide.html",
+      "name": "Parquet ガイド：Node.js・CLI の完全な使用例 12 選 | parquet-tool",
+      "description": "Parquet の作成・読み取り・追記・メタデータ・CSV / JSON / Arrow / XML 変換・分割・結合・検証・列選択・Buffer を解説。前提条件と Node.js / CLI コードを掲載。",
+      "inLanguage": "ja",
+      "isPartOf": {
+        "@id": "https://lian0123.github.io/parquet-tool/ja/#website"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://lian0123.github.io/parquet-tool/ja/guide.html#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "ホーム",
+          "item": "https://lian0123.github.io/parquet-tool/ja/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Node.js / CLI の詳しいガイド",
+          "item": "https://lian0123.github.io/parquet-tool/ja/guide.html"
+        }
+      ]
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://lian0123.github.io/parquet-tool/ja/guide.html#article",
+      "headline": "Node.js / CLI の詳しいガイド",
+      "inLanguage": "ja",
+      "mainEntityOfPage": {
+        "@id": "https://lian0123.github.io/parquet-tool/ja/guide.html#page"
+      },
+      "about": [
+        "Parquet",
+        "Node.js",
+        "TypeScript",
+        "CLI"
+      ],
+      "hasPart": [
+        {
+          "@type": "SoftwareSourceCode",
+          "name": "最初の Parquet ファイルを作成",
+          "url": "https://lian0123.github.io/parquet-tool/ja/guide.html#recipe-write",
+          "programmingLanguage": "JavaScript",
+          "codeRepository": "https://github.com/Lian0123/parquet-tool"
+        },
+        {
+          "@type": "SoftwareSourceCode",
+          "name": "データ行を読み取る",
+          "url": "https://lian0123.github.io/parquet-tool/ja/guide.html#recipe-read",
+          "programmingLanguage": "JavaScript",
+          "codeRepository": "https://github.com/Lian0123/parquet-tool"
+        },
+        {
+          "@type": "SoftwareSourceCode",
+          "name": "schema とメタデータを確認",
+          "url": "https://lian0123.github.io/parquet-tool/ja/guide.html#recipe-metadata",
+          "programmingLanguage": "JavaScript",
+          "codeRepository": "https://github.com/Lian0123/parquet-tool"
+        },
+        {
+          "@type": "SoftwareSourceCode",
+          "name": "既存ファイルに追記",
+          "url": "https://lian0123.github.io/parquet-tool/ja/guide.html#recipe-append",
+          "programmingLanguage": "JavaScript",
+          "codeRepository": "https://github.com/Lian0123/parquet-tool"
+        },
+        {
+          "@type": "SoftwareSourceCode",
+          "name": "CSV と Parquet を相互変換",
+          "url": "https://lian0123.github.io/parquet-tool/ja/guide.html#recipe-csv",
+          "programmingLanguage": "JavaScript",
+          "codeRepository": "https://github.com/Lian0123/parquet-tool"
+        },
+        {
+          "@type": "SoftwareSourceCode",
+          "name": "JSON と Parquet を相互変換",
+          "url": "https://lian0123.github.io/parquet-tool/ja/guide.html#recipe-json",
+          "programmingLanguage": "JavaScript",
+          "codeRepository": "https://github.com/Lian0123/parquet-tool"
+        },
+        {
+          "@type": "SoftwareSourceCode",
+          "name": "Apache Arrow IPC を相互変換",
+          "url": "https://lian0123.github.io/parquet-tool/ja/guide.html#recipe-arrow",
+          "programmingLanguage": "JavaScript",
+          "codeRepository": "https://github.com/Lian0123/parquet-tool"
+        },
+        {
+          "@type": "SoftwareSourceCode",
+          "name": "XML と Parquet を相互変換",
+          "url": "https://lian0123.github.io/parquet-tool/ja/guide.html#recipe-xml",
+          "programmingLanguage": "JavaScript",
+          "codeRepository": "https://github.com/Lian0123/parquet-tool"
+        },
+        {
+          "@type": "SoftwareSourceCode",
+          "name": "ファイルを分割して結合",
+          "url": "https://lian0123.github.io/parquet-tool/ja/guide.html#recipe-split-merge",
+          "programmingLanguage": "JavaScript",
+          "codeRepository": "https://github.com/Lian0123/parquet-tool"
+        },
+        {
+          "@type": "SoftwareSourceCode",
+          "name": "Parquet ファイルを検証",
+          "url": "https://lian0123.github.io/parquet-tool/ja/guide.html#recipe-validate",
+          "programmingLanguage": "JavaScript",
+          "codeRepository": "https://github.com/Lian0123/parquet-tool"
+        },
+        {
+          "@type": "SoftwareSourceCode",
+          "name": "指定した列と row group を処理",
+          "url": "https://lian0123.github.io/parquet-tool/ja/guide.html#recipe-projection",
+          "programmingLanguage": "JavaScript",
+          "codeRepository": "https://github.com/Lian0123/parquet-tool"
+        },
+        {
+          "@type": "SoftwareSourceCode",
+          "name": "Node.js Buffer でファイルを扱う",
+          "url": "https://lian0123.github.io/parquet-tool/ja/guide.html#recipe-buffer",
+          "programmingLanguage": "JavaScript",
+          "codeRepository": "https://github.com/Lian0123/parquet-tool"
+        }
+      ]
+    }
+  ]
+}</script>
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="../guide.css">
+  <link rel="alternate" type="text/markdown" href="./guide.md" title="Markdown の完全ガイド">
+<link rel="alternate" hreflang="zh-Hant" href="https://lian0123.github.io/parquet-tool/guide.html"><link rel="alternate" hreflang="en" href="https://lian0123.github.io/parquet-tool/en/guide.html"><link rel="alternate" hreflang="ja" href="https://lian0123.github.io/parquet-tool/ja/guide.html"><link rel="alternate" hreflang="x-default" href="https://lian0123.github.io/parquet-tool/guide.html"><script id="locale-data" type="application/json">{"language":"ja","messages":{"基本讀寫":"基本的な読み書き","格式轉換":"形式変換","資料處理":"データ処理","在工作資料夾的終端機執行。":"作業フォルダーのターミナルで実行してください。","欄式儲存，適合資料分析與資料交換。":"分析やデータ交換に適した列指向形式です。","選擇檔案後，即可查看預覽並開始轉換。":"ファイルを選択すると、プレビューと変換ができます。","準備：":"準備：","parquet-tool 是 Node.js 18 以上可用的 TypeScript 函式庫與 CLI，核心讀寫使用 C++ 原生模組。網站轉換工具透過 WebAssembly 共用相同的 C++ 核心，以及 12 個讀寫、轉換與資料處理範例。":"parquet-tool は Node.js 18 以降に対応する TypeScript ライブラリと CLI です。ブラウザー版も同じ C++ Parquet コアを WebAssembly で使用し、12 の使用例を提供します。","選擇或拖入含標題列的 UTF-8 CSV，確認資料預覽，將輸出格式設為 Parquet，再按「開始轉換」與「下載檔案」。輸出使用本專案核心的無壓縮 PLAIN 編碼。":"ヘッダー付き UTF-8 CSV を選択・ドロップし、プレビューを確認して Parquet に変換・ダウンロードします。本プロジェクトのコアで無圧縮 PLAIN 形式を出力します。","Parquet INT64 在 JSON／CSV 輸出為十進位字串。JSON 超出安全精度的數值會被拒絕，請改用帶引號的字串。CSV 空欄位與 JSON 缺少的欄位轉為 null；混合型別欄位以文字保存，日期欄位以文字保存。":"INT64 は JSON / CSV で十進数文字列になります。安全な精度を超える JSON 数値には引用符付き文字列を使用してください。空欄や欠けた項目は null、混合型と日付は文字列になります。","可以。網頁版與 Node.js／CLI 共用本專案 C++ 核心，支援無壓縮 PLAIN 資料頁 v1。舊版專案的 schema 仍可讀取；不支援壓縮、巢狀欄位或其他 logical types，也不保留完整 metadata。":"はい。ブラウザーと Node.js / CLI は本プロジェクトの C++ コアを共有し、無圧縮 PLAIN データページ v1 に対応します。旧版の schema も読み取れます。圧縮・入れ子・その他の logical type は未対応で、metadata 全体は保持しません。","，不必安裝 Node.js。網頁與 Node.js／CLI 共用本專案 C++ 核心；Parquet 支援無壓縮 PLAIN 資料頁 v1。混合型別、空值與容量限制詳見":"を使用でき、Node.js は不要です。どちらも同じ C++ コアを使い、無圧縮 PLAIN データページ v1 に対応します。混合型・欠損値・上限については、","個範例":"件の使用例","列":"行","欄":"列","儲存為 example.cjs，再執行 node example.cjs。":"example.cjs として保存し、node example.cjs を実行してください。","已複製程式碼":"コードをコピーしました","請按 Ctrl+C 或 ⌘C 複製已選取的程式碼":"Ctrl+C または ⌘C で選択したコードをコピーしてください","資料已就緒，選擇格式後按「開始轉換」。":"準備できました。形式を選び「変換を開始」を押してください。","通用文字表格，可匯入試算表或其他資料工具。":"表計算ソフトや他のデータツールで使えるテキスト形式です。","易讀的物件陣列，適合程式與 API 資料交換。":"プログラムや API のデータ交換に適したオブジェクト配列です。","正在本機讀取與辨識資料…":"端末内のファイルを読み込み・確認しています…","資料已就緒，預覽確認後即可轉換。":"準備できました。プレビューを確認して変換してください。","轉換完成。按「下載檔案」儲存結果。":"変換が完了しました。「ダウンロード」で保存してください。","處理未完成，請檢查下方錯誤訊息。":"処理できませんでした。下のエラーをご確認ください。","轉換引擎無法執行。":"変換エンジンを実行できませんでした。","請重新選擇檔案再試一次，並確認使用支援 JavaScript 模組與 Web Worker 的新版瀏覽器。":"ファイルを選び直し、JavaScript モジュール・WebAssembly・Web Worker に対応した最新ブラウザーをお使いください。","無法讀取檔案。":"ファイルを読み込めませんでした。","已取消處理並清除檔案。":"処理を中止し、ファイルをクリアしました。","選項已更新，請重新轉換。":"設定を変更しました。もう一度変換してください。","正在瀏覽器背景轉換，請稍候…":"ブラウザーのバックグラウンドで変換中です…","請一次選擇一個檔案。":"ファイルは 1 つずつ選択してください。","請透過 GitHub Pages 或本機 HTTP 伺服器開啟此頁，並使用支援 Web Worker 的新版瀏覽器。直接開啟 HTML 檔案無法執行轉換。":"GitHub Pages またはローカル HTTP サーバー経由で、Web Worker と WebAssembly に対応したブラウザーで開いてください。file:// からは変換できません。","資料超過 100,000 列，請先切分檔案。":"100,000 行を超えています。先にファイルを分割してください。","資料必須包含 1 至 200 個欄位。":"列数は 1〜200 列にしてください。","資料超過 2,000,000 個儲存格，請先切分檔案。":"2,000,000 セルを超えています。先に分割してください。","欄位名稱不能空白，也不能使用 __proto__、prototype 或 constructor。":"列名を空欄にしたり、__proto__・prototype・constructor を使ったりすることはできません。","欄位名稱重複，請先修正 CSV 標題列。":"列名が重複しています。CSV ヘッダーを修正してください。","找不到資料列。請提供至少一筆資料。":"データがありません。少なくとも 1 行必要です。","JSON 必須是物件陣列，例如 [{\"id\":1,\"name\":\"Alice\"}]。":"JSON は [{\"id\":1,\"name\":\"Alice\"}] のようなオブジェクト配列にしてください。","檔案超過 20 MiB，請先切分後再轉換。":"20 MiB を超えています。分割してから変換してください。","檔案是空的。":"ファイルが空です。","文字編碼無法辨識，請先將檔案另存為 UTF-8。":"文字コードを認識できません。UTF-8 で保存してください。","JSON 格式錯誤，請檢查逗號、引號與括號。":"JSON が不正です。カンマ・引用符・括弧を確認してください。","CSV 格式錯誤：":"CSV が不正です：","CSV 沒有標題列。":"CSV にヘッダー行がありません。","CSV 每一列的欄位數必須與標題列一致，請確認分隔符號。":"各行の列数をヘッダーと一致させてください。区切り文字を確認してください。","不支援這個輸出格式。":"この出力形式は未対応です。","請先選擇檔案。":"先にファイルを選択してください。","請選擇 .csv、.json 或 .parquet 檔案。":".csv・.json・.parquet ファイルを選択してください。","包含無效日期。":"に無効な日付が含まれています。","包含巢狀物件、陣列或二進位資料。目前僅支援平面資料表。":"に入れ子・配列・バイナリデータが含まれています。フラットな表のみ対応します。","的數值超出 JavaScript 安全精度。請改用帶引號的十進位字串。":"の数値が JavaScript の安全な精度を超えています。引用符付きの十進数文字列にしてください。","超出 INT64 範圍。":"が INT64 の範囲を超えています。","Only uncompressed Parquet is supported by the project engine":"本プロジェクトのエンジンは無圧縮 Parquet のみ対応します","Only PLAIN encoding and data page v1 are supported by the project engine":"本プロジェクトのエンジンは PLAIN エンコーディング・データページ v1 のみ対応します","browser table limit exceeded":"ブラウザーの上限（100,000 行・200 列・2,000,000 セル）を超えています。","與本機版本共用核心":"ローカル版と共通のコア","瀏覽器引擎：本專案 C++ 核心（WebAssembly） / Papa Parse":"ブラウザーエンジン：本プロジェクトの C++ コア（WebAssembly） / Papa Parse","網頁版透過 WebAssembly 使用本專案的 C++ 核心，與 Node.js／CLI 共用 Parquet 實作。支援無壓縮、PLAIN 編碼與資料頁 v1；壓縮或其他編碼會明確回報不支援。":"ブラウザー版は WebAssembly を通じて本プロジェクトの C++ コアを使用し、Node.js / CLI と Parquet 実装を共有します。無圧縮・PLAIN・データページ v1 に対応し、それ以外の圧縮・エンコーディングは明示的に拒否します。","輸出物件陣列。INT64 轉成十進位字串，避免 JSON 數值精度流失；日期欄位以文字保存。":"オブジェクト配列を出力します。精度保持のため INT64 は十進数文字列に、日付列は文字列のまま保存します。","混合型別欄位以文字保存；日期請以文字保存，超大整數請在 JSON 使用字串。暫不支援巢狀或二進位欄位。最多 200 欄、2,000,000 個儲存格。":"型が混在する列は文字列になります。日付や巨大な JSON 整数は文字列で保存してください。入れ子・バイナリ列は未対応です。上限は 200 列・2,000,000 セルです。","Invalid Parquet file. Check that it is complete and uses a supported format.":"Parquet ファイルが不正です。ファイルが完全で対応形式か確認してください。","nested and repeated Parquet columns are not supported":"入れ子・繰り返しの Parquet 列には対応していません。","binary and non-UTF8 logical types are not supported by the project engine":"バイナリ・UTF-8 以外の論理型には対応していません。","Multiple data pages per column are not supported by the project engine":"列ごとに複数のデータページがある形式には対応していません。","unsupported Parquet physical type":"この Parquet 物理型には対応していません。"}}</script><script id="site-i18n" src="../i18n.js"></script></head>
+<body>
+  <a class="skip-link" href="#main">本文へ移動</a>
+  <header class="header"><a class="brand" href="./index.html"><span class="brand-mark" aria-hidden="true">▥</span>parquet<span class="brand-light">-tool</span><span class="brand-label">GUIDE</span></a><nav aria-label="メインナビゲーション"><a href="./index.html#examples">操作可能な使用例</a><a href="./converter.html">変換ツール</a><a href="./guide.html" aria-current="page">詳しい使い方</a></nav></header><nav class="language-switch wrap" aria-label="Language"><a href="../guide.html" hreflang="zh-Hant" lang="zh-Hant">繁體中文</a><a href="../en/guide.html" hreflang="en" lang="en">English</a><a href="./guide.html" hreflang="ja" lang="ja" aria-current="page">日本語</a></nav>
+  <main id="main" class="wrap guide-main">
+    <nav class="breadcrumbs" aria-label="パンくずリスト"><a href="./index.html">ホーム</a><span aria-hidden="true">/</span><span>Node.js / CLI の詳しいガイド</span></nav>
+    <p class="eyebrow">PARQUET / NODE.JS / CLI</p><h1>Parquet の使い方と完全な使用例</h1>
+    <p class="guide-lead">12 の parquet-tool タスクを、前提条件・実行結果・コピー可能な CLI / Node.js コードとともに説明します。静的 HTML なので JavaScript なしで読めます。</p>
+    <p class="content-review">内容確認：<time datetime="2026-10-28">2026-10-28</time> · <a href="https://github.com/Lian0123/parquet-tool">GitHub ソースコード ↗</a> · <a href="./guide.md">Markdown 版</a></p>
+    <section class="guide-setup" aria-labelledby="setup-title"><h2 id="setup-title">開始前：インストールとデータの準備</h2><p>Node.js 18 以降が必要です。作業フォルダーで次のコマンドを実行し、 <a href="../samples/input.json" download="">input.json</a>  と  <a href="../samples/input.csv" download="">input.csv</a>  を同じフォルダーにダウンロードしてください。</p><pre><code>npm init -y
+npm install parquet-tool</code></pre><p>CLI コマンドはターミナルで実行します。Node.js コードは  <code>example.cjs</code> として保存し、 <code>node example.cjs</code> を実行します。ネイティブビルドに必要なツールは、<a href="https://github.com/Lian0123/parquet-tool/blob/main/docs/installation.md">インストールガイド</a>。</p><p>CSV / JSON / Parquet の変換だけであれば、<a href="./converter.html">ブラウザー変換ツール</a>を使用でき、Node.js は不要です。どちらも同じ C++ コアを使い、無圧縮 PLAIN データページ v1 に対応します。混合型・欠損値・上限については、<a href="./converter.html#faq">変換に関するよくある質問</a>。</p></section>
+    <div class="guide-layout"><nav class="guide-toc" aria-label="ガイドの目次"><h2>タスク一覧</h2><a href="#recipe-write"><span>01</span>ファイル作成</a><a href="#recipe-read"><span>02</span>データを読み取る</a><a href="#recipe-metadata"><span>03</span>メタデータを確認</a><a href="#recipe-append"><span>04</span>データを追記</a><a href="#recipe-csv"><span>05</span>CSV 変換</a><a href="#recipe-json"><span>06</span>JSON 変換</a><a href="#recipe-arrow"><span>07</span>Arrow 変換</a><a href="#recipe-xml"><span>08</span>XML 変換</a><a href="#recipe-split-merge"><span>09</span>分割と結合</a><a href="#recipe-validate"><span>10</span>ファイルを検証</a><a href="#recipe-projection"><span>11</span>列・グループを選択</a><a href="#recipe-buffer"><span>12</span>Buffer の往復</a></nav><div class="guide-recipes">
+      <article id="recipe-write"><h2>最初の Parquet ファイルを作成</h2><p>schema を明示して JSON を Parquet に書き込みます。rowGroupSize を 2 にして、後で row group を確認できるようにします。</p><p class="guide-prerequisite"><strong>準備：</strong>input.json を作業フォルダーにダウンロードします。再実行すると data.parquet を上書きします。</p><h3>CLI コマンド</h3><pre><code>npx parquet-tool write data.parquet -i input.json -s "id:INT32,name:STRING,active:BOOLEAN" --row-group-size 2</code></pre><h3>Node.js コード</h3><pre><code>const { readFileSync } = require('node:fs');
+const { Schema, ParquetWriter } = require('parquet-tool');
+
+const rows = JSON.parse(readFileSync('input.json', 'utf8'));
+const schema = Schema.create({
+  id: 'INT32', name: 'STRING', active: 'BOOLEAN',
+});
+
+ParquetWriter.withWriter('data.parquet', schema,
+  { rowGroupSize: 2 }, (writer) =&gt; {
+    writer.write(rows);
+  }); // 自動關閉 writer，完成檔案寫入</code></pre><p><strong>実行結果：</strong>3 行・2 個の row group を含む data.parquet を作成します。</p><a class="guide-source" href="https://github.com/Lian0123/parquet-tool/blob/main/src/lib/writer.ts">実装を見る ↗</a></article>
+      <article id="recipe-read"><h2>データ行を読み取る</h2><p>CLI は JSON を出力します。Node.js は iterator で行を処理し、ファイル全体を一度に結合しません。</p><p class="guide-prerequisite"><strong>準備：</strong>先に「ファイル作成」を実行し、data.parquet を用意します。</p><h3>CLI コマンド</h3><pre><code>npx parquet-tool read data.parquet --json --limit 20</code></pre><h3>Node.js コード</h3><pre><code>const { ParquetReader } = require('parquet-tool');
+
+ParquetReader.withReader('data.parquet', (reader) =&gt; {
+  for (const row of reader.iterateRows()) {
+    console.log(row);
+  }
+}); // 自動關閉 reader</code></pre><p><strong>実行結果：</strong>ターミナルに id・name・active の値を表示します。</p><a class="guide-source" href="https://github.com/Lian0123/parquet-tool/blob/main/src/lib/reader.ts">実装を見る ↗</a></article>
+      <article id="recipe-metadata"><h2>schema とメタデータを確認</h2><p>列の型・行数・row group 数からファイルの構造を確認します。</p><p class="guide-prerequisite"><strong>準備：</strong>先に「ファイル作成」を実行し、data.parquet を用意します。</p><h3>CLI コマンド</h3><pre><code>npx parquet-tool info data.parquet</code></pre><h3>Node.js コード</h3><pre><code>const { ParquetReader } = require('parquet-tool');
+
+const metadata = ParquetReader.readMetadata('data.parquet');
+console.log('Rows:', metadata.numRows);
+console.log('Row groups:', metadata.numRowGroups);
+console.table(metadata.schema);</code></pre><p><strong>実行結果：</strong>schema・numRows・numRowGroups などのメタデータを表示します。</p><a class="guide-source" href="https://github.com/Lian0123/parquet-tool/blob/main/src/lib/reader.ts">実装を見る ↗</a></article>
+      <article id="recipe-append"><h2>既存ファイルに追記</h2><p>既存の schema を使用し、新しい row group を追加します。実行するたびに 1 行増えます。</p><p class="guide-prerequisite"><strong>準備：</strong>先に「ファイル作成」を実行します。CLI の例は Node.js で more.json を作成し、data.parquet を変更します。</p><h3>CLI コマンド</h3><pre><code>node -e "require('node:fs').writeFileSync('more.json', JSON.stringify([{id:4,name:'Dora',active:true}]))"
+npx parquet-tool append data.parquet -i more.json
+npx parquet-tool info data.parquet</code></pre><h3>Node.js コード</h3><pre><code>const { ParquetWriter, ParquetReader } = require('parquet-tool');
+
+ParquetWriter.withAppender('data.parquet', (writer) =&gt; {
+  writer.write({ id: 4, name: 'Dora', active: true });
+});
+console.log(ParquetReader.readMetadata('data.parquet').numRows);</code></pre><p><strong>実行結果：</strong>最初の追記で、元の 3 行が 4 行になります。</p><a class="guide-source" href="https://github.com/Lian0123/parquet-tool/blob/main/src/lib/writer.ts">実装を見る ↗</a></article>
+      <article id="recipe-csv"><h2>CSV と Parquet を相互変換</h2><p>ヘッダー付き CSV を読み込み、型を推定してから CSV に出力します。</p><p class="guide-prerequisite"><strong>準備：</strong>input.csv を作業フォルダーにダウンロードします。data.parquet は不要です。</p><h3>CLI コマンド</h3><pre><code>npx parquet-tool csv-to-parquet input.csv from-csv.parquet
+npx parquet-tool parquet-to-csv from-csv.parquet roundtrip.csv</code></pre><h3>Node.js コード</h3><pre><code>const { csvToParquet, parquetToCsv } = require('parquet-tool');
+
+csvToParquet('input.csv', 'from-csv.parquet');
+parquetToCsv('from-csv.parquet', 'roundtrip.csv');</code></pre><p><strong>実行結果：</strong>3 行のサンプルを含む from-csv.parquet と roundtrip.csv を作成します。</p><a class="guide-source" href="https://github.com/Lian0123/parquet-tool/blob/main/src/lib/csv.ts">実装を見る ↗</a></article>
+      <article id="recipe-json"><h2>JSON と Parquet を相互変換</h2><p>JSON 配列から Parquet を作成し、行データのみの JSON を出力します。rows-only を省略すると schema も含まれます。</p><p class="guide-prerequisite"><strong>準備：</strong>input.json を作業フォルダーにダウンロードします。data.parquet は不要です。</p><h3>CLI コマンド</h3><pre><code>npx parquet-tool json-to-parquet input.json from-json.parquet
+npx parquet-tool parquet-to-json from-json.parquet roundtrip.json --rows-only</code></pre><h3>Node.js コード</h3><pre><code>const { jsonToParquet, parquetToJson } = require('parquet-tool');
+
+jsonToParquet('input.json', 'from-json.parquet');
+parquetToJson('from-json.parquet', 'roundtrip.json', {
+  includeSchema: false,
+});</code></pre><p><strong>実行結果：</strong>from-json.parquet と、データ配列のみの roundtrip.json を作成します。</p><a class="guide-source" href="https://github.com/Lian0123/parquet-tool/blob/main/src/lib/json.ts">実装を見る ↗</a></article>
+      <article id="recipe-arrow"><h2>Apache Arrow IPC を相互変換</h2><p>Parquet を Arrow IPC ファイルに変換してから戻します。</p><p class="guide-prerequisite"><strong>準備：</strong>先に「ファイル作成」を実行し、data.parquet を用意します。</p><h3>CLI コマンド</h3><pre><code>npx parquet-tool parquet-to-arrow data.parquet data.arrow
+npx parquet-tool arrow-to-parquet data.arrow from-arrow.parquet</code></pre><h3>Node.js コード</h3><pre><code>const { parquetToArrow, arrowToParquet } = require('parquet-tool');
+
+parquetToArrow('data.parquet', 'data.arrow');
+arrowToParquet('data.arrow', 'from-arrow.parquet');</code></pre><p><strong>実行結果：</strong>data.arrow と from-arrow.parquet を作成します。</p><a class="guide-source" href="https://github.com/Lian0123/parquet-tool/blob/main/src/lib/arrow.ts">実装を見る ↗</a></article>
+      <article id="recipe-xml"><h2>XML と Parquet を相互変換</h2><p>既定では schema とデータを出力し、読み込み時に列の型を復元できます。</p><p class="guide-prerequisite"><strong>準備：</strong>先に「ファイル作成」を実行し、data.parquet を用意します。</p><h3>CLI コマンド</h3><pre><code>npx parquet-tool parquet-to-xml data.parquet data.xml
+npx parquet-tool xml-to-parquet data.xml from-xml.parquet</code></pre><h3>Node.js コード</h3><pre><code>const { parquetToXml, xmlToParquet } = require('parquet-tool');
+
+parquetToXml('data.parquet', 'data.xml');
+xmlToParquet('data.xml', 'from-xml.parquet');</code></pre><p><strong>実行結果：</strong>data.xml と from-xml.parquet を作成します。</p><a class="guide-source" href="https://github.com/Lian0123/parquet-tool/blob/main/src/lib/xml.ts">実装を見る ↗</a></article>
+      <article id="recipe-split-merge"><h2>ファイルを分割して結合</h2><p>各出力ファイルを最大 2 行に分割します。結合時は既定で schema の互換性を検証します。</p><p class="guide-prerequisite"><strong>準備：</strong>「ファイル作成」を再実行して 3 行に戻します。出力先は現在の作業フォルダーです。</p><h3>CLI コマンド</h3><pre><code>npx parquet-tool split data.parquet -n 2 -p demo
+npx parquet-tool merge merged.parquet demo_part0000.parquet demo_part0001.parquet
+npx parquet-tool validate merged.parquet</code></pre><h3>Node.js コード</h3><pre><code>const {
+  splitParquetFile, mergeParquetFiles, validateParquetFile,
+} = require('parquet-tool');
+
+const files = splitParquetFile('data.parquet', {
+  maxRowsPerFile: 2,
+  outputDir: '.',
+  prefix: 'demo',
+});
+mergeParquetFiles(files, 'merged.parquet');
+console.log(validateParquetFile('merged.parquet').valid);</code></pre><p><strong>実行結果：</strong>demo_part ファイルを 2 個作成し、結合後の merged.parquet は 3 行になります。</p><a class="guide-source" href="https://github.com/Lian0123/parquet-tool/blob/main/src/lib/splitter.ts">実装を見る ↗</a></article>
+      <article id="recipe-validate"><h2>Parquet ファイルを検証</h2><p>構造と row group を検証します。不正なファイルでは CLI が非ゼロの終了コードを返すので、スクリプトや CI に使えます。</p><p class="guide-prerequisite"><strong>準備：</strong>先に「ファイル作成」を実行し、data.parquet を用意します。</p><h3>CLI コマンド</h3><pre><code>npx parquet-tool validate data.parquet</code></pre><h3>Node.js コード</h3><pre><code>const { validateParquetFile } = require('parquet-tool');
+
+const report = validateParquetFile('data.parquet');
+console.log(report.valid, report.issues);
+if (!report.valid) {
+  process.exitCode = 1;
+}</code></pre><p><strong>実行結果：</strong>正常なサンプルでは Valid: yes、Node.js では true と空の issues を表示します。</p><a class="guide-source" href="https://github.com/Lian0123/parquet-tool/blob/main/src/lib/validate.ts">実装を見る ↗</a></article>
+      <article id="recipe-projection"><h2>指定した列と row group を処理</h2><p>Node.js API は列と row group を選択できます。CLI は row group のみ指定できます。インデックスは 0 から始まります。</p><p class="guide-prerequisite"><strong>準備：</strong>「ファイル作成」で rowGroupSize: 2 の data.parquet を作成します。</p><h3>CLI コマンド</h3><pre><code>npx parquet-tool read data.parquet --row-group 0 --json</code></pre><h3>Node.js コード</h3><pre><code>const { ParquetReader } = require('parquet-tool');
+
+ParquetReader.withReader('data.parquet', (reader) =&gt; {
+  for (const row of reader.iterateRows({
+    columns: ['id', 'name'],
+    rowGroups: [0],
+  })) {
+    console.log(row);
+  }
+});</code></pre><p><strong>実行結果：</strong>CLI は最初の row group 全体、Node.js はその id・name 列を表示します。列の絞り込みは row group を読んだ後に行います。</p><a class="guide-source" href="https://github.com/Lian0123/parquet-tool/blob/main/src/lib/reader.ts">実装を見る ↗</a></article>
+      <article id="recipe-buffer"><h2>Node.js Buffer でファイルを扱う</h2><p>Parquet のバイト列を読み、行データに復号せず別ファイルに書き込みます。</p><p class="guide-prerequisite"><strong>準備：</strong>先に「ファイル作成」を実行してください。この機能は Node.js API を使用します。</p><h3>Node.js コード</h3><pre><code>const { parquetToBuffer, bufferToParquet } = require('parquet-tool');
+
+const bytes = parquetToBuffer('data.parquet', { validate: true });
+bufferToParquet(bytes, 'restored.parquet', {
+  validate: true,
+  overwrite: true,
+});
+console.log('Bytes:', bytes.length);</code></pre><p><strong>実行結果：</strong>検証済みの restored.parquet を作成します。overwrite: true で再実行時に上書きできます。</p><a class="guide-source" href="https://github.com/Lian0123/parquet-tool/blob/main/src/lib/buffer.ts">実装を見る ↗</a></article>
+    </div></div>
+    <section class="guide-setup"><h2>次のステップ</h2><p>次の資料をご覧ください：<a href="https://github.com/Lian0123/parquet-tool/blob/main/docs/api.md">完全な API リファレンス</a>、<a href="https://github.com/Lian0123/parquet-tool/blob/main/docs/cli.md">CLI リファレンス</a> または <a href="https://github.com/Lian0123/parquet-tool/tree/main/examples">実行可能な使用例</a>。問題は <a href="https://github.com/Lian0123/parquet-tool/issues">GitHub Issues</a> でご報告ください。</p></section>
+  </main>
+  <footer class="wrap footer"><a class="brand" href="./index.html">parquet<span class="brand-light">-tool</span></a><span>MIT License · Node.js / CLI ガイド</span><a href="./converter.html">ファイルを変換 ↗</a></footer>
+</body></html>

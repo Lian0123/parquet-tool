@@ -1,6 +1,4 @@
-<!doctype html>
-<html lang="zh-Hant">
-<head>
+<!DOCTYPE html><html lang="zh-Hant"><head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- SEO:START -->
@@ -57,7 +55,7 @@
           "name": "parquet-tool 是什麼？",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "parquet-tool 是 Node.js 18 以上可用的 TypeScript 函式庫與 CLI，核心讀寫使用 C++ 原生模組。這個網站另提供獨立的瀏覽器轉換工具，以及 12 個讀寫、轉換與資料處理範例。"
+            "text": "parquet-tool 是 Node.js 18 以上可用的 TypeScript 函式庫與 CLI，核心讀寫使用 C++ 原生模組。網站轉換工具透過 WebAssembly 共用相同的 C++ 核心，以及 12 個讀寫、轉換與資料處理範例。"
           }
         },
         {
@@ -84,19 +82,19 @@
   <meta name="theme-color" content="#183f35">
   <link rel="icon" href="./favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="./styles.css">
-  <script src="./examples.js" defer></script>
-  <script src="./app.js" defer></script>
-</head>
+  <script src="./examples.js" defer=""></script>
+  <script src="./app.js" defer=""></script>
+<link rel="alternate" hreflang="zh-Hant" href="https://lian0123.github.io/parquet-tool/"><link rel="alternate" hreflang="en" href="https://lian0123.github.io/parquet-tool/en/"><link rel="alternate" hreflang="ja" href="https://lian0123.github.io/parquet-tool/ja/"><link rel="alternate" hreflang="x-default" href="https://lian0123.github.io/parquet-tool/"><script id="locale-data" type="application/json">{"language":"zh-Hant","messages":{"Invalid Parquet file. Check that it is complete and uses a supported format.":"Parquet 檔案無效，請確認檔案完整且使用支援的格式。","nested and repeated Parquet columns are not supported":"不支援巢狀或重複的 Parquet 欄位。","binary and non-UTF8 logical types are not supported by the project engine":"不支援二進位或 UTF-8 以外的 logical types。","Multiple data pages per column are not supported by the project engine":"目前不支援每欄包含多個資料頁的 Parquet。","unsupported Parquet physical type":"不支援這個 Parquet 實體型別。","Only uncompressed Parquet is supported by the project engine":"本專案核心目前只支援無壓縮 Parquet。","Only PLAIN encoding and data page v1 are supported by the project engine":"本專案核心目前只支援 PLAIN 編碼與資料頁 v1。","browser table limit exceeded":"資料超過瀏覽器處理上限：100,000 列、200 欄或 2,000,000 個儲存格。"}}</script><script id="site-i18n" src="./i18n.js"></script></head>
 <body>
   <a class="skip-link" href="#main">跳至主要內容</a>
   <header class="header">
     <a class="brand" href="#" aria-label="parquet-tool 首頁"><span class="brand-mark" aria-hidden="true">▥</span>parquet<span class="brand-light">-tool</span><span class="brand-label">EXAMPLES</span></a>
     <nav aria-label="主要導覽"><a href="./guide.html">完整教學</a><a href="#examples">使用範例</a><a href="./converter.html">轉換工具</a><a class="github-link" href="https://github.com/Lian0123/parquet-tool">GitHub <span aria-hidden="true">↗</span></a></nav>
-  </header>
+  </header><nav class="language-switch wrap" aria-label="Language"><a href="./index.html" hreflang="zh-Hant" lang="zh-Hant" aria-current="page">繁體中文</a><a href="./en/index.html" hreflang="en" lang="en">English</a><a href="./ja/index.html" hreflang="ja" lang="ja">日本語</a></nav>
   <main id="main">
     <section class="hero wrap" aria-labelledby="hero-title">
       <div class="hero-copy">
-        <p class="eyebrow"><span class="status-dot"></span> NODE.JS LIBRARY & CLI</p>
+        <p class="eyebrow"><span class="status-dot"></span> NODE.JS LIBRARY &amp; CLI</p>
         <h1 id="hero-title">Parquet 轉換，<br><span>從這裡開始。</span></h1>
         <p class="hero-description">Parquet 讀寫、格式轉換與資料處理工具。<br>選擇 Node.js／CLI 使用範例，或在瀏覽器直接互轉 CSV、JSON 與 Parquet。</p>
         <div class="hero-actions"><a class="button primary" href="./converter.html">直接轉換檔案 <span aria-hidden="true">↗</span></a><a class="text-link" href="#examples">探索使用範例 <span aria-hidden="true">→</span></a></div>
@@ -120,7 +118,7 @@
 cd parquet-demo
 npm init -y
 npm install parquet-tool</code></pre><p class="small">若安裝時需要編譯原生模組，請先依<a href="https://github.com/Lian0123/parquet-tool/blob/main/docs/installation.md">安裝文件</a>準備 CMake 與 C++ 工具鏈。</p></article>
-        <article><span class="step-number">02</span><h3>準備範例資料</h3><p>下載後將檔案放進剛建立的工作資料夾。</p><div class="download-links"><a href="./samples/input.json" download>↓ input.json <span>3 筆資料</span></a><a href="./samples/input.csv" download>↓ input.csv <span>相同內容</span></a></div><p class="small">欄位：<code>id</code>、<code>name</code>、<code>active</code>。資料為虛構示例。</p></article>
+        <article><span class="step-number">02</span><h3>準備範例資料</h3><p>下載後將檔案放進剛建立的工作資料夾。</p><div class="download-links"><a href="./samples/input.json" download="">↓ input.json <span>3 筆資料</span></a><a href="./samples/input.csv" download="">↓ input.csv <span>相同內容</span></a></div><p class="small">欄位：<code>id</code>、<code>name</code>、<code>active</code>。資料為虛構示例。</p></article>
         <article><span class="step-number">03</span><h3>挑一個範例開始</h3><p>CLI 指令直接貼到終端機；Node.js 程式儲存為 <code>example.cjs</code> 後執行。</p><pre><code>node example.cjs</code></pre><p class="small">範例在本機 Node.js 執行。也可以使用<a href="./converter.html">瀏覽器轉換工具</a>直接轉換 CSV、JSON 與 Parquet，無需安裝套件。</p></article>
       </div>
     </section>
@@ -133,13 +131,13 @@ npm install parquet-tool</code></pre><p class="small">若安裝時需要編譯�
           <aside class="recipe-sidebar" aria-label="範例選擇">
             <label class="search-label" for="search">搜尋範例</label><div class="search-box"><span aria-hidden="true">⌕</span><input id="search" type="search" placeholder="搜尋任務、指令或格式…" autocomplete="off"></div>
             <label class="visually-hidden" for="category">範例分類</label><select id="category"><option value="all">所有範例</option><option value="basics">基本讀寫</option><option value="conversion">格式轉換</option><option value="processing">資料處理</option></select>
-            <p id="result-count" class="result-count" role="status"></p><div id="recipe-list" class="recipe-list"></div><p id="empty-state" hidden>找不到符合的範例。試試「CSV」或清除搜尋條件。</p>
+            <p id="result-count" class="result-count" role="status"></p><div id="recipe-list" class="recipe-list"></div><p id="empty-state" hidden="">找不到符合的範例。試試「CSV」或清除搜尋條件。</p>
           </aside>
           <article class="recipe-detail" id="recipe-detail" aria-labelledby="recipe-title">
             <div class="recipe-meta"><span id="recipe-category">基本讀寫</span><a id="permalink" href="#example-write" aria-label="此範例的永久連結"># <span>範例連結</span></a></div>
             <h3 id="recipe-title">建立第一個 Parquet 檔案</h3><p id="recipe-description">使用明確的 schema，將 input.json 寫成 data.parquet。</p>
             <p class="prerequisite" id="prerequisite">準備：先下載 input.json 到工作資料夾。</p>
-            <div class="code-toolbar"><div class="code-tabs" role="tablist" aria-label="程式語言"><button id="tab-cli" role="tab" aria-selected="true" aria-controls="code-panel" data-language="cli">CLI</button><button id="tab-node" role="tab" aria-selected="false" aria-controls="code-panel" tabindex="-1" data-language="node">Node.js</button></div><button id="copy" class="copy-button" type="button" hidden>複製程式碼 <span aria-hidden="true">⧉</span></button></div>
+            <div class="code-toolbar"><div class="code-tabs" role="tablist" aria-label="程式語言"><button id="tab-cli" role="tab" aria-selected="true" aria-controls="code-panel" data-language="cli">CLI</button><button id="tab-node" role="tab" aria-selected="false" aria-controls="code-panel" tabindex="-1" data-language="node">Node.js</button></div><button id="copy" class="copy-button" type="button" hidden="">複製程式碼 <span aria-hidden="true">⧉</span></button></div>
             <div id="code-panel" role="tabpanel" aria-labelledby="tab-cli" tabindex="0"><pre><code id="recipe-code">npx parquet-tool write data.parquet -i input.json -s "id:INT32,name:STRING,active:BOOLEAN"</code></pre></div>
             <div class="recipe-outcome"><span class="outcome-label">執行後</span><p id="recipe-outcome">產生包含 3 筆資料的 data.parquet。</p></div>
             <div class="recipe-footer"><span id="code-hint">在工作資料夾的終端機執行。</span><a id="source-link" href="https://github.com/Lian0123/parquet-tool/blob/main/src/cli/index.ts">查看原始碼 ↗</a></div>
@@ -150,16 +148,15 @@ npm install parquet-tool</code></pre><p class="small">若安裝時需要編譯�
     </section>
     <!-- FAQ:START -->
 <section id="faq" class="search-faq wrap" aria-labelledby="faq-title">
-      <p class="eyebrow">QUESTIONS & ANSWERS</p><h2 id="faq-title">Parquet 轉換常見問題</h2>
-      <details><summary>parquet-tool 是什麼？</summary><p>parquet-tool 是 Node.js 18 以上可用的 TypeScript 函式庫與 CLI，核心讀寫使用 C++ 原生模組。這個網站另提供獨立的瀏覽器轉換工具，以及 12 個讀寫、轉換與資料處理範例。</p></details>
+      <p class="eyebrow">QUESTIONS &amp; ANSWERS</p><h2 id="faq-title">Parquet 轉換常見問題</h2>
+      <details><summary>parquet-tool 是什麼？</summary><p>parquet-tool 是 Node.js 18 以上可用的 TypeScript 函式庫與 CLI，核心讀寫使用 C++ 原生模組。網站轉換工具透過 WebAssembly 共用相同的 C++ 核心，以及 12 個讀寫、轉換與資料處理範例。</p></details>
       <details><summary>網頁版可以轉換哪些格式？</summary><p>網頁版支援 CSV、JSON、平面 Parquet 三種格式互轉，共六個方向。Arrow IPC 與 XML 轉換請使用 Node.js／CLI 範例。</p></details>
       <details><summary>使用網頁轉換工具需要安裝 Node.js 嗎？</summary><p>不需要。使用支援 JavaScript 模組與 Web Worker 的現代瀏覽器，開啟轉換頁即可。教學中的 Node.js 與 CLI 程式碼則需要在本機安裝 Node.js 18 以上及 parquet-tool。</p></details>
-      <p class="content-review">內容檢核：<time datetime="2026-10-27">2026-10-27</time> · <a href="https://github.com/Lian0123/parquet-tool">原始碼與維護紀錄 ↗</a> · <a href="./guide.html">完整使用教學</a></p>
+      <p class="content-review">內容檢核：<time datetime="2026-10-28">2026-10-28</time> · <a href="https://github.com/Lian0123/parquet-tool">原始碼與維護紀錄 ↗</a> · <a href="./guide.html">完整使用教學</a></p>
     </section>
   <!-- FAQ:END -->
     <section class="resources wrap" aria-labelledby="resources-title"><div><p class="eyebrow">03 / GO FURTHER</p><h2 id="resources-title">接著，打造你的資料流程。</h2></div><div class="resource-links"><a href="./guide.html"><span>Complete Guide<small>12 個 Parquet 任務與完整程式碼</small></span><span aria-hidden="true">↗</span></a><a href="https://github.com/Lian0123/parquet-tool/blob/main/docs/api.md"><span>API Reference<small>方法、參數與資料型別</small></span><span aria-hidden="true">↗</span></a><a href="https://github.com/Lian0123/parquet-tool/blob/main/docs/cli.md"><span>CLI Reference<small>完整指令與選項</small></span><span aria-hidden="true">↗</span></a><a href="https://github.com/Lian0123/parquet-tool/tree/main/examples"><span>Runnable Examples<small>儲存庫內的完整範例</small></span><span aria-hidden="true">↗</span></a></div></section>
   </main>
   <footer class="wrap footer"><a class="brand" href="#">parquet<span class="brand-light">-tool</span></a><span>以 TypeScript 與 C++ 打造 · MIT License</span><a href="https://github.com/Lian0123/parquet-tool/issues">回報問題 ↗</a></footer>
   <p id="copy-status" class="toast" role="status" aria-live="polite"></p>
-</body>
-</html>
+</body></html>

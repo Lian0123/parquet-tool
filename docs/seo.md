@@ -18,7 +18,7 @@ rankings, rich results, or citations in generated answers.
 - `guide.html` and `guide.md`: all twelve task descriptions, prerequisites, CLI and
   CommonJS snippets, outcomes, and source links. The HTML guide works with JavaScript
   disabled; interactive tab switching is no longer the only way to read examples.
-- `sitemap.xml`: the three canonical HTML pages, excluding hash states, samples,
+- `sitemap.xml`: nine canonical HTML pages (three per language), excluding hash states, samples,
   generated downloads, and alternate representations. No artificial `lastmod` is
   emitted on every build.
 - Optional `llms.txt`: a concise content/link index with the same support limits.
@@ -53,11 +53,14 @@ The ordinary browser build also regenerates these files. Pages checks their
 freshness **before** building, so stale committed content fails deployment checks.
 Use `seo.config.mjs` to change `baseUrl` if adopting a custom domain; regenerate all
 outputs, update the share-card source if its displayed URL changes, and verify
-canonicals, sitemap, JSON-LD and social URLs together. Only Traditional Chinese is
-published, so no nonexistent language alternatives are advertised.
+canonicals, sitemap, JSON-LD and social URLs together. Traditional Chinese lives at
+the project root, English at `en/`, and Japanese at `ja/`; all pages include reciprocal
+`hreflang` alternatives and a language switcher. `translations*.mjs` and `localize.mjs`
+produce localized static pages, recipe metadata, statuses and errors.
 
 Content changes should keep these constraints explicit: browser/native engines
-are separate, Parquet interoperability is limited, uploaded files are not sent to
+share the project C++ core through WebAssembly, only uncompressed PLAIN data pages
+v1 and flat scalar tables are supported, selected files are not sent to
 servers, flat tables only, and the engine's real size/row/column/cell limits apply.
 Tests compare advertised limits with `site/converter-shared.mjs`.
 
@@ -83,7 +86,7 @@ not claimed as remotely verified.
 
 ## After deployment
 
-1. Confirm all three canonical pages, the PNG, Markdown guide and sitemap return
+1. Confirm all nine canonical pages, the PNG, Markdown guide and sitemap return
    successful HTTP responses at the public project URL. Inspect deployed source,
    not only the JavaScript-rendered page.
 2. In an owner-verified Google Search Console property, submit

@@ -6,6 +6,7 @@ import { JSDOM } from 'jsdom';
 import { site, pages } from '../seo.config.mjs';
 import { generateSeo } from '../seo.mjs';
 import { LIMITS } from '../../../site/converter-shared.mjs';
+import { languages } from '../localize.mjs';
 
 const directory = new URL('../../../site/', import.meta.url);
 const canonical = (file) => new URL(file === 'index.html' ? '' : file, site.baseUrl).href;
@@ -62,7 +63,7 @@ test('all 12 recipes and exact runnable snippets are present without JavaScript 
   const markdown = await readFile(new URL('guide.md', directory), 'utf8');
   try {
     assert.equal(dom.window.document.querySelectorAll('.guide-recipes article').length, context.window.PARQUET_EXAMPLES.length);
-    assert.equal(dom.window.document.querySelectorAll('script[src]').length, 0);
+    assert.equal(dom.window.document.querySelectorAll('script[src]:not(#site-i18n)').length, 0);
     for (const recipe of context.window.PARQUET_EXAMPLES) {
       const article = dom.window.document.getElementById(`recipe-${recipe.id}`);
       assert.equal(article.querySelector('h2').textContent, recipe.title);
@@ -74,11 +75,11 @@ test('all 12 recipes and exact runnable snippets are present without JavaScript 
   } finally { dom.window.close(); }
 });
 
-test('sitemap lists only the three canonical HTML pages with consistent URLs', async () => {
+test('sitemap lists nine canonical language pages with consistent URLs', async () => {
   const xml = await readFile(new URL('sitemap.xml', directory), 'utf8');
   const dom = new JSDOM(xml, { contentType: 'application/xml' });
   try {
-    assert.deepEqual([...dom.window.document.querySelectorAll('loc')].map((element) => element.textContent), pages.map((page) => canonical(page.file)));
+    assert.deepEqual([...dom.window.document.querySelectorAll('loc')].map((element) => element.textContent), languages.flatMap((language) => pages.map((page) => new URL(language.directory + (page.file === 'index.html' ? '' : page.file), site.baseUrl).href)));
     assert.equal(dom.window.document.documentElement.namespaceURI, 'http://www.sitemaps.org/schemas/sitemap/0.9');
     assert.equal(new Set(pages.map((page) => page.title)).size, pages.length);
     assert.equal(new Set(pages.map((page) => page.description)).size, pages.length);

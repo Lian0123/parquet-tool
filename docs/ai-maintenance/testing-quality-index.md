@@ -1,4 +1,4 @@
-<!-- AI-DOC: owner=maintainers; verified=2026-10-27; sources=package.json,jest.config.ts,.eslintrc.js,tests,.github/workflows/ci.yml,site,tools/site-converter,.github/workflows/pages.yml -->
+<!-- AI-DOC: owner=maintainers; verified=2026-10-28; sources=package.json,jest.config.ts,.eslintrc.js,tests,.github/workflows/ci.yml,site,tools/site-converter,.github/workflows/pages.yml -->
 # Testing and Quality Index
 
 | Change | Minimum validation |
@@ -14,5 +14,9 @@
 | SEO / AI-search content | `npm run seo:check --prefix tools/site-converter`; website tests cover metadata, canonical/sitemap URLs, social PNG, visible FAQ/JSON-LD agreement, complete static recipes, actual engine limits and local links. External indexing/citations require post-deployment observation; docs check |
 
 Normal, boundary, and error paths need evidence. Check handles, temporary files, buffers, generated artifacts, secrets, and `git diff --check` before completion.
+
+Security: `npm run security:check` validates the installed release-tool bundle after
+a clean install. Website tests also cover all nine static language pages, reciprocal
+`hreflang`, real local links, translated statuses and WASM source hashes.
 
 Test map: `roundtrip`, `append`, `features`, `cli`, `splitter`, `parallel`, and `buffer`.

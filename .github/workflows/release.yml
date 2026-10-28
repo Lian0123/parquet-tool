@@ -41,6 +41,7 @@ jobs:
           node-version: '24.10.0'
           cache: 'npm'
       - run: npm ci
+      - run: npm run security:check
       - run: npm run build:native
       - name: Stage prebuild artifact
         shell: bash
@@ -66,6 +67,7 @@ jobs:
           node-version: '24.10.0'
           cache: 'npm'
       - run: npm ci
+      - run: npm run security:check
       - run: npm run build:native
       - run: npm run build:ts
       - run: node -e "require('./build/Release/parquet_addon.node'); console.log('native addon loaded');"
@@ -85,6 +87,7 @@ jobs:
           node-version: '24.10.0'
           cache: 'npm'
       - run: npm ci
+      - run: npm run security:check
 
       # Download all platform prebuilds built above and merge into prebuilds/
       - name: Download all prebuilds

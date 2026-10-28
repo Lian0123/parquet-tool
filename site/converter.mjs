@@ -1,4 +1,5 @@
 import { LIMITS, detectFormat } from './converter-shared.mjs';
+const t = window.siteTranslate || ((text) => text);
 
 const byId = (id) => document.getElementById(id);
 const format = byId('output-format');
@@ -26,7 +27,7 @@ function clearResult() {
 }
 
 function showError(message) {
-  error.textContent = message;
+  error.textContent = t(message);
   error.hidden = false;
 }
 
@@ -38,7 +39,7 @@ function setPhase(value, message) {
   for (const id of ['output-format', 'compression', 'output-delimiter', 'escape-formulae', 'input-delimiter', 'infer-types']) byId(id).disabled = busy;
   status.classList.toggle('busy', busy);
   byId('preview').setAttribute('aria-busy', String(busy));
-  status.textContent = message;
+  status.textContent = t(message);
 }
 
 function reset(message = '選擇檔案後，即可查看預覽並開始轉換。') {
@@ -64,7 +65,7 @@ function updateFormat() {
   byId('csv-options').hidden = format.value !== 'csv';
   byId('json-options').hidden = format.value !== 'json';
   const descriptions = { parquet: '欄式儲存，適合資料分析與資料交換。', csv: '通用文字表格，可匯入試算表或其他資料工具。', json: '易讀的物件陣列，適合程式與 API 資料交換。' };
-  byId('format-description').textContent = descriptions[format.value];
+  byId('format-description').textContent = t(descriptions[format.value]);
   if (ready) setPhase('ready', '資料已就緒，選擇格式後按「開始轉換」。');
 }
 
@@ -95,7 +96,7 @@ function renderPreview(preview) {
     }
     byId('preview-body').append(tr);
   }
-  byId('table-stats').textContent = `${preview.rowCount.toLocaleString()} 列 × ${preview.schema.length} 欄 · ${preview.format.toUpperCase()}`;
+  byId('table-stats').textContent = `${preview.rowCount.toLocaleString()} ${t('列')} × ${preview.schema.length} ${t('欄')} · ${preview.format.toUpperCase()}`;
   byId('preview').hidden = false;
 }
 
@@ -203,7 +204,7 @@ window.addEventListener('drop', (event) => event.preventDefault());
 window.addEventListener('pagehide', () => reset());
 if (location.protocol === 'file:' || !('Worker' in window)) {
   byId('environment-error').hidden = false;
-  byId('environment-error').textContent = '請透過 GitHub Pages 或本機 HTTP 伺服器開啟此頁，並使用支援 Web Worker 的新版瀏覽器。直接開啟 HTML 檔案無法執行轉換。';
+  byId('environment-error').textContent = t('請透過 GitHub Pages 或本機 HTTP 伺服器開啟此頁，並使用支援 Web Worker 的新版瀏覽器。直接開啟 HTML 檔案無法執行轉換。');
   input.disabled = true;
   byId('sample').disabled = true;
 }

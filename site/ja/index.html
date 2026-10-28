@@ -1,0 +1,162 @@
+<!DOCTYPE html><html lang="ja"><head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- SEO:START -->
+  <title>Parquet ツールと使用例：Node.js・CLI・ブラウザー変換 | parquet-tool</title>
+  <meta name="description" content="Parquet の読み書き・変換・処理を 12 の Node.js / CLI 使用例で解説。ブラウザーではファイルをアップロードせず CSV・JSON・Parquet を変換できます。">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <link rel="canonical" href="https://lian0123.github.io/parquet-tool/ja/">
+  <link rel="sitemap" type="application/xml" href="../sitemap.xml">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="parquet-tool">
+  <meta property="og:locale" content="ja_JP">
+  <meta property="og:title" content="Parquet ツールと使用例：Node.js・CLI・ブラウザー変換 | parquet-tool">
+  <meta property="og:description" content="Parquet の読み書き・変換・処理を 12 の Node.js / CLI 使用例で解説。ブラウザーではファイルをアップロードせず CSV・JSON・Parquet を変換できます。">
+  <meta property="og:url" content="https://lian0123.github.io/parquet-tool/ja/">
+  <meta property="og:image" content="https://lian0123.github.io/parquet-tool/social-card.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="parquet-tool：CSV・JSON・Parquet のブラウザー変換と Node.js の使用例">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Parquet ツールと使用例：Node.js・CLI・ブラウザー変換 | parquet-tool">
+  <meta name="twitter:description" content="Parquet の読み書き・変換・処理を 12 の Node.js / CLI 使用例で解説。ブラウザーではファイルをアップロードせず CSV・JSON・Parquet を変換できます。">
+  <meta name="twitter:image" content="https://lian0123.github.io/parquet-tool/social-card.png">
+  <meta name="twitter:image:alt" content="parquet-tool：CSV・JSON・Parquet のブラウザー変換と Node.js の使用例">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://lian0123.github.io/parquet-tool/ja/#website",
+      "url": "https://lian0123.github.io/parquet-tool/ja/",
+      "name": "parquet-tool",
+      "inLanguage": "ja"
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://lian0123.github.io/parquet-tool/ja/#page",
+      "url": "https://lian0123.github.io/parquet-tool/ja/",
+      "name": "Parquet ツールと使用例：Node.js・CLI・ブラウザー変換 | parquet-tool",
+      "description": "Parquet の読み書き・変換・処理を 12 の Node.js / CLI 使用例で解説。ブラウザーではファイルをアップロードせず CSV・JSON・Parquet を変換できます。",
+      "inLanguage": "ja",
+      "isPartOf": {
+        "@id": "https://lian0123.github.io/parquet-tool/ja/#website"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://lian0123.github.io/parquet-tool/ja/#faq",
+      "isPartOf": {
+        "@id": "https://lian0123.github.io/parquet-tool/ja/#page"
+      },
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "parquet-tool とは何ですか？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "parquet-tool は Node.js 18 以降に対応する TypeScript ライブラリと CLI です。ブラウザー版も同じ C++ Parquet コアを WebAssembly で使用し、12 の使用例を提供します。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "ブラウザー版ではどの形式を変換できますか？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "ブラウザー版は CSV・JSON・フラットな Parquet の全 6 方向の変換に対応します。Arrow IPC と XML は Node.js / CLI の使用例をご利用ください。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "ブラウザー変換ツールに Node.js は必要ですか？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "不要です。JavaScript モジュールと Web Worker に対応する最新のブラウザーで開いてください。Node.js / CLI の使用例には、ローカルの Node.js 18 以降と parquet-tool が必要です。"
+          }
+        }
+      ]
+    }
+  ]
+}</script>
+  <!-- SEO:END -->
+  <meta name="theme-color" content="#183f35">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../styles.css">
+  <script src="./examples.js" defer=""></script>
+  <script src="../app.js" defer=""></script>
+<link rel="alternate" hreflang="zh-Hant" href="https://lian0123.github.io/parquet-tool/"><link rel="alternate" hreflang="en" href="https://lian0123.github.io/parquet-tool/en/"><link rel="alternate" hreflang="ja" href="https://lian0123.github.io/parquet-tool/ja/"><link rel="alternate" hreflang="x-default" href="https://lian0123.github.io/parquet-tool/"><script id="locale-data" type="application/json">{"language":"ja","messages":{"基本讀寫":"基本的な読み書き","格式轉換":"形式変換","資料處理":"データ処理","在工作資料夾的終端機執行。":"作業フォルダーのターミナルで実行してください。","欄式儲存，適合資料分析與資料交換。":"分析やデータ交換に適した列指向形式です。","選擇檔案後，即可查看預覽並開始轉換。":"ファイルを選択すると、プレビューと変換ができます。","準備：":"準備：","parquet-tool 是 Node.js 18 以上可用的 TypeScript 函式庫與 CLI，核心讀寫使用 C++ 原生模組。網站轉換工具透過 WebAssembly 共用相同的 C++ 核心，以及 12 個讀寫、轉換與資料處理範例。":"parquet-tool は Node.js 18 以降に対応する TypeScript ライブラリと CLI です。ブラウザー版も同じ C++ Parquet コアを WebAssembly で使用し、12 の使用例を提供します。","選擇或拖入含標題列的 UTF-8 CSV，確認資料預覽，將輸出格式設為 Parquet，再按「開始轉換」與「下載檔案」。輸出使用本專案核心的無壓縮 PLAIN 編碼。":"ヘッダー付き UTF-8 CSV を選択・ドロップし、プレビューを確認して Parquet に変換・ダウンロードします。本プロジェクトのコアで無圧縮 PLAIN 形式を出力します。","Parquet INT64 在 JSON／CSV 輸出為十進位字串。JSON 超出安全精度的數值會被拒絕，請改用帶引號的字串。CSV 空欄位與 JSON 缺少的欄位轉為 null；混合型別欄位以文字保存，日期欄位以文字保存。":"INT64 は JSON / CSV で十進数文字列になります。安全な精度を超える JSON 数値には引用符付き文字列を使用してください。空欄や欠けた項目は null、混合型と日付は文字列になります。","可以。網頁版與 Node.js／CLI 共用本專案 C++ 核心，支援無壓縮 PLAIN 資料頁 v1。舊版專案的 schema 仍可讀取；不支援壓縮、巢狀欄位或其他 logical types，也不保留完整 metadata。":"はい。ブラウザーと Node.js / CLI は本プロジェクトの C++ コアを共有し、無圧縮 PLAIN データページ v1 に対応します。旧版の schema も読み取れます。圧縮・入れ子・その他の logical type は未対応で、metadata 全体は保持しません。","，不必安裝 Node.js。網頁與 Node.js／CLI 共用本專案 C++ 核心；Parquet 支援無壓縮 PLAIN 資料頁 v1。混合型別、空值與容量限制詳見":"を使用でき、Node.js は不要です。どちらも同じ C++ コアを使い、無圧縮 PLAIN データページ v1 に対応します。混合型・欠損値・上限については、","個範例":"件の使用例","列":"行","欄":"列","儲存為 example.cjs，再執行 node example.cjs。":"example.cjs として保存し、node example.cjs を実行してください。","已複製程式碼":"コードをコピーしました","請按 Ctrl+C 或 ⌘C 複製已選取的程式碼":"Ctrl+C または ⌘C で選択したコードをコピーしてください","資料已就緒，選擇格式後按「開始轉換」。":"準備できました。形式を選び「変換を開始」を押してください。","通用文字表格，可匯入試算表或其他資料工具。":"表計算ソフトや他のデータツールで使えるテキスト形式です。","易讀的物件陣列，適合程式與 API 資料交換。":"プログラムや API のデータ交換に適したオブジェクト配列です。","正在本機讀取與辨識資料…":"端末内のファイルを読み込み・確認しています…","資料已就緒，預覽確認後即可轉換。":"準備できました。プレビューを確認して変換してください。","轉換完成。按「下載檔案」儲存結果。":"変換が完了しました。「ダウンロード」で保存してください。","處理未完成，請檢查下方錯誤訊息。":"処理できませんでした。下のエラーをご確認ください。","轉換引擎無法執行。":"変換エンジンを実行できませんでした。","請重新選擇檔案再試一次，並確認使用支援 JavaScript 模組與 Web Worker 的新版瀏覽器。":"ファイルを選び直し、JavaScript モジュール・WebAssembly・Web Worker に対応した最新ブラウザーをお使いください。","無法讀取檔案。":"ファイルを読み込めませんでした。","已取消處理並清除檔案。":"処理を中止し、ファイルをクリアしました。","選項已更新，請重新轉換。":"設定を変更しました。もう一度変換してください。","正在瀏覽器背景轉換，請稍候…":"ブラウザーのバックグラウンドで変換中です…","請一次選擇一個檔案。":"ファイルは 1 つずつ選択してください。","請透過 GitHub Pages 或本機 HTTP 伺服器開啟此頁，並使用支援 Web Worker 的新版瀏覽器。直接開啟 HTML 檔案無法執行轉換。":"GitHub Pages またはローカル HTTP サーバー経由で、Web Worker と WebAssembly に対応したブラウザーで開いてください。file:// からは変換できません。","資料超過 100,000 列，請先切分檔案。":"100,000 行を超えています。先にファイルを分割してください。","資料必須包含 1 至 200 個欄位。":"列数は 1〜200 列にしてください。","資料超過 2,000,000 個儲存格，請先切分檔案。":"2,000,000 セルを超えています。先に分割してください。","欄位名稱不能空白，也不能使用 __proto__、prototype 或 constructor。":"列名を空欄にしたり、__proto__・prototype・constructor を使ったりすることはできません。","欄位名稱重複，請先修正 CSV 標題列。":"列名が重複しています。CSV ヘッダーを修正してください。","找不到資料列。請提供至少一筆資料。":"データがありません。少なくとも 1 行必要です。","JSON 必須是物件陣列，例如 [{\"id\":1,\"name\":\"Alice\"}]。":"JSON は [{\"id\":1,\"name\":\"Alice\"}] のようなオブジェクト配列にしてください。","檔案超過 20 MiB，請先切分後再轉換。":"20 MiB を超えています。分割してから変換してください。","檔案是空的。":"ファイルが空です。","文字編碼無法辨識，請先將檔案另存為 UTF-8。":"文字コードを認識できません。UTF-8 で保存してください。","JSON 格式錯誤，請檢查逗號、引號與括號。":"JSON が不正です。カンマ・引用符・括弧を確認してください。","CSV 格式錯誤：":"CSV が不正です：","CSV 沒有標題列。":"CSV にヘッダー行がありません。","CSV 每一列的欄位數必須與標題列一致，請確認分隔符號。":"各行の列数をヘッダーと一致させてください。区切り文字を確認してください。","不支援這個輸出格式。":"この出力形式は未対応です。","請先選擇檔案。":"先にファイルを選択してください。","請選擇 .csv、.json 或 .parquet 檔案。":".csv・.json・.parquet ファイルを選択してください。","包含無效日期。":"に無効な日付が含まれています。","包含巢狀物件、陣列或二進位資料。目前僅支援平面資料表。":"に入れ子・配列・バイナリデータが含まれています。フラットな表のみ対応します。","的數值超出 JavaScript 安全精度。請改用帶引號的十進位字串。":"の数値が JavaScript の安全な精度を超えています。引用符付きの十進数文字列にしてください。","超出 INT64 範圍。":"が INT64 の範囲を超えています。","Only uncompressed Parquet is supported by the project engine":"本プロジェクトのエンジンは無圧縮 Parquet のみ対応します","Only PLAIN encoding and data page v1 are supported by the project engine":"本プロジェクトのエンジンは PLAIN エンコーディング・データページ v1 のみ対応します","browser table limit exceeded":"ブラウザーの上限（100,000 行・200 列・2,000,000 セル）を超えています。","與本機版本共用核心":"ローカル版と共通のコア","瀏覽器引擎：本專案 C++ 核心（WebAssembly） / Papa Parse":"ブラウザーエンジン：本プロジェクトの C++ コア（WebAssembly） / Papa Parse","網頁版透過 WebAssembly 使用本專案的 C++ 核心，與 Node.js／CLI 共用 Parquet 實作。支援無壓縮、PLAIN 編碼與資料頁 v1；壓縮或其他編碼會明確回報不支援。":"ブラウザー版は WebAssembly を通じて本プロジェクトの C++ コアを使用し、Node.js / CLI と Parquet 実装を共有します。無圧縮・PLAIN・データページ v1 に対応し、それ以外の圧縮・エンコーディングは明示的に拒否します。","輸出物件陣列。INT64 轉成十進位字串，避免 JSON 數值精度流失；日期欄位以文字保存。":"オブジェクト配列を出力します。精度保持のため INT64 は十進数文字列に、日付列は文字列のまま保存します。","混合型別欄位以文字保存；日期請以文字保存，超大整數請在 JSON 使用字串。暫不支援巢狀或二進位欄位。最多 200 欄、2,000,000 個儲存格。":"型が混在する列は文字列になります。日付や巨大な JSON 整数は文字列で保存してください。入れ子・バイナリ列は未対応です。上限は 200 列・2,000,000 セルです。","Invalid Parquet file. Check that it is complete and uses a supported format.":"Parquet ファイルが不正です。ファイルが完全で対応形式か確認してください。","nested and repeated Parquet columns are not supported":"入れ子・繰り返しの Parquet 列には対応していません。","binary and non-UTF8 logical types are not supported by the project engine":"バイナリ・UTF-8 以外の論理型には対応していません。","Multiple data pages per column are not supported by the project engine":"列ごとに複数のデータページがある形式には対応していません。","unsupported Parquet physical type":"この Parquet 物理型には対応していません。"}}</script><script id="site-i18n" src="../i18n.js"></script></head>
+<body>
+  <a class="skip-link" href="#main">本文へ移動</a>
+  <header class="header">
+    <a class="brand" href="#" aria-label="parquet-tool ホーム"><span class="brand-mark" aria-hidden="true">▥</span>parquet<span class="brand-light">-tool</span><span class="brand-label">EXAMPLES</span></a>
+    <nav aria-label="メインナビゲーション"><a href="./guide.html">詳しい使い方</a><a href="#examples">使用例</a><a href="./converter.html">変換ツール</a><a class="github-link" href="https://github.com/Lian0123/parquet-tool">GitHub <span aria-hidden="true">↗</span></a></nav>
+  </header><nav class="language-switch wrap" aria-label="Language"><a href="../index.html" hreflang="zh-Hant" lang="zh-Hant">繁體中文</a><a href="../en/index.html" hreflang="en" lang="en">English</a><a href="./index.html" hreflang="ja" lang="ja" aria-current="page">日本語</a></nav>
+  <main id="main">
+    <section class="hero wrap" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="eyebrow"><span class="status-dot"></span> NODE.JS LIBRARY &amp; CLI</p>
+        <h1 id="hero-title">Parquet 変換を、<br><span>ここから。</span></h1>
+        <p class="hero-description">Parquet の読み書き・形式変換・データ処理ツール。<br>Node.js / CLI の使用例を読むか、ブラウザーで CSV・JSON・Parquet を直接変換できます。</p>
+        <div class="hero-actions"><a class="button primary" href="./converter.html">ファイルを変換 <span aria-hidden="true">↗</span></a><a class="text-link" href="#examples">使用例を見る <span aria-hidden="true">→</span></a></div>
+        <div class="hero-tags"><span>TypeScript API</span><span>C++ ネイティブ実装</span><span>MIT License</span></div>
+      </div>
+      <div class="hero-demo" aria-label="JSON から Parquet への CLI 使用例">
+        <div class="demo-heading"><span class="terminal-dots" aria-hidden="true">● ● ●</span><span>your next data workflow</span><span aria-hidden="true">↗</span></div>
+        <div class="demo-files"><div class="file-stack"><span class="file-type">{ }</span><strong>input.json</strong><small>元データ</small></div><div class="file-arrow" aria-hidden="true">⟶</div><div class="file-stack parquet-file"><span class="file-type">▥</span><strong>data.parquet</strong><small>列指向ストレージ</small></div></div>
+        <div class="demo-terminal"><p><span class="prompt">$</span> npx parquet-tool json-to-parquet \<br><span class="indent">input.json data.parquet</span></p><p class="terminal-success">Converted JSON to Parquet: data.parquet<br>Schema columns: id, name, active</p><p><span class="prompt">$</span> npx parquet-tool read data.parquet --json</p><pre>[
+  { <span>"id"</span>: 1, <span>"name"</span>: "Alice", <span>"active"</span>: true },
+  { <span>"id"</span>: 2, <span>"name"</span>: "Bob",   <span>"active"</span>: false },
+  { <span>"id"</span>: 3, <span>"name"</span>: "Carol", <span>"active"</span>: true }
+]</pre><span class="demo-caption">コマンドとサンプルデータの例</span></div>
+      </div>
+    </section>
+    <div class="format-strip"><div class="wrap"><span>データ処理のために</span><p>JSON <span>↔</span> CSV <span>↔</span> <strong>PARQUET</strong> <span>↔</span> ARROW <span>↔</span> XML</p><span>ひとつのツールで、複数の形式</span></div></div>
+    <section id="start" class="start wrap" aria-labelledby="start-title">
+      <div class="section-intro"><p class="eyebrow">01 / GET STARTED</p><h2 id="start-title">準備して、始めましょう。</h2><p>Node.js 18 以降が必要です。使用例はローカルのターミナルで実行してください。</p></div>
+      <div class="steps">
+        <article><span class="step-number">01</span><h3>パッケージをインストール</h3><p>作業フォルダーを作成し、npm パッケージをインストールします。</p><pre><code>mkdir parquet-demo
+cd parquet-demo
+npm init -y
+npm install parquet-tool</code></pre><p class="small">インストール時にネイティブモジュールのビルドが必要な場合は、<a href="https://github.com/Lian0123/parquet-tool/blob/main/docs/installation.md">インストールガイド</a>を参照し、CMake と C++ ツールチェーンを準備してください。</p></article>
+        <article><span class="step-number">02</span><h3>サンプルデータを準備</h3><p>ファイルをダウンロードして作業フォルダーに置きます。</p><div class="download-links"><a href="../samples/input.json" download="">↓ input.json <span>3 行</span></a><a href="../samples/input.csv" download="">↓ input.csv <span>同じデータ</span></a></div><p class="small">列：<code>id</code>、<code>name</code>、<code>active</code>。データは架空のサンプルです。</p></article>
+        <article><span class="step-number">03</span><h3>使用例を選択</h3><p>CLI コマンドはターミナルに貼り付けて実行します。Node.js コードは  <code>example.cjs</code>  として保存し、実行してください。</p><pre><code>node example.cjs</code></pre><p class="small">使用例はローカルの Node.js で動作します。また、<a href="./converter.html">ブラウザー変換ツール</a>を使えば、パッケージをインストールせずに CSV・JSON・Parquet を変換できます。</p></article>
+      </div>
+    </section>
+    <section id="examples" class="examples-section" aria-labelledby="examples-title">
+      <div class="wrap">
+        <div class="examples-heading"><div><p class="eyebrow">02 / THE RECIPE BOOK</p><h2 id="examples-title">目的に合った使用例を探す。</h2></div><p>最初のデータから、次の処理フローへ。<br>タスクを選び、コードをコピーして始めましょう。</p></div>
+        <p class="static-guide-link">すべてのコードをまとめて読むには、<a href="./guide.html">12 の Parquet タスクの詳しいガイド</a>をご覧ください。JavaScript は不要です。</p>
+        <noscript><div class="notice">操作可能な使用例には JavaScript が必要です。または、<a href="./guide.html">静的な完全ガイド</a>。</div></noscript>
+        <div class="recipe-layout">
+          <aside class="recipe-sidebar" aria-label="使用例を選択">
+            <label class="search-label" for="search">使用例を検索</label><div class="search-box"><span aria-hidden="true">⌕</span><input id="search" type="search" placeholder="タスク・コマンド・形式を検索…" autocomplete="off"></div>
+            <label class="visually-hidden" for="category">使用例のカテゴリ</label><select id="category"><option value="all">すべての使用例</option><option value="basics">基本的な読み書き</option><option value="conversion">形式変換</option><option value="processing">データ処理</option></select>
+            <p id="result-count" class="result-count" role="status"></p><div id="recipe-list" class="recipe-list"></div><p id="empty-state" hidden="">一致する使用例がありません。「CSV」で検索するか、条件をクリアしてください。</p>
+          </aside>
+          <article class="recipe-detail" id="recipe-detail" aria-labelledby="recipe-title">
+            <div class="recipe-meta"><span id="recipe-category">基本的な読み書き</span><a id="permalink" href="#example-write" aria-label="この使用例への固定リンク"># <span>使用例のリンク</span></a></div>
+            <h3 id="recipe-title">最初の Parquet ファイルを作成</h3><p id="recipe-description">明示的な schema で input.json を data.parquet に書き込みます。</p>
+            <p class="prerequisite" id="prerequisite">準備：input.json を作業フォルダーにダウンロードしてください。</p>
+            <div class="code-toolbar"><div class="code-tabs" role="tablist" aria-label="コードの種類"><button id="tab-cli" role="tab" aria-selected="true" aria-controls="code-panel" data-language="cli">CLI</button><button id="tab-node" role="tab" aria-selected="false" aria-controls="code-panel" tabindex="-1" data-language="node">Node.js</button></div><button id="copy" class="copy-button" type="button" hidden="">コードをコピー <span aria-hidden="true">⧉</span></button></div>
+            <div id="code-panel" role="tabpanel" aria-labelledby="tab-cli" tabindex="0"><pre><code id="recipe-code">npx parquet-tool write data.parquet -i input.json -s "id:INT32,name:STRING,active:BOOLEAN"</code></pre></div>
+            <div class="recipe-outcome"><span class="outcome-label">実行結果</span><p id="recipe-outcome">3 行のデータを含む data.parquet を作成します。</p></div>
+            <div class="recipe-footer"><span id="code-hint">作業フォルダーのターミナルで実行してください。</span><a id="source-link" href="https://github.com/Lian0123/parquet-tool/blob/main/src/cli/index.ts">ソースコード ↗</a></div>
+          </article>
+        </div>
+        <p class="examples-note">各使用例に前提条件を記載しています。追記は既存ファイルを変更します。やり直す場合は「ファイル作成」を再実行してください。</p>
+      </div>
+    </section>
+    <!-- FAQ:START -->
+<section id="faq" class="search-faq wrap" aria-labelledby="faq-title">
+      <p class="eyebrow">QUESTIONS &amp; ANSWERS</p><h2 id="faq-title">Parquet 変換のよくある質問</h2>
+      <details><summary>parquet-tool とは何ですか？</summary><p>parquet-tool は Node.js 18 以降に対応する TypeScript ライブラリと CLI です。ブラウザー版も同じ C++ Parquet コアを WebAssembly で使用し、12 の使用例を提供します。</p></details>
+      <details><summary>ブラウザー版ではどの形式を変換できますか？</summary><p>ブラウザー版は CSV・JSON・フラットな Parquet の全 6 方向の変換に対応します。Arrow IPC と XML は Node.js / CLI の使用例をご利用ください。</p></details>
+      <details><summary>ブラウザー変換ツールに Node.js は必要ですか？</summary><p>不要です。JavaScript モジュールと Web Worker に対応する最新のブラウザーで開いてください。Node.js / CLI の使用例には、ローカルの Node.js 18 以降と parquet-tool が必要です。</p></details>
+      <p class="content-review">内容確認：<time datetime="2026-10-28">2026-10-28</time> · <a href="https://github.com/Lian0123/parquet-tool">ソースコードと更新履歴 ↗</a> · <a href="./guide.html">詳しい使用ガイド</a></p>
+    </section>
+  <!-- FAQ:END -->
+    <section class="resources wrap" aria-labelledby="resources-title"><div><p class="eyebrow">03 / GO FURTHER</p><h2 id="resources-title">次のデータ処理フローを作る。</h2></div><div class="resource-links"><a href="./guide.html"><span>Complete Guide<small>12 の Parquet タスクと完全なコード</small></span><span aria-hidden="true">↗</span></a><a href="https://github.com/Lian0123/parquet-tool/blob/main/docs/api.md"><span>API Reference<small>メソッド・引数・データ型</small></span><span aria-hidden="true">↗</span></a><a href="https://github.com/Lian0123/parquet-tool/blob/main/docs/cli.md"><span>CLI Reference<small>すべてのコマンドとオプション</small></span><span aria-hidden="true">↗</span></a><a href="https://github.com/Lian0123/parquet-tool/tree/main/examples"><span>Runnable Examples<small>リポジトリ内の実行可能な使用例</small></span><span aria-hidden="true">↗</span></a></div></section>
+  </main>
+  <footer class="wrap footer"><a class="brand" href="#">parquet<span class="brand-light">-tool</span></a><span>TypeScript と C++ で開発 · MIT License</span><a href="https://github.com/Lian0123/parquet-tool/issues">問題を報告 ↗</a></footer>
+  <p id="copy-status" class="toast" role="status" aria-live="polite"></p>
+</body></html>
