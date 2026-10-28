@@ -1,3 +1,9 @@
+## [1.3.1](https://github.com/Lian0123/parquet-tool/compare/v1.3.0...v1.3.1) (2026-10-28)
+
+### Bug Fixes
+
+* remove Hyparquet and use WebAssembly ([c5cc2b1](https://github.com/Lian0123/parquet-tool/commit/c5cc2b152d0a3bb51d346338949f9055f9b437ba))
+
 ## [1.3.0](https://github.com/Lian0123/parquet-tool/compare/v1.2.2...v1.3.0) (2026-10-27)
 
 ### Features
