@@ -1,3 +1,9 @@
+## [1.3.2](https://github.com/Lian0123/parquet-tool/compare/v1.3.1...v1.3.2) (2026-10-28)
+
+### Bug Fixes
+
+* website and dependbot action run failed ([1bbf95d](https://github.com/Lian0123/parquet-tool/commit/1bbf95d62318facf832ee47fd24a902072dbd41a))
+
 ## [1.3.1](https://github.com/Lian0123/parquet-tool/compare/v1.3.0...v1.3.1) (2026-10-28)
 
 ### Bug Fixes
