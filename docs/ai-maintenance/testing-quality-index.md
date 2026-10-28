@@ -28,3 +28,10 @@ incorrect HTML/JavaScript/WASM MIME/content, and a directory URL serving an old
 README while `index.html` is correct. Run `node tools/site-converter/branch-entrypoints.mjs
 --check`. After publishing, `node tools/site-converter/verify-deployment.mjs URL`
 checks actual HTTP pages and project engine bytes; the workflow enforces it.
+
+Worker startup regression: `tests/worker-startup.test.mjs` launches an isolated VM
+module graph without Node globals, delays browser WASM fetch, and posts the initial
+file before initialization finishes. It checks real Parquet conversion and WASM
+failure reporting. This specifically covers the startup timing missed by waiting
+for module evaluation before sending messages. DOM tests simulate the 60-second
+deadline, cancellation, recovery, late replies and message-decoding failure.
