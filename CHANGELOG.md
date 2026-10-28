@@ -1,3 +1,9 @@
+## [1.3.3](https://github.com/Lian0123/parquet-tool/compare/v1.3.2...v1.3.3) (2026-10-28)
+
+### Bug Fixes
+
+* wasm loading slow ([93fe4a5](https://github.com/Lian0123/parquet-tool/commit/93fe4a515754d40958d7f508c83dba917331aa23))
+
 ## [1.3.2](https://github.com/Lian0123/parquet-tool/compare/v1.3.1...v1.3.2) (2026-10-28)
 
 ### Bug Fixes
