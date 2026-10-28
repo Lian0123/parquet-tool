@@ -1,18 +1,18 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { loadTable, exportTable, previewTable, LIMITS } from '../../../site/converter-core.mjs';
-import { parquetWriteBuffer, parquetMetadata, Papa } from '../../../site/vendor/converter-deps.mjs';
+import { Papa } from '../../../site/vendor/converter-deps.mjs';
+import { writeProjectParquet } from '../../../site/project-engine.mjs';
 
 const encode = (text) => new TextEncoder().encode(text).buffer;
 const json = (rows) => loadTable(encode(JSON.stringify(rows)), 'data.json');
 const readOutput = (output) => new TextDecoder().decode(output.bytes);
 const baseRows = [{ id: 1, name: '水木, Hana\n"Hello"', active: true, score: 1.5 }, { id: 2, name: null, active: false, score: null }];
 
-for (const compression of ['snappy', 'none']) test(`JSON → ${compression} Parquet → CSV/JSON preserves scalar data`, async () => {
+for (const compression of ['none']) test(`JSON → project C++ ${compression} Parquet → CSV/JSON preserves scalar data`, async () => {
   const source = await json(baseRows);
   const output = exportTable(source, 'parquet', { compression });
   assert.equal(new TextDecoder().decode(output.bytes.slice(0, 4)), 'PAR1');
-  assert.equal(parquetMetadata(output.bytes).row_groups[0].columns[0].meta_data.codec, compression === 'none' ? 'UNCOMPRESSED' : 'SNAPPY');
   const back = await loadTable(output.bytes.buffer, 'back.parquet');
   assert.deepEqual(back.rows, baseRows);
   assert.deepEqual(JSON.parse(readOutput(exportTable(back, 'json'))), baseRows);
@@ -51,8 +51,8 @@ test('CSV exports optionally escape spreadsheet formula text', async () => {
 });
 
 test('INT64 exports preserve exact digits as strings in JSON and preview', async () => {
-  const buffer = parquetWriteBuffer({ columnData: [{ name: 'id', type: 'INT64', data: [9007199254740993n, null] }] });
-  const table = await loadTable(buffer, 'int64.parquet');
+  const buffer = writeProjectParquet([{ name: 'id', type: 'INT64', data: [9007199254740993n, null] }]);
+  const table = await loadTable(buffer.buffer, 'int64.parquet');
   assert.equal(table.schema[0].type, 'INT64');
   assert.deepEqual(JSON.parse(readOutput(exportTable(table, 'json'))), [{ id: '9007199254740993' }, { id: null }]);
   assert.equal(previewTable(table).rows[0].id, '9007199254740993');
@@ -72,7 +72,7 @@ test('preview contains only ten rows, output retains every row and column', asyn
 
 for (const [label, text, filename, pattern] of [
   ['invalid JSON', '[{broken}]', 'data.json', /JSON 格式錯誤/],
-  ['invalid Parquet', 'not parquet', 'data.parquet', /無法讀取 Parquet/],
+  ['invalid Parquet', 'not parquet', 'data.parquet', /invalid parquet/],
   ['unsupported extension', 'test', 'data.xml', /請選擇/],
   ['empty input', '', 'data.csv', /空的/],
   ['no records', '[]', 'data.json', /找不到資料列/],
@@ -96,7 +96,23 @@ test('rejects invalid UTF-8, files/row counts/column counts/cell counts beyond l
   await assert.rejects(json(Array.from({ length: 10001 }, () => Object.fromEntries(Array.from({ length: 200 }, (_, n) => [`c${n}`, 0])))), /2,000,000/);
 });
 
-test('Parquet metadata limit is checked before decoding oversized row groups', async () => {
-  const buffer = parquetWriteBuffer({ columnData: [{ name: 'id', type: 'INT32', data: Array(LIMITS.rows + 1).fill(1) }] });
-  await assert.rejects(loadTable(buffer, 'large.parquet'), /100,000/);
+test('project writer rejects oversized tables and unsupported compression', async () => {
+  assert.throws(() => writeProjectParquet([{ name: 'id', type: 'INT32', data: Array(LIMITS.rows + 1).fill(1) }]), /limit/);
+  const table = await json([{ id: 1 }]);
+  assert.throws(() => exportTable(table, 'parquet', { compression: 'snappy' }), /uncompressed/);
+});
+
+test('project WASM reads independent standard and legacy fixtures and rejects unsupported encodings', async () => {
+  const { readFile } = await import('node:fs/promises');
+  const fixture = async (name) => {
+    const bytes = await readFile(new URL(`../../../tests/fixtures/${name}.parquet`, import.meta.url));
+    return bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength);
+  };
+  assert.deepEqual((await loadTable(await fixture('standard-plain'), 'test.parquet')).rows,
+    [{ id: 1, name: '標準', active: true }, { id: 2, name: null, active: false }]);
+  assert.deepEqual((await loadTable(await fixture('legacy-schema'), 'test.parquet')).rows,
+    [{ id: 1, name: 'legacy' }, { id: 2, name: null }]);
+  for (const name of ['standard-snappy', 'standard-dictionary']) {
+    await assert.rejects(loadTable(await fixture(name), 'test.parquet'), /uncompressed|PLAIN/);
+  }
 });

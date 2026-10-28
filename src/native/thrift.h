@@ -160,7 +160,7 @@ public:
     }
 
     void readBytes(uint8_t* out, size_t n) {
-        if (pos_ + n > size_) throw std::runtime_error("thrift: unexpected end of data");
+        if (n > remaining()) throw std::runtime_error("thrift: unexpected end of data");
         std::memcpy(out, data_ + pos_, n);
         pos_ += n;
     }
@@ -195,7 +195,7 @@ public:
 
     std::string readBinary() {
         uint64_t len = readVarint();
-        if (pos_ + len > size_) throw std::runtime_error("thrift: unexpected end of data");
+        if (len > remaining()) throw std::runtime_error("thrift: unexpected end of data");
         std::string s(reinterpret_cast<const char*>(data_ + pos_), static_cast<size_t>(len));
         pos_ += static_cast<size_t>(len);
         return s;
@@ -236,6 +236,8 @@ public:
         if (count == 15) {
             count = static_cast<int32_t>(readVarint());
         }
+        if (count < 0 || static_cast<uint64_t>(count) > remaining())
+            throw std::runtime_error("thrift: invalid list size");
         return {etype, count};
     }
 
@@ -269,7 +271,7 @@ public:
             readZigzagI64();
             break;
         case CT_DOUBLE:
-            pos_ += 8;
+            readDouble();
             break;
         case CT_BINARY:
             readBinary();

@@ -1,6 +1,4 @@
-<!doctype html>
-<html lang="zh-Hant">
-<head>
+<!DOCTYPE html><html lang="zh-Hant"><head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- SEO:START -->
@@ -100,7 +98,7 @@
           "name": "如何將 CSV 轉成 Parquet？",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "選擇或拖入含標題列的 UTF-8 CSV，確認資料預覽，將輸出格式設為 Parquet，再按「開始轉換」與「下載檔案」。可選擇 Snappy 或不壓縮。"
+            "text": "選擇或拖入含標題列的 UTF-8 CSV，確認資料預覽，將輸出格式設為 Parquet，再按「開始轉換」與「下載檔案」。輸出使用本專案核心的無壓縮 PLAIN 編碼。"
           }
         },
         {
@@ -132,7 +130,7 @@
           "name": "大整數、空值與混合型別如何處理？",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Parquet INT64 在 JSON／CSV 輸出為十進位字串。JSON 超出安全精度的數值會被拒絕，請改用帶引號的字串。CSV 空欄位與 JSON 缺少的欄位轉為 null；混合型別欄位以文字保存，日期轉為 ISO 文字。"
+            "text": "Parquet INT64 在 JSON／CSV 輸出為十進位字串。JSON 超出安全精度的數值會被拒絕，請改用帶引號的字串。CSV 空欄位與 JSON 缺少的欄位轉為 null；混合型別欄位以文字保存，日期欄位以文字保存。"
           }
         },
         {
@@ -140,7 +138,7 @@
           "name": "網頁版的 Parquet 可以直接與目前 CLI 互用嗎？",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "目前 C++ CLI 與網頁使用的標準 Parquet 引擎存在互通限制，請透過 CSV 或 JSON 在兩者之間交換資料。網頁版不保留原檔的完整 schema、metadata 或所有 logical types。"
+            "text": "可以。網頁版與 Node.js／CLI 共用本專案 C++ 核心，支援無壓縮 PLAIN 資料頁 v1。舊版專案的 schema 仍可讀取；不支援壓縮、巢狀欄位或其他 logical types，也不保留完整 metadata。"
           }
         }
       ]
@@ -153,13 +151,13 @@
   <link rel="stylesheet" href="./styles.css">
   <link rel="stylesheet" href="./converter.css">
   <script src="./converter.mjs" type="module"></script>
-</head>
+<link rel="alternate" hreflang="zh-Hant" href="https://lian0123.github.io/parquet-tool/converter.html"><link rel="alternate" hreflang="en" href="https://lian0123.github.io/parquet-tool/en/converter.html"><link rel="alternate" hreflang="ja" href="https://lian0123.github.io/parquet-tool/ja/converter.html"><link rel="alternate" hreflang="x-default" href="https://lian0123.github.io/parquet-tool/converter.html"><script id="locale-data" type="application/json">{"language":"zh-Hant","messages":{"Invalid Parquet file. Check that it is complete and uses a supported format.":"Parquet 檔案無效，請確認檔案完整且使用支援的格式。","nested and repeated Parquet columns are not supported":"不支援巢狀或重複的 Parquet 欄位。","binary and non-UTF8 logical types are not supported by the project engine":"不支援二進位或 UTF-8 以外的 logical types。","Multiple data pages per column are not supported by the project engine":"目前不支援每欄包含多個資料頁的 Parquet。","unsupported Parquet physical type":"不支援這個 Parquet 實體型別。","Only uncompressed Parquet is supported by the project engine":"本專案核心目前只支援無壓縮 Parquet。","Only PLAIN encoding and data page v1 are supported by the project engine":"本專案核心目前只支援 PLAIN 編碼與資料頁 v1。","browser table limit exceeded":"資料超過瀏覽器處理上限：100,000 列、200 欄或 2,000,000 個儲存格。"}}</script><script id="site-i18n" src="./i18n.js"></script></head>
 <body>
   <a class="skip-link" href="#main">跳至主要內容</a>
   <header class="header">
     <a class="brand" href="./index.html"><span class="brand-mark" aria-hidden="true">▥</span>parquet<span class="brand-light">-tool</span><span class="brand-label">CONVERTER</span></a>
     <nav aria-label="主要導覽"><a href="./guide.html">完整教學</a><a href="./converter.html" aria-current="page">轉換工具</a><a class="github-link" href="https://github.com/Lian0123/parquet-tool">GitHub ↗</a></nav>
-  </header>
+  </header><nav class="language-switch wrap" aria-label="Language"><a href="./converter.html" hreflang="zh-Hant" lang="zh-Hant" aria-current="page">繁體中文</a><a href="./en/converter.html" hreflang="en" lang="en">English</a><a href="./ja/converter.html" hreflang="ja" lang="ja">日本語</a></nav>
   <main id="main" class="wrap converter-main">
     <nav class="breadcrumbs" aria-label="麵包屑"><a href="./index.html">首頁</a><span aria-hidden="true">/</span><span>CSV、JSON、Parquet 線上轉換工具</span></nav>
     <section class="converter-intro" aria-labelledby="converter-title">
@@ -167,7 +165,7 @@
       <span class="privacy-badge"><span aria-hidden="true">◉</span> 檔案只在你的裝置處理</span>
     </section>
     <noscript><p class="notice">這個工具需要啟用 JavaScript。你也可以使用<a href="./index.html#examples">本機 CLI 範例</a>。</p></noscript>
-    <p id="environment-error" class="notice" hidden></p>
+    <p id="environment-error" class="notice" hidden=""></p>
     <div class="converter-grid">
       <section class="converter-card input-card" aria-labelledby="input-title">
         <div class="card-title"><span>01</span><h2 id="input-title">選擇來源檔案</h2></div>
@@ -177,42 +175,41 @@
           <small>單檔最多 20 MiB · 最多 100,000 列</small>
         </div>
         <div class="sample-row"><span>還沒準備檔案？</span><button id="sample" type="button">載入範例資料 ↗</button></div>
-        <div id="file-info" class="file-info" hidden><span class="file-glyph" aria-hidden="true">▤</span><div><strong id="filename"></strong><small id="filesize"></small></div><button id="clear" type="button" aria-label="清除檔案與轉換結果">清除</button></div>
-        <details class="import-options"><summary>CSV 讀取選項</summary><div class="field"><label for="input-delimiter">來源分隔符號</label><select id="input-delimiter"><option value="">自動偵測</option value=",">逗號 ,</option><option value=";">分號 ;</option><option value="tab">Tab</option></select></div><label class="checkbox"><input id="infer-types" type="checkbox" checked> 自動辨識數值與 true／false</label><p>CSV 第一列必須是欄位名稱，空值會讀為 null。帶有前導零或超出安全整數範圍的值保留為文字。變更選項會重新讀取 CSV。</p></details>
+        <div id="file-info" class="file-info" hidden=""><span class="file-glyph" aria-hidden="true">▤</span><div><strong id="filename"></strong><small id="filesize"></small></div><button id="clear" type="button" aria-label="清除檔案與轉換結果">清除</button></div>
+        <details class="import-options"><summary>CSV 讀取選項</summary><div class="field"><label for="input-delimiter">來源分隔符號</label><select id="input-delimiter"><option value="">自動偵測</option>逗號 ,<option value=";">分號 ;</option><option value="tab">Tab</option></select></div><label class="checkbox"><input id="infer-types" type="checkbox" checked=""> 自動辨識數值與 true／false</label><p>CSV 第一列必須是欄位名稱，空值會讀為 null。帶有前導零或超出安全整數範圍的值保留為文字。變更選項會重新讀取 CSV。</p></details>
       </section>
       <section class="converter-card output-card" aria-labelledby="output-title">
         <div class="card-title"><span>02</span><h2 id="output-title">選擇輸出格式</h2></div>
         <div class="field"><label for="output-format">轉換成</label><select id="output-format"><option value="parquet">Parquet .parquet</option><option value="csv">CSV .csv</option><option value="json">JSON .json</option></select></div>
         <p id="format-description" class="format-description">欄式儲存，適合資料分析與資料交換。</p>
-        <div id="parquet-options" class="field"><label for="compression">壓縮方式</label><select id="compression"><option value="snappy">Snappy（建議）</option><option value="none">不壓縮</option></select></div>
-        <div id="csv-options" hidden><div class="field"><label for="output-delimiter">輸出分隔符號</label><select id="output-delimiter"><option value=",">逗號 ,</option><option value=";">分號 ;</option><option value="tab">Tab</option></select></div><label class="checkbox"><input id="escape-formulae" type="checkbox" checked> 在可能被試算表解讀為公式的文字前加上 '</label><p class="option-note">適用 =、+、-、@ 等開頭的文字；可取消以保留原文。CSV 輸出含 UTF-8 BOM。</p></div>
-        <div id="json-options" class="option-note" hidden>輸出物件陣列。INT64 轉成十進位字串，避免 JSON 數值精度流失；日期轉為 ISO 文字。</div>
-        <button id="convert" type="button" class="button primary convert-button" disabled><span>開始轉換</span><span aria-hidden="true">→</span></button>
-        <button id="cancel" type="button" class="cancel-button" hidden>取消處理並清除檔案</button>
-        <div id="result" class="download-result" hidden><span class="result-check" aria-hidden="true">✓</span><div><strong>轉換完成</strong><p id="result-info"></p></div><a id="download" class="button primary" download>下載檔案 ↓</a></div>
+        <div id="parquet-options" class="field"><label for="compression">壓縮方式</label><select id="compression"><option value="none">不壓縮</option></select></div>
+        <div id="csv-options" hidden=""><div class="field"><label for="output-delimiter">輸出分隔符號</label><select id="output-delimiter"><option value=",">逗號 ,</option><option value=";">分號 ;</option><option value="tab">Tab</option></select></div><label class="checkbox"><input id="escape-formulae" type="checkbox" checked=""> 在可能被試算表解讀為公式的文字前加上 '</label><p class="option-note">適用 =、+、-、@ 等開頭的文字；可取消以保留原文。CSV 輸出含 UTF-8 BOM。</p></div>
+        <div id="json-options" class="option-note" hidden="">輸出物件陣列。INT64 轉成十進位字串，避免 JSON 數值精度流失；日期欄位以文字保存。</div>
+        <button id="convert" type="button" class="button primary convert-button" disabled=""><span>開始轉換</span><span aria-hidden="true">→</span></button>
+        <button id="cancel" type="button" class="cancel-button" hidden="">取消處理並清除檔案</button>
+        <div id="result" class="download-result" hidden=""><span class="result-check" aria-hidden="true">✓</span><div><strong>轉換完成</strong><p id="result-info"></p></div><a id="download" class="button primary" download="">下載檔案 ↓</a></div>
         <p id="status" class="conversion-status" role="status" aria-live="polite">選擇檔案後，即可查看預覽並開始轉換。</p>
-        <p id="error" class="conversion-error" role="alert" hidden></p>
+        <p id="error" class="conversion-error" role="alert" hidden=""></p>
       </section>
     </div>
-    <section id="preview" class="converter-card preview-card" aria-labelledby="preview-title" hidden>
+    <section id="preview" class="converter-card preview-card" aria-labelledby="preview-title" hidden="">
       <div class="preview-heading"><div><p class="eyebrow">A QUICK LOOK AT YOUR DATA</p><h2 id="preview-title">資料預覽</h2></div><span id="table-stats"></span></div>
       <div class="table-scroll" tabindex="0" role="region" aria-label="資料預覽表格，可水平捲動"><table><caption class="visually-hidden">來源檔案的前 10 筆資料與辨識型別</caption><thead id="preview-head"></thead><tbody id="preview-body"></tbody></table></div>
       <p class="preview-note">僅顯示前 10 列，下載結果包含全部資料。標題下方為轉換時使用的型別；null 表示空值。</p>
     </section>
     <!-- FAQ:START -->
 <section id="faq" class="search-faq wrap" aria-labelledby="faq-title">
-      <p class="eyebrow">QUESTIONS & ANSWERS</p><h2 id="faq-title">Parquet 轉換常見問題</h2>
-      <details><summary>如何將 CSV 轉成 Parquet？</summary><p>選擇或拖入含標題列的 UTF-8 CSV，確認資料預覽，將輸出格式設為 Parquet，再按「開始轉換」與「下載檔案」。可選擇 Snappy 或不壓縮。</p></details>
+      <p class="eyebrow">QUESTIONS &amp; ANSWERS</p><h2 id="faq-title">Parquet 轉換常見問題</h2>
+      <details><summary>如何將 CSV 轉成 Parquet？</summary><p>選擇或拖入含標題列的 UTF-8 CSV，確認資料預覽，將輸出格式設為 Parquet，再按「開始轉換」與「下載檔案」。輸出使用本專案核心的無壓縮 PLAIN 編碼。</p></details>
       <details><summary>如何將 Parquet 轉成 JSON 或 CSV？</summary><p>選擇平面 Parquet 檔案，預覽資料後，將輸出格式設為 JSON 或 CSV，再開始轉換並下載。CSV 可選擇逗號、分號或 Tab 分隔；JSON 輸出為物件陣列。</p></details>
       <details><summary>檔案會上傳到伺服器嗎？</summary><p>不會。檔案讀取、資料預覽與轉換都在你的瀏覽器 Web Worker 中執行。轉換引擎隨網站載入，不透過第三方轉換服務傳送檔案。</p></details>
       <details><summary>支援多大的檔案？</summary><p>單檔最多 20 MiB，最多 100,000 列、200 欄與 2,000,000 個儲存格。目前支援平面資料表，暫不支援巢狀或二進位欄位。壓縮檔案解碼後會使用更多記憶體，可隨時取消處理。</p></details>
-      <details><summary>大整數、空值與混合型別如何處理？</summary><p>Parquet INT64 在 JSON／CSV 輸出為十進位字串。JSON 超出安全精度的數值會被拒絕，請改用帶引號的字串。CSV 空欄位與 JSON 缺少的欄位轉為 null；混合型別欄位以文字保存，日期轉為 ISO 文字。</p></details>
-      <details><summary>網頁版的 Parquet 可以直接與目前 CLI 互用嗎？</summary><p>目前 C++ CLI 與網頁使用的標準 Parquet 引擎存在互通限制，請透過 CSV 或 JSON 在兩者之間交換資料。網頁版不保留原檔的完整 schema、metadata 或所有 logical types。</p></details>
-      <p class="content-review">內容檢核：<time datetime="2026-10-27">2026-10-27</time> · <a href="https://github.com/Lian0123/parquet-tool">原始碼與維護紀錄 ↗</a> · <a href="./guide.html">完整使用教學</a></p>
+      <details><summary>大整數、空值與混合型別如何處理？</summary><p>Parquet INT64 在 JSON／CSV 輸出為十進位字串。JSON 超出安全精度的數值會被拒絕，請改用帶引號的字串。CSV 空欄位與 JSON 缺少的欄位轉為 null；混合型別欄位以文字保存，日期欄位以文字保存。</p></details>
+      <details><summary>網頁版的 Parquet 可以直接與目前 CLI 互用嗎？</summary><p>可以。網頁版與 Node.js／CLI 共用本專案 C++ 核心，支援無壓縮 PLAIN 資料頁 v1。舊版專案的 schema 仍可讀取；不支援壓縮、巢狀欄位或其他 logical types，也不保留完整 metadata。</p></details>
+      <p class="content-review">內容檢核：<time datetime="2026-10-28">2026-10-28</time> · <a href="https://github.com/Lian0123/parquet-tool">原始碼與維護紀錄 ↗</a> · <a href="./guide.html">完整使用教學</a></p>
     </section>
   <!-- FAQ:END -->
-    <section class="converter-notes" aria-label="支援範圍"><div><h2>在本機完成，也方便分享。</h2><p>檔案不會送往伺服器。所有轉換程式隨網站載入，處理時不需要第三方服務。</p><h3>與目前 CLI 交換資料</h3><p>網頁版使用標準 Parquet 引擎。目前儲存庫的 C++ CLI 與標準 Parquet 存在互通限制，請先用 CSV 或 JSON 在兩者之間交換資料。</p></div><div><h3>支援範圍</h3><p>支援 UTF-8 CSV（含標題列）、JSON 物件陣列或 { rows: [...] }、平面 Parquet。JSON 的 schema 區塊不會套用；型別由資料辨識。</p><p>混合型別欄位以文字保存；日期轉成 ISO 文字，超大整數請在 JSON 使用字串。暫不支援巢狀或二進位欄位。最多 200 欄、2,000,000 個儲存格。</p><p>需要更大檔案或 Arrow／XML？查看<a href="./guide.html">Node.js 與 CLI 完整教學 ↗</a></p></div></section>
+    <section class="converter-notes" aria-label="支援範圍"><div><h2>在本機完成，也方便分享。</h2><p>檔案不會送往伺服器。所有轉換程式隨網站載入，處理時不需要第三方服務。</p><h3>與本機版本共用核心</h3><p>網頁版透過 WebAssembly 使用本專案的 C++ 核心，與 Node.js／CLI 共用 Parquet 實作。支援無壓縮、PLAIN 編碼與資料頁 v1；壓縮或其他編碼會明確回報不支援。</p></div><div><h3>支援範圍</h3><p>支援 UTF-8 CSV（含標題列）、JSON 物件陣列或 { rows: [...] }、平面 Parquet。JSON 的 schema 區塊不會套用；型別由資料辨識。</p><p>混合型別欄位以文字保存；日期請以文字保存，超大整數請在 JSON 使用字串。暫不支援巢狀或二進位欄位。最多 200 欄、2,000,000 個儲存格。</p><p>需要更大檔案或 Arrow／XML？查看<a href="./guide.html">Node.js 與 CLI 完整教學 ↗</a></p></div></section>
   </main>
-  <footer class="wrap footer"><a class="brand" href="./index.html">parquet<span class="brand-light">-tool</span></a><span>瀏覽器引擎：Hyparquet / Hyparquet Writer / Papa Parse</span><a href="./vendor/THIRD_PARTY_LICENSES.txt">第三方授權 ↗</a></footer>
-</body>
-</html>
+  <footer class="wrap footer"><a class="brand" href="./index.html">parquet<span class="brand-light">-tool</span></a><span>瀏覽器引擎：本專案 C++ 核心（WebAssembly） / Papa Parse</span><a href="./vendor/THIRD_PARTY_LICENSES.txt">第三方授權 ↗</a></footer>
+</body></html>

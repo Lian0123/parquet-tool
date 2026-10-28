@@ -1,6 +1,4 @@
-<!doctype html>
-<html lang="zh-Hant">
-<head>
+<!DOCTYPE html><html lang="zh-Hant"><head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#183f35">
@@ -170,114 +168,113 @@
   <link rel="stylesheet" href="./styles.css">
   <link rel="stylesheet" href="./guide.css">
   <link rel="alternate" type="text/markdown" href="./guide.md" title="Markdown 完整教學">
-</head>
+<link rel="alternate" hreflang="zh-Hant" href="https://lian0123.github.io/parquet-tool/guide.html"><link rel="alternate" hreflang="en" href="https://lian0123.github.io/parquet-tool/en/guide.html"><link rel="alternate" hreflang="ja" href="https://lian0123.github.io/parquet-tool/ja/guide.html"><link rel="alternate" hreflang="x-default" href="https://lian0123.github.io/parquet-tool/guide.html"><script id="locale-data" type="application/json">{"language":"zh-Hant","messages":{"Invalid Parquet file. Check that it is complete and uses a supported format.":"Parquet 檔案無效，請確認檔案完整且使用支援的格式。","nested and repeated Parquet columns are not supported":"不支援巢狀或重複的 Parquet 欄位。","binary and non-UTF8 logical types are not supported by the project engine":"不支援二進位或 UTF-8 以外的 logical types。","Multiple data pages per column are not supported by the project engine":"目前不支援每欄包含多個資料頁的 Parquet。","unsupported Parquet physical type":"不支援這個 Parquet 實體型別。","Only uncompressed Parquet is supported by the project engine":"本專案核心目前只支援無壓縮 Parquet。","Only PLAIN encoding and data page v1 are supported by the project engine":"本專案核心目前只支援 PLAIN 編碼與資料頁 v1。","browser table limit exceeded":"資料超過瀏覽器處理上限：100,000 列、200 欄或 2,000,000 個儲存格。"}}</script><script id="site-i18n" src="./i18n.js"></script></head>
 <body>
   <a class="skip-link" href="#main">跳至主要內容</a>
-  <header class="header"><a class="brand" href="./index.html"><span class="brand-mark" aria-hidden="true">▥</span>parquet<span class="brand-light">-tool</span><span class="brand-label">GUIDE</span></a><nav aria-label="主要導覽"><a href="./index.html#examples">互動範例</a><a href="./converter.html">轉換工具</a><a href="./guide.html" aria-current="page">完整教學</a></nav></header>
+  <header class="header"><a class="brand" href="./index.html"><span class="brand-mark" aria-hidden="true">▥</span>parquet<span class="brand-light">-tool</span><span class="brand-label">GUIDE</span></a><nav aria-label="主要導覽"><a href="./index.html#examples">互動範例</a><a href="./converter.html">轉換工具</a><a href="./guide.html" aria-current="page">完整教學</a></nav></header><nav class="language-switch wrap" aria-label="Language"><a href="./guide.html" hreflang="zh-Hant" lang="zh-Hant" aria-current="page">繁體中文</a><a href="./en/guide.html" hreflang="en" lang="en">English</a><a href="./ja/guide.html" hreflang="ja" lang="ja">日本語</a></nav>
   <main id="main" class="wrap guide-main">
     <nav class="breadcrumbs" aria-label="麵包屑"><a href="./index.html">首頁</a><span aria-hidden="true">/</span><span>Node.js 與 CLI 完整教學</span></nav>
     <p class="eyebrow">PARQUET / NODE.JS / CLI</p><h1>Parquet 使用教學與完整範例</h1>
     <p class="guide-lead">這份教學整理 12 個 parquet-tool 任務，提供前置需求、預期結果與可複製的 CLI／Node.js 程式碼。內容直接呈現在 HTML 中，不需 JavaScript 即可閱讀。</p>
-    <p class="content-review">內容檢核：<time datetime="2026-10-27">2026-10-27</time> · <a href="https://github.com/Lian0123/parquet-tool">GitHub 原始碼 ↗</a> · <a href="./guide.md">Markdown 版本</a></p>
-    <section class="guide-setup" aria-labelledby="setup-title"><h2 id="setup-title">開始前：安裝與準備資料</h2><p>需要 Node.js 18 以上。建立工作資料夾後執行以下指令，並下載 <a href="./samples/input.json" download>input.json</a> 與 <a href="./samples/input.csv" download>input.csv</a> 到同一資料夾。</p><pre><code>npm init -y
-npm install parquet-tool</code></pre><p>CLI 指令直接在終端機執行。Node.js 程式碼請儲存為 <code>example.cjs</code>，再執行 <code>node example.cjs</code>。安裝原生模組所需工具鏈請見<a href="https://github.com/Lian0123/parquet-tool/blob/main/docs/installation.md">安裝文件</a>。</p><p>若只要轉換 CSV／JSON／Parquet，可使用<a href="./converter.html">瀏覽器轉換工具</a>，不必安裝 Node.js。網頁與目前 C++ CLI 的 Parquet 互通有限，請以 CSV／JSON 交換資料。混合型別、空值與容量限制詳見<a href="./converter.html#faq">轉換常見問題</a>。</p></section>
+    <p class="content-review">內容檢核：<time datetime="2026-10-28">2026-10-28</time> · <a href="https://github.com/Lian0123/parquet-tool">GitHub 原始碼 ↗</a> · <a href="./guide.md">Markdown 版本</a></p>
+    <section class="guide-setup" aria-labelledby="setup-title"><h2 id="setup-title">開始前：安裝與準備資料</h2><p>需要 Node.js 18 以上。建立工作資料夾後執行以下指令，並下載 <a href="./samples/input.json" download="">input.json</a> 與 <a href="./samples/input.csv" download="">input.csv</a> 到同一資料夾。</p><pre><code>npm init -y
+npm install parquet-tool</code></pre><p>CLI 指令直接在終端機執行。Node.js 程式碼請儲存為 <code>example.cjs</code>，再執行 <code>node example.cjs</code>。安裝原生模組所需工具鏈請見<a href="https://github.com/Lian0123/parquet-tool/blob/main/docs/installation.md">安裝文件</a>。</p><p>若只要轉換 CSV／JSON／Parquet，可使用<a href="./converter.html">瀏覽器轉換工具</a>，不必安裝 Node.js。網頁與 Node.js／CLI 共用本專案 C++ 核心；Parquet 支援無壓縮 PLAIN 資料頁 v1。混合型別、空值與容量限制詳見<a href="./converter.html#faq">轉換常見問題</a>。</p></section>
     <div class="guide-layout"><nav class="guide-toc" aria-label="教學目錄"><h2>任務目錄</h2><a href="#recipe-write"><span>01</span>建立檔案</a><a href="#recipe-read"><span>02</span>讀取資料</a><a href="#recipe-metadata"><span>03</span>查看中繼資料</a><a href="#recipe-append"><span>04</span>新增資料</a><a href="#recipe-csv"><span>05</span>CSV 互轉</a><a href="#recipe-json"><span>06</span>JSON 互轉</a><a href="#recipe-arrow"><span>07</span>Arrow 互轉</a><a href="#recipe-xml"><span>08</span>XML 互轉</a><a href="#recipe-split-merge"><span>09</span>切分與合併</a><a href="#recipe-validate"><span>10</span>驗證檔案</a><a href="#recipe-projection"><span>11</span>指定欄位與群組</a><a href="#recipe-buffer"><span>12</span>Buffer 往返</a></nav><div class="guide-recipes">
-      <article id="recipe-write"><h2>建立第一個 Parquet 檔案</h2><p>明確定義 schema，將 JSON 資料寫入 Parquet。rowGroupSize 設為 2，方便後續觀察 row group。</p><p class="guide-prerequisite"><strong>準備：</strong>先下載 input.json 到工作資料夾。重跑會覆寫 data.parquet。</p><h3>CLI 指令</h3><pre><code>npx parquet-tool write data.parquet -i input.json -s &quot;id:INT32,name:STRING,active:BOOLEAN&quot; --row-group-size 2</code></pre><h3>Node.js 程式碼</h3><pre><code>const { readFileSync } = require(&#39;node:fs&#39;);
-const { Schema, ParquetWriter } = require(&#39;parquet-tool&#39;);
+      <article id="recipe-write"><h2>建立第一個 Parquet 檔案</h2><p>明確定義 schema，將 JSON 資料寫入 Parquet。rowGroupSize 設為 2，方便後續觀察 row group。</p><p class="guide-prerequisite"><strong>準備：</strong>先下載 input.json 到工作資料夾。重跑會覆寫 data.parquet。</p><h3>CLI 指令</h3><pre><code>npx parquet-tool write data.parquet -i input.json -s "id:INT32,name:STRING,active:BOOLEAN" --row-group-size 2</code></pre><h3>Node.js 程式碼</h3><pre><code>const { readFileSync } = require('node:fs');
+const { Schema, ParquetWriter } = require('parquet-tool');
 
-const rows = JSON.parse(readFileSync(&#39;input.json&#39;, &#39;utf8&#39;));
+const rows = JSON.parse(readFileSync('input.json', 'utf8'));
 const schema = Schema.create({
-  id: &#39;INT32&#39;, name: &#39;STRING&#39;, active: &#39;BOOLEAN&#39;,
+  id: 'INT32', name: 'STRING', active: 'BOOLEAN',
 });
 
-ParquetWriter.withWriter(&#39;data.parquet&#39;, schema,
+ParquetWriter.withWriter('data.parquet', schema,
   { rowGroupSize: 2 }, (writer) =&gt; {
     writer.write(rows);
   }); // 自動關閉 writer，完成檔案寫入</code></pre><p><strong>執行後：</strong>產生包含 3 筆資料、2 個 row group 的 data.parquet。</p><a class="guide-source" href="https://github.com/Lian0123/parquet-tool/blob/main/src/lib/writer.ts">查看此功能原始碼 ↗</a></article>
-      <article id="recipe-read"><h2>讀取資料列</h2><p>CLI 輸出 JSON；Node.js 使用 iterator 逐筆處理，避免一次合併整份檔案。</p><p class="guide-prerequisite"><strong>準備：</strong>先執行「建立檔案」，準備 data.parquet。</p><h3>CLI 指令</h3><pre><code>npx parquet-tool read data.parquet --json --limit 20</code></pre><h3>Node.js 程式碼</h3><pre><code>const { ParquetReader } = require(&#39;parquet-tool&#39;);
+      <article id="recipe-read"><h2>讀取資料列</h2><p>CLI 輸出 JSON；Node.js 使用 iterator 逐筆處理，避免一次合併整份檔案。</p><p class="guide-prerequisite"><strong>準備：</strong>先執行「建立檔案」，準備 data.parquet。</p><h3>CLI 指令</h3><pre><code>npx parquet-tool read data.parquet --json --limit 20</code></pre><h3>Node.js 程式碼</h3><pre><code>const { ParquetReader } = require('parquet-tool');
 
-ParquetReader.withReader(&#39;data.parquet&#39;, (reader) =&gt; {
+ParquetReader.withReader('data.parquet', (reader) =&gt; {
   for (const row of reader.iterateRows()) {
     console.log(row);
   }
 }); // 自動關閉 reader</code></pre><p><strong>執行後：</strong>在終端機看到 id、name 與 active 欄位的資料。</p><a class="guide-source" href="https://github.com/Lian0123/parquet-tool/blob/main/src/lib/reader.ts">查看此功能原始碼 ↗</a></article>
-      <article id="recipe-metadata"><h2>查看 schema 與中繼資料</h2><p>確認欄位型別、資料筆數及 row group 數量，先了解檔案結構。</p><p class="guide-prerequisite"><strong>準備：</strong>先執行「建立檔案」，準備 data.parquet。</p><h3>CLI 指令</h3><pre><code>npx parquet-tool info data.parquet</code></pre><h3>Node.js 程式碼</h3><pre><code>const { ParquetReader } = require(&#39;parquet-tool&#39;);
+      <article id="recipe-metadata"><h2>查看 schema 與中繼資料</h2><p>確認欄位型別、資料筆數及 row group 數量，先了解檔案結構。</p><p class="guide-prerequisite"><strong>準備：</strong>先執行「建立檔案」，準備 data.parquet。</p><h3>CLI 指令</h3><pre><code>npx parquet-tool info data.parquet</code></pre><h3>Node.js 程式碼</h3><pre><code>const { ParquetReader } = require('parquet-tool');
 
-const metadata = ParquetReader.readMetadata(&#39;data.parquet&#39;);
-console.log(&#39;Rows:&#39;, metadata.numRows);
-console.log(&#39;Row groups:&#39;, metadata.numRowGroups);
+const metadata = ParquetReader.readMetadata('data.parquet');
+console.log('Rows:', metadata.numRows);
+console.log('Row groups:', metadata.numRowGroups);
 console.table(metadata.schema);</code></pre><p><strong>執行後：</strong>顯示檔案的 schema、numRows、numRowGroups 等中繼資料。</p><a class="guide-source" href="https://github.com/Lian0123/parquet-tool/blob/main/src/lib/reader.ts">查看此功能原始碼 ↗</a></article>
-      <article id="recipe-append"><h2>為既有檔案新增資料</h2><p>沿用原有 schema，追加新的 row group。每次執行都會再新增一筆資料。</p><p class="guide-prerequisite"><strong>準備：</strong>先執行「建立檔案」。CLI 先用 Node.js 產生 more.json；此範例會修改 data.parquet。</p><h3>CLI 指令</h3><pre><code>node -e &quot;require(&#39;node:fs&#39;).writeFileSync(&#39;more.json&#39;, JSON.stringify([{id:4,name:&#39;Dora&#39;,active:true}]))&quot;
+      <article id="recipe-append"><h2>為既有檔案新增資料</h2><p>沿用原有 schema，追加新的 row group。每次執行都會再新增一筆資料。</p><p class="guide-prerequisite"><strong>準備：</strong>先執行「建立檔案」。CLI 先用 Node.js 產生 more.json；此範例會修改 data.parquet。</p><h3>CLI 指令</h3><pre><code>node -e "require('node:fs').writeFileSync('more.json', JSON.stringify([{id:4,name:'Dora',active:true}]))"
 npx parquet-tool append data.parquet -i more.json
-npx parquet-tool info data.parquet</code></pre><h3>Node.js 程式碼</h3><pre><code>const { ParquetWriter, ParquetReader } = require(&#39;parquet-tool&#39;);
+npx parquet-tool info data.parquet</code></pre><h3>Node.js 程式碼</h3><pre><code>const { ParquetWriter, ParquetReader } = require('parquet-tool');
 
-ParquetWriter.withAppender(&#39;data.parquet&#39;, (writer) =&gt; {
-  writer.write({ id: 4, name: &#39;Dora&#39;, active: true });
+ParquetWriter.withAppender('data.parquet', (writer) =&gt; {
+  writer.write({ id: 4, name: 'Dora', active: true });
 });
-console.log(ParquetReader.readMetadata(&#39;data.parquet&#39;).numRows);</code></pre><p><strong>執行後：</strong>首次追加後，原始 3 筆資料會增加為 4 筆。</p><a class="guide-source" href="https://github.com/Lian0123/parquet-tool/blob/main/src/lib/writer.ts">查看此功能原始碼 ↗</a></article>
+console.log(ParquetReader.readMetadata('data.parquet').numRows);</code></pre><p><strong>執行後：</strong>首次追加後，原始 3 筆資料會增加為 4 筆。</p><a class="guide-source" href="https://github.com/Lian0123/parquet-tool/blob/main/src/lib/writer.ts">查看此功能原始碼 ↗</a></article>
       <article id="recipe-csv"><h2>CSV 與 Parquet 互轉</h2><p>匯入有標題列的 CSV，自動推斷欄位型別，再匯出成 CSV。</p><p class="guide-prerequisite"><strong>準備：</strong>下載 input.csv 到工作資料夾。不需要先建立 data.parquet。</p><h3>CLI 指令</h3><pre><code>npx parquet-tool csv-to-parquet input.csv from-csv.parquet
-npx parquet-tool parquet-to-csv from-csv.parquet roundtrip.csv</code></pre><h3>Node.js 程式碼</h3><pre><code>const { csvToParquet, parquetToCsv } = require(&#39;parquet-tool&#39;);
+npx parquet-tool parquet-to-csv from-csv.parquet roundtrip.csv</code></pre><h3>Node.js 程式碼</h3><pre><code>const { csvToParquet, parquetToCsv } = require('parquet-tool');
 
-csvToParquet(&#39;input.csv&#39;, &#39;from-csv.parquet&#39;);
-parquetToCsv(&#39;from-csv.parquet&#39;, &#39;roundtrip.csv&#39;);</code></pre><p><strong>執行後：</strong>產生 from-csv.parquet 與 roundtrip.csv，保留 3 筆示例資料。</p><a class="guide-source" href="https://github.com/Lian0123/parquet-tool/blob/main/src/lib/csv.ts">查看此功能原始碼 ↗</a></article>
+csvToParquet('input.csv', 'from-csv.parquet');
+parquetToCsv('from-csv.parquet', 'roundtrip.csv');</code></pre><p><strong>執行後：</strong>產生 from-csv.parquet 與 roundtrip.csv，保留 3 筆示例資料。</p><a class="guide-source" href="https://github.com/Lian0123/parquet-tool/blob/main/src/lib/csv.ts">查看此功能原始碼 ↗</a></article>
       <article id="recipe-json"><h2>JSON 與 Parquet 互轉</h2><p>從 JSON 陣列建立 Parquet，再匯出純資料列 JSON。省略 rows-only 時，預設會包含 schema。</p><p class="guide-prerequisite"><strong>準備：</strong>下載 input.json 到工作資料夾。不需要先建立 data.parquet。</p><h3>CLI 指令</h3><pre><code>npx parquet-tool json-to-parquet input.json from-json.parquet
-npx parquet-tool parquet-to-json from-json.parquet roundtrip.json --rows-only</code></pre><h3>Node.js 程式碼</h3><pre><code>const { jsonToParquet, parquetToJson } = require(&#39;parquet-tool&#39;);
+npx parquet-tool parquet-to-json from-json.parquet roundtrip.json --rows-only</code></pre><h3>Node.js 程式碼</h3><pre><code>const { jsonToParquet, parquetToJson } = require('parquet-tool');
 
-jsonToParquet(&#39;input.json&#39;, &#39;from-json.parquet&#39;);
-parquetToJson(&#39;from-json.parquet&#39;, &#39;roundtrip.json&#39;, {
+jsonToParquet('input.json', 'from-json.parquet');
+parquetToJson('from-json.parquet', 'roundtrip.json', {
   includeSchema: false,
 });</code></pre><p><strong>執行後：</strong>產生 from-json.parquet 與只包含資料陣列的 roundtrip.json。</p><a class="guide-source" href="https://github.com/Lian0123/parquet-tool/blob/main/src/lib/json.ts">查看此功能原始碼 ↗</a></article>
       <article id="recipe-arrow"><h2>Apache Arrow IPC 互轉</h2><p>將 Parquet 轉成 Arrow IPC 檔案，再轉回 Parquet。</p><p class="guide-prerequisite"><strong>準備：</strong>先執行「建立檔案」，準備 data.parquet。</p><h3>CLI 指令</h3><pre><code>npx parquet-tool parquet-to-arrow data.parquet data.arrow
-npx parquet-tool arrow-to-parquet data.arrow from-arrow.parquet</code></pre><h3>Node.js 程式碼</h3><pre><code>const { parquetToArrow, arrowToParquet } = require(&#39;parquet-tool&#39;);
+npx parquet-tool arrow-to-parquet data.arrow from-arrow.parquet</code></pre><h3>Node.js 程式碼</h3><pre><code>const { parquetToArrow, arrowToParquet } = require('parquet-tool');
 
-parquetToArrow(&#39;data.parquet&#39;, &#39;data.arrow&#39;);
-arrowToParquet(&#39;data.arrow&#39;, &#39;from-arrow.parquet&#39;);</code></pre><p><strong>執行後：</strong>產生 data.arrow 與 from-arrow.parquet。</p><a class="guide-source" href="https://github.com/Lian0123/parquet-tool/blob/main/src/lib/arrow.ts">查看此功能原始碼 ↗</a></article>
+parquetToArrow('data.parquet', 'data.arrow');
+arrowToParquet('data.arrow', 'from-arrow.parquet');</code></pre><p><strong>執行後：</strong>產生 data.arrow 與 from-arrow.parquet。</p><a class="guide-source" href="https://github.com/Lian0123/parquet-tool/blob/main/src/lib/arrow.ts">查看此功能原始碼 ↗</a></article>
       <article id="recipe-xml"><h2>XML 與 Parquet 互轉</h2><p>預設將 schema 和資料一起匯出，回讀時可還原原本的欄位型別。</p><p class="guide-prerequisite"><strong>準備：</strong>先執行「建立檔案」，準備 data.parquet。</p><h3>CLI 指令</h3><pre><code>npx parquet-tool parquet-to-xml data.parquet data.xml
-npx parquet-tool xml-to-parquet data.xml from-xml.parquet</code></pre><h3>Node.js 程式碼</h3><pre><code>const { parquetToXml, xmlToParquet } = require(&#39;parquet-tool&#39;);
+npx parquet-tool xml-to-parquet data.xml from-xml.parquet</code></pre><h3>Node.js 程式碼</h3><pre><code>const { parquetToXml, xmlToParquet } = require('parquet-tool');
 
-parquetToXml(&#39;data.parquet&#39;, &#39;data.xml&#39;);
-xmlToParquet(&#39;data.xml&#39;, &#39;from-xml.parquet&#39;);</code></pre><p><strong>執行後：</strong>產生 data.xml 與 from-xml.parquet。</p><a class="guide-source" href="https://github.com/Lian0123/parquet-tool/blob/main/src/lib/xml.ts">查看此功能原始碼 ↗</a></article>
+parquetToXml('data.parquet', 'data.xml');
+xmlToParquet('data.xml', 'from-xml.parquet');</code></pre><p><strong>執行後：</strong>產生 data.xml 與 from-xml.parquet。</p><a class="guide-source" href="https://github.com/Lian0123/parquet-tool/blob/main/src/lib/xml.ts">查看此功能原始碼 ↗</a></article>
       <article id="recipe-split-merge"><h2>切分檔案，再合併回來</h2><p>每個輸出檔案最多 2 筆資料，合併時預設檢查 schema 相容性。</p><p class="guide-prerequisite"><strong>準備：</strong>先重新執行「建立檔案」，讓 data.parquet 回到 3 筆資料。示例檔案輸出至目前工作資料夾。</p><h3>CLI 指令</h3><pre><code>npx parquet-tool split data.parquet -n 2 -p demo
 npx parquet-tool merge merged.parquet demo_part0000.parquet demo_part0001.parquet
 npx parquet-tool validate merged.parquet</code></pre><h3>Node.js 程式碼</h3><pre><code>const {
   splitParquetFile, mergeParquetFiles, validateParquetFile,
-} = require(&#39;parquet-tool&#39;);
+} = require('parquet-tool');
 
-const files = splitParquetFile(&#39;data.parquet&#39;, {
+const files = splitParquetFile('data.parquet', {
   maxRowsPerFile: 2,
-  outputDir: &#39;.&#39;,
-  prefix: &#39;demo&#39;,
+  outputDir: '.',
+  prefix: 'demo',
 });
-mergeParquetFiles(files, &#39;merged.parquet&#39;);
-console.log(validateParquetFile(&#39;merged.parquet&#39;).valid);</code></pre><p><strong>執行後：</strong>產生 2 個 demo_part 檔案，merged.parquet 合併後共有 3 筆資料。</p><a class="guide-source" href="https://github.com/Lian0123/parquet-tool/blob/main/src/lib/splitter.ts">查看此功能原始碼 ↗</a></article>
-      <article id="recipe-validate"><h2>驗證 Parquet 檔案</h2><p>檢查檔案結構與 row group。CLI 遇到無效檔案會回傳非零結束碼，可用於腳本與 CI。</p><p class="guide-prerequisite"><strong>準備：</strong>先執行「建立檔案」，準備 data.parquet。</p><h3>CLI 指令</h3><pre><code>npx parquet-tool validate data.parquet</code></pre><h3>Node.js 程式碼</h3><pre><code>const { validateParquetFile } = require(&#39;parquet-tool&#39;);
+mergeParquetFiles(files, 'merged.parquet');
+console.log(validateParquetFile('merged.parquet').valid);</code></pre><p><strong>執行後：</strong>產生 2 個 demo_part 檔案，merged.parquet 合併後共有 3 筆資料。</p><a class="guide-source" href="https://github.com/Lian0123/parquet-tool/blob/main/src/lib/splitter.ts">查看此功能原始碼 ↗</a></article>
+      <article id="recipe-validate"><h2>驗證 Parquet 檔案</h2><p>檢查檔案結構與 row group。CLI 遇到無效檔案會回傳非零結束碼，可用於腳本與 CI。</p><p class="guide-prerequisite"><strong>準備：</strong>先執行「建立檔案」，準備 data.parquet。</p><h3>CLI 指令</h3><pre><code>npx parquet-tool validate data.parquet</code></pre><h3>Node.js 程式碼</h3><pre><code>const { validateParquetFile } = require('parquet-tool');
 
-const report = validateParquetFile(&#39;data.parquet&#39;);
+const report = validateParquetFile('data.parquet');
 console.log(report.valid, report.issues);
 if (!report.valid) {
   process.exitCode = 1;
 }</code></pre><p><strong>執行後：</strong>有效的示例檔案顯示 Valid: yes；Node.js 顯示 true 與空的 issues。</p><a class="guide-source" href="https://github.com/Lian0123/parquet-tool/blob/main/src/lib/validate.ts">查看此功能原始碼 ↗</a></article>
-      <article id="recipe-projection"><h2>只處理指定的欄位與 row group</h2><p>Node.js API 可選擇欄位和 row group。CLI 可指定 row group，但沒有欄位選擇選項。索引從 0 開始。</p><p class="guide-prerequisite"><strong>準備：</strong>先執行「建立檔案」，使用 rowGroupSize: 2 產生 data.parquet。</p><h3>CLI 指令</h3><pre><code>npx parquet-tool read data.parquet --row-group 0 --json</code></pre><h3>Node.js 程式碼</h3><pre><code>const { ParquetReader } = require(&#39;parquet-tool&#39;);
+      <article id="recipe-projection"><h2>只處理指定的欄位與 row group</h2><p>Node.js API 可選擇欄位和 row group。CLI 可指定 row group，但沒有欄位選擇選項。索引從 0 開始。</p><p class="guide-prerequisite"><strong>準備：</strong>先執行「建立檔案」，使用 rowGroupSize: 2 產生 data.parquet。</p><h3>CLI 指令</h3><pre><code>npx parquet-tool read data.parquet --row-group 0 --json</code></pre><h3>Node.js 程式碼</h3><pre><code>const { ParquetReader } = require('parquet-tool');
 
-ParquetReader.withReader(&#39;data.parquet&#39;, (reader) =&gt; {
+ParquetReader.withReader('data.parquet', (reader) =&gt; {
   for (const row of reader.iterateRows({
-    columns: [&#39;id&#39;, &#39;name&#39;],
+    columns: ['id', 'name'],
     rowGroups: [0],
   })) {
     console.log(row);
   }
 });</code></pre><p><strong>執行後：</strong>CLI 顯示第一個 row group 的完整資料；Node.js 顯示其中的 id、name 欄位。欄位投影在讀取 row group 後進行。</p><a class="guide-source" href="https://github.com/Lian0123/parquet-tool/blob/main/src/lib/reader.ts">查看此功能原始碼 ↗</a></article>
-      <article id="recipe-buffer"><h2>以 Node.js Buffer 傳遞檔案</h2><p>讀取原始 Parquet 位元組，再寫入另一個檔案。這個操作不會將資料解碼成資料列。</p><p class="guide-prerequisite"><strong>準備：</strong>先執行「建立檔案」，準備 data.parquet。本功能使用 Node.js API。</p><h3>Node.js 程式碼</h3><pre><code>const { parquetToBuffer, bufferToParquet } = require(&#39;parquet-tool&#39;);
+      <article id="recipe-buffer"><h2>以 Node.js Buffer 傳遞檔案</h2><p>讀取原始 Parquet 位元組，再寫入另一個檔案。這個操作不會將資料解碼成資料列。</p><p class="guide-prerequisite"><strong>準備：</strong>先執行「建立檔案」，準備 data.parquet。本功能使用 Node.js API。</p><h3>Node.js 程式碼</h3><pre><code>const { parquetToBuffer, bufferToParquet } = require('parquet-tool');
 
-const bytes = parquetToBuffer(&#39;data.parquet&#39;, { validate: true });
-bufferToParquet(bytes, &#39;restored.parquet&#39;, {
+const bytes = parquetToBuffer('data.parquet', { validate: true });
+bufferToParquet(bytes, 'restored.parquet', {
   validate: true,
   overwrite: true,
 });
-console.log(&#39;Bytes:&#39;, bytes.length);</code></pre><p><strong>執行後：</strong>建立經過驗證的 restored.parquet。overwrite: true 允許重跑時覆寫。</p><a class="guide-source" href="https://github.com/Lian0123/parquet-tool/blob/main/src/lib/buffer.ts">查看此功能原始碼 ↗</a></article>
+console.log('Bytes:', bytes.length);</code></pre><p><strong>執行後：</strong>建立經過驗證的 restored.parquet。overwrite: true 允許重跑時覆寫。</p><a class="guide-source" href="https://github.com/Lian0123/parquet-tool/blob/main/src/lib/buffer.ts">查看此功能原始碼 ↗</a></article>
     </div></div>
     <section class="guide-setup"><h2>下一步</h2><p>查閱<a href="https://github.com/Lian0123/parquet-tool/blob/main/docs/api.md">完整 API 文件</a>、<a href="https://github.com/Lian0123/parquet-tool/blob/main/docs/cli.md">CLI 指令文件</a>或<a href="https://github.com/Lian0123/parquet-tool/tree/main/examples">可執行範例</a>。遇到錯誤可在<a href="https://github.com/Lian0123/parquet-tool/issues">GitHub Issues</a>回報。</p></section>
   </main>
   <footer class="wrap footer"><a class="brand" href="./index.html">parquet<span class="brand-light">-tool</span></a><span>MIT License · Node.js 與 CLI 使用教學</span><a href="./converter.html">直接轉換檔案 ↗</a></footer>
-</body>
-</html>
+</body></html>

@@ -1,4 +1,5 @@
-import { readFile, writeFile } from 'node:fs/promises';
+import { readFile, writeFile, mkdir } from 'node:fs/promises';
+import { localizeOutputs } from './localize.mjs';
 import { pathToFileURL } from 'node:url';
 import vm from 'node:vm';
 import { site, pages } from './seo.config.mjs';
@@ -103,7 +104,7 @@ ${head(page)}
     <p class="guide-lead">這份教學整理 ${recipes.length} 個 parquet-tool 任務，提供前置需求、預期結果與可複製的 CLI／Node.js 程式碼。內容直接呈現在 HTML 中，不需 JavaScript 即可閱讀。</p>
     <p class="content-review">內容檢核：<time datetime="${site.reviewed}">${site.reviewed}</time> · <a href="${site.repository}">GitHub 原始碼 ↗</a> · <a href="./guide.md">Markdown 版本</a></p>
     <section class="guide-setup" aria-labelledby="setup-title"><h2 id="setup-title">開始前：安裝與準備資料</h2><p>需要 Node.js 18 以上。建立工作資料夾後執行以下指令，並下載 <a href="./samples/input.json" download>input.json</a> 與 <a href="./samples/input.csv" download>input.csv</a> 到同一資料夾。</p><pre><code>npm init -y
-npm install parquet-tool</code></pre><p>CLI 指令直接在終端機執行。Node.js 程式碼請儲存為 <code>example.cjs</code>，再執行 <code>node example.cjs</code>。安裝原生模組所需工具鏈請見<a href="${site.repository}/blob/main/docs/installation.md">安裝文件</a>。</p><p>若只要轉換 CSV／JSON／Parquet，可使用<a href="./converter.html">瀏覽器轉換工具</a>，不必安裝 Node.js。網頁與目前 C++ CLI 的 Parquet 互通有限，請以 CSV／JSON 交換資料。混合型別、空值與容量限制詳見<a href="./converter.html#faq">轉換常見問題</a>。</p></section>
+npm install parquet-tool</code></pre><p>CLI 指令直接在終端機執行。Node.js 程式碼請儲存為 <code>example.cjs</code>，再執行 <code>node example.cjs</code>。安裝原生模組所需工具鏈請見<a href="${site.repository}/blob/main/docs/installation.md">安裝文件</a>。</p><p>若只要轉換 CSV／JSON／Parquet，可使用<a href="./converter.html">瀏覽器轉換工具</a>，不必安裝 Node.js。網頁與 Node.js／CLI 共用本專案 C++ 核心；Parquet 支援無壓縮 PLAIN 資料頁 v1。混合型別、空值與容量限制詳見<a href="./converter.html#faq">轉換常見問題</a>。</p></section>
     <div class="guide-layout"><nav class="guide-toc" aria-label="教學目錄"><h2>任務目錄</h2>${recipes.map((recipe, index) => `<a href="#recipe-${recipe.id}"><span>${String(index + 1).padStart(2, '0')}</span>${escape(recipe.short)}</a>`).join('')}</nav><div class="guide-recipes">
       ${recipes.map((recipe) => `<article id="recipe-${recipe.id}"><h2>${escape(recipe.title)}</h2><p>${escape(recipe.description)}</p><p class="guide-prerequisite"><strong>準備：</strong>${escape(recipe.prerequisite)}</p>${recipe.cli ? `<h3>CLI 指令</h3><pre><code>${escape(recipe.cli)}</code></pre>` : ''}<h3>Node.js 程式碼</h3><pre><code>${escape(recipe.node)}</code></pre><p><strong>執行後：</strong>${escape(recipe.outcome)}</p><a class="guide-source" href="${site.repository}/blob/main/src/lib/${recipe.source}">查看此功能原始碼 ↗</a></article>`).join('\n      ')}
     </div></div>
@@ -116,7 +117,7 @@ npm install parquet-tool</code></pre><p>CLI 指令直接在終端機執行。Nod
 }
 
 function markdown() {
-  return `# Parquet 使用教學與完整範例\n\n${absolute('guide.html')}\n\nNode.js 18+。先安裝 parquet-tool，下載 [input.json](${absolute('samples/input.json')}) 與 [input.csv](${absolute('samples/input.csv')}) 到工作資料夾。Node.js 程式碼另存為 example.cjs 後執行 node example.cjs。\n\n\`\`\`sh\nnpm init -y\nnpm install parquet-tool\n\`\`\`\n\n網頁版與目前 C++ CLI 的 Parquet 互通有限，請透過 CSV／JSON 交換資料。\n\n${recipes.map((recipe) => `## ${recipe.title}\n\n${recipe.description}\n\n準備：${recipe.prerequisite}\n\n${recipe.cli ? `### CLI\n\n\`\`\`sh\n${recipe.cli}\n\`\`\`\n\n` : ''}### Node.js\n\n\`\`\`js\n${recipe.node}\n\`\`\`\n\n執行後：${recipe.outcome}\n\n[原始碼](${site.repository}/blob/main/src/lib/${recipe.source})`).join('\n\n')}\n`;
+  return `# Parquet 使用教學與完整範例\n\n${absolute('guide.html')}\n\nNode.js 18+。先安裝 parquet-tool，下載 [input.json](${absolute('samples/input.json')}) 與 [input.csv](${absolute('samples/input.csv')}) 到工作資料夾。Node.js 程式碼另存為 example.cjs 後執行 node example.cjs。\n\n\`\`\`sh\nnpm init -y\nnpm install parquet-tool\n\`\`\`\n\n網頁與 Node.js／CLI 共用本專案 C++ 核心；Parquet 支援無壓縮 PLAIN 資料頁 v1。\n\n${recipes.map((recipe) => `## ${recipe.title}\n\n${recipe.description}\n\n準備：${recipe.prerequisite}\n\n${recipe.cli ? `### CLI\n\n\`\`\`sh\n${recipe.cli}\n\`\`\`\n\n` : ''}### Node.js\n\n\`\`\`js\n${recipe.node}\n\`\`\`\n\n執行後：${recipe.outcome}\n\n[原始碼](${site.repository}/blob/main/src/lib/${recipe.source})`).join('\n\n')}\n`;
 }
 
 export async function generateSeo({ check = false } = {}) {
@@ -132,13 +133,16 @@ export async function generateSeo({ check = false } = {}) {
   output.set('guide.html', guide());
   output.set('guide.md', markdown());
   output.set('sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${pages.map((page) => `  <url><loc>${escape(absolute(page.file))}</loc></url>`).join('\n')}\n</urlset>\n`);
-  output.set('llms.txt', `# parquet-tool\n\n> Parquet utilities, executable Node.js/CLI recipes, and a browser-local CSV/JSON/Parquet converter.\n\n## Pages\n\n- [Overview](${absolute()}): Traditional Chinese project overview and interactive recipes.\n- [Browser converter](${absolute('converter.html')}): CSV, JSON, flat Parquet conversion in a local module worker; no file uploads. Maximum 20 MiB, 100,000 rows, 200 columns, 2,000,000 cells.\n- [Full guide](${absolute('guide.html')}): All ${recipes.length} CLI/CommonJS recipes, prerequisites and outcomes, available without JavaScript.\n- [Markdown guide](${absolute('guide.md')}): Same recipes as plain Markdown.\n- [Source repository](${site.repository}): Public API, CLI, native implementation and issue tracker.\n\n## Accuracy notes\n\nThe browser engine is separate from the Node.js C++ addon. Current native Parquet files and standard browser-engine files have interoperability limitations: exchange CSV/JSON between the two. The browser does not support nested/binary columns or preserve all source schema/metadata. INT64 exports to JSON/CSV as decimal strings. CLI recipes need Node.js 18+. This optional index does not grant crawling permissions or guarantee inclusion in AI search.\n`);
-  for (const [file, content] of output) {
+  output.set('llms.txt', `# parquet-tool\n\n> Parquet utilities, executable Node.js/CLI recipes, and a browser-local CSV/JSON/Parquet converter.\n\n## Pages\n\n- [Overview](${absolute()}): Traditional Chinese project overview and interactive recipes.\n- [Browser converter](${absolute('converter.html')}): CSV, JSON, flat Parquet conversion in a local module worker; no file uploads. Maximum 20 MiB, 100,000 rows, 200 columns, 2,000,000 cells.\n- [Full guide](${absolute('guide.html')}): All ${recipes.length} CLI/CommonJS recipes, prerequisites and outcomes, available without JavaScript.\n- [Markdown guide](${absolute('guide.md')}): Same recipes as plain Markdown.\n- [Source repository](${site.repository}): Public API, CLI, native implementation and issue tracker.\n\n## Accuracy notes\n\nThe browser compiles the same project C++ core as the Node addon to WebAssembly. Parquet support is limited to uncompressed PLAIN data page v1; unsupported codecs/encodings are rejected. The browser does not support nested/binary columns or preserve all source schema/metadata. INT64 exports to JSON/CSV as decimal strings. CLI recipes need Node.js 18+. This optional index does not grant crawling permissions or guarantee inclusion in AI search.\n`);
+  for (const [file, content] of localizeOutputs(output, site, recipes)) {
     if (check) {
       let actual;
       try { actual = await readFile(new URL(file, root), 'utf8'); } catch { /* report missing output */ }
       if (actual !== content) throw new Error(`${file} is stale; run npm run seo --prefix tools/site-converter`);
-    } else await writeFile(new URL(file, root), content);
+    } else {
+      await mkdir(new URL('./', new URL(file, root)), { recursive: true });
+      await writeFile(new URL(file, root), content);
+    }
   }
   console.log(`${check ? 'Verified' : 'Generated'} SEO metadata, visible FAQ, static guide, sitemap and optional LLM index.`);
 }

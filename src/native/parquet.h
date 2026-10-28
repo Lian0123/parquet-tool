@@ -148,11 +148,11 @@ namespace serial {
 
 inline void writeSchemaElement(thrift::CompactWriter& w, const SchemaElement& e) {
     w.pushStruct();
-    w.writeFieldString(1, e.name);
-    if (e.num_children >= 0) w.writeFieldI32(2, e.num_children);
-    if (e.type >= 0) w.writeFieldI32(3, e.type);
-    if (e.converted_type >= 0) w.writeFieldI32(4, e.converted_type);
-    if (e.repetition_type >= 0) w.writeFieldI32(6, e.repetition_type);
+    if (e.type >= 0) w.writeFieldI32(1, e.type);
+    if (e.repetition_type >= 0) w.writeFieldI32(3, e.repetition_type);
+    w.writeFieldString(4, e.name);
+    if (e.num_children >= 0) w.writeFieldI32(5, e.num_children);
+    if (e.converted_type >= 0) w.writeFieldI32(6, e.converted_type);
     w.popStruct();
 }
 
@@ -236,16 +236,22 @@ inline void writePageHeader(thrift::CompactWriter& w, const PageHeader& ph) {
 
 inline SchemaElement readSchemaElement(thrift::CompactReader& r) {
     SchemaElement se;
+    bool legacy = false;
     r.pushStruct();
     for (;;) {
         auto fh = r.readFieldHeader();
         if (fh.type == thrift::CT_STOP) break;
         switch (fh.field_id) {
-        case 1: se.name = r.readBinary(); break;
-        case 2: se.num_children = r.readZigzagI32(); break;
-        case 3: se.type = r.readZigzagI32(); break;
-        case 4: se.converted_type = r.readZigzagI32(); break;
-        case 6: se.repetition_type = r.readZigzagI32(); break;
+        case 1:
+            // Earlier project versions used nonstandard field IDs. Continue reading them.
+            if (fh.type == thrift::CT_BINARY) { legacy = true; se.name = r.readBinary(); }
+            else se.type = r.readZigzagI32();
+            break;
+        case 2: if (legacy) se.num_children = r.readZigzagI32(); else r.skip(fh.type); break;
+        case 3: if (legacy) se.type = r.readZigzagI32(); else se.repetition_type = r.readZigzagI32(); break;
+        case 4: if (legacy) se.converted_type = r.readZigzagI32(); else se.name = r.readBinary(); break;
+        case 5: se.num_children = r.readZigzagI32(); break;
+        case 6: if (legacy) se.repetition_type = r.readZigzagI32(); else se.converted_type = r.readZigzagI32(); break;
         default: r.skip(fh.type); break;
         }
     }
@@ -798,6 +804,10 @@ public:
     void open(const std::string& path) {
         file_ = std::fopen(path.c_str(), "rb");
         if (!file_) throw std::runtime_error("cannot open file for reading: " + path);
+        std::fseek(file_, 0, SEEK_END);
+        long file_size = std::ftell(file_);
+        if (file_size < 12) throw std::runtime_error("invalid parquet file: too short");
+        std::fseek(file_, 0, SEEK_SET);
 
         // Verify magic at start
         char magic[4];
@@ -815,6 +825,9 @@ public:
         uint32_t footer_len;
         std::memcpy(&footer_len, tail, 4);
 
+        if (footer_len > static_cast<uint64_t>(file_size - 12))
+            throw std::runtime_error("invalid parquet footer length");
+
         std::fseek(file_, -(8 + static_cast<long>(footer_len)), SEEK_END);
         std::vector<uint8_t> footer_buf(footer_len);
         std::fread(footer_buf.data(), 1, footer_len, file_);
@@ -825,6 +838,11 @@ public:
         // Build col_schemas from metadata (skip root element)
         for (size_t i = 1; i < metadata_.schema.size(); i++) {
             auto& se = metadata_.schema[i];
+            if (se.num_children >= 0 || se.repetition_type == REPEATED)
+                throw std::runtime_error("nested and repeated Parquet columns are not supported");
+            if ((se.converted_type != -1 && se.converted_type != CT_UTF8) ||
+                (se.type == BYTE_ARRAY && se.converted_type != CT_UTF8))
+                throw std::runtime_error("binary and non-UTF8 logical types are not supported by the project engine");
             ColSchema cs;
             cs.name = se.name;
             cs.type = se.type;
@@ -842,11 +860,16 @@ public:
             throw std::runtime_error("row group index out of range");
 
         auto& rg = metadata_.row_groups[index];
+        if (rg.columns.size() != col_schemas_.size()) throw std::runtime_error("Parquet column count mismatch");
         std::vector<ColumnData> result;
 
         for (size_t ci = 0; ci < rg.columns.size(); ci++) {
             auto& cc = rg.columns[ci];
             auto& cs = col_schemas_[ci];
+            if (cc.meta_data.codec != UNCOMPRESSED)
+                throw std::runtime_error("Only uncompressed Parquet is supported by the project engine");
+            if (cc.meta_data.total_compressed_size < 0 || cc.meta_data.total_compressed_size > 256 * 1024 * 1024)
+                throw std::runtime_error("invalid Parquet column chunk size");
 
             // Seek to data page
             std::fseek(file_, static_cast<long>(cc.meta_data.data_page_offset), SEEK_SET);
@@ -863,6 +886,13 @@ public:
 
             thrift::CompactReader tr(chunk_buf.data(), chunk_buf.size());
             PageHeader ph = serial::readPageHeader(tr);
+
+            if (ph.type != DATA_PAGE || ph.data_page_header.encoding != PLAIN)
+                throw std::runtime_error("Only PLAIN encoding and data page v1 are supported by the project engine");
+            if (ph.data_page_header.num_values != rg.num_rows)
+                throw std::runtime_error("Multiple data pages per column are not supported by the project engine");
+            if (ph.compressed_page_size < 0 || static_cast<size_t>(ph.compressed_page_size) > tr.remaining())
+                throw std::runtime_error("truncated Parquet page");
 
             int32_t num_values = ph.data_page_header.num_values;
             const uint8_t* page_data = chunk_buf.data() + tr.pos();

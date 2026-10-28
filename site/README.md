@@ -1,10 +1,8 @@
 # GitHub Pages examples website
 
-Traditional Chinese usage guide and browser converter for `parquet-tool`. All
-runtime assets are local; no server API, external fonts, or CDN is needed to serve
-the checked-in website. Recipes run in Node.js; `converter.html` processes files
-directly in a module Web Worker using bundled Hyparquet, Hyparquet Writer and Papa
-Parse. The browser engine is separate from the C++ native package.
+Traditional Chinese, English and Japanese usage guides and browser converter for
+`parquet-tool`. All runtime assets are local. The converter uses WebAssembly compiled
+from this project's `src/native/parquet.h` and `thrift.h`, through `src/wasm/browser.cpp`.
 
 ## Preview
 
@@ -32,18 +30,16 @@ server. Opening its HTML with `file://` displays an explanation instead.
 - JSON: object arrays or `{ rows: [...] }`; source `schema` metadata is ignored.
   Missing values become null, heterogeneous scalar columns become strings, unsafe
   JSON integers are rejected. Use decimal strings for exact large integers.
-- Flat Parquet: common decompression codecs through hyparquet-compressors; Snappy
-  or uncompressed output. Nested and binary columns are rejected. Date values are
-  exported as ISO strings, INT64 values as decimal strings in JSON/CSV. This is a
-  table conversion tool, not a schema/metadata-preserving round trip.
-- Limits: 20 MiB input, 100,000 rows, 200 columns, 2,000,000 cells. Input is read in
-  memory; compressed size does not bound decoded memory. Cancel terminates the
-  worker. Result Blob URLs are revoked when replaced, cleared, or leaving the page.
-- **Current native interoperability limitation:** a standard Hyparquet Writer file
-  (both Snappy and uncompressed) fails in the current C++ reader with
-  `thrift: unknown type to skip`. Its SchemaElement field IDs in `src/native/parquet.h`
-  also differ from the standard schema. Use CSV/JSON to exchange data between this
-  browser engine and the current CLI. Native compatibility is outside this change.
+- Flat Parquet: uncompressed PLAIN data pages v1, one page per column chunk.
+  BOOLEAN, INT32, INT64, FLOAT, DOUBLE and UTF-8 strings are supported. Compression,
+  dictionaries, nested/repeated fields and non-UTF8 logical types are rejected.
+  Dates remain text. INT64 values export as decimal strings in JSON/CSV.
+  Metadata/logical schemas are not preserved.
+- Limits: 20 MiB input, 100,000 rows, 200 columns, 2,000,000 cells; WASM memory max
+  256 MiB. Processing materializes tables in a cancellable worker.
+- Native/WASM share the implementation. New files use standard schema field IDs;
+  the reader also accepts the project's earlier schema layout. Independent PyArrow
+  fixtures and native/WASM interchange tests cover supported formats.
 
 ### Rebuild and test
 
@@ -57,10 +53,18 @@ npm test --prefix tools/site-converter
 npm run docs:check
 ```
 
-The builder includes local compression implementations and generates third-party
-license notices from the bundled packages. No additional WASM fetch or runtime CDN
-is used. The Pages workflow rebuilds, verifies the checked-in bundle, and runs the
-converter tests before deployment. Root npm runtime dependencies are unaffected.
+For shared C++ changes, install Emscripten **3.1.74**, activate its environment and run:
+
+```sh
+npm run build:wasm --prefix tools/site-converter
+npm run build --prefix tools/site-converter
+npm test --prefix tools/site-converter
+```
+
+Commit `project-parquet.mjs`, `.wasm` and `.sources.json` together. The source-hash
+manifest makes website tests fail if shared C++ or the build script changes without
+recompiling. Pages serves the committed local WASM and rebuilds the Papa Parse bundle.
+The WASM compiler is a development dependency only, outside npm runtime installs.
 
 ## Publish to GitHub Pages
 
@@ -74,7 +78,10 @@ converter tests before deployment. Root npm runtime dependencies are unaffected.
 
 The workflow uploads only `site/`. Relative asset and sample paths work under the
 `/parquet-tool/` project prefix, as well as on a standalone domain. `.nojekyll`
-also allows this folder to be served without Jekyll in a branch-based deployment.
+does not make a repository-root branch deployment publish `site/`. A branch-based
+Jekyll deployment serves README at `/parquet-tool/` and places the real website at
+`/parquet-tool/site/`, causing `/parquet-tool/guide.html` to return 404. Select GitHub
+Actions as the source; the workflow now checks this explicitly.
 The website is independent of the npm package and the Flask viewer.
 
 See the [official custom-workflow guide](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages)
@@ -90,7 +97,9 @@ for Pages permissions and configuration.
 - `converter.html`, `converter.css`, `converter.mjs`: converter UI and state.
 - `converter-worker.mjs`, `converter-core.mjs`, `converter-shared.mjs`: worker
   protocol, table parsing/export, validation, and shared limits.
-- `vendor/`: reproducible browser bundle and third-party notices.
+- `vendor/`: local project WASM, source hashes, CSV bundle and third-party notices.
+- `en/`, `ja/`: generated localized pages, guides and recipe metadata.
+- `i18n.js`: localized dynamic statuses and errors.
 - `../tools/site-converter/`: pinned build dependencies, bundler, conversion tests,
   and DOM controller tests. Test tools are not published with the website.
 - `guide.html`, `guide.md`: generated static versions of all twelve recipes.
@@ -119,47 +128,31 @@ keyboard tab navigation, direct `#example-<id>` links, downloads, and copy behav
 Use a fresh temporary working directory to execute snippets so append operations
 and generated files cannot affect user data. Run `npm run docs:check` after changes.
 
-## Verification record — 2026-10-27
+## Verification scope
 
-- `npm run ci` passed locally on Node.js 26.5.0: native/TypeScript builds, lint,
-  all 7 suites / 40 tests, and maintenance documentation checks.
-- All 23 available CLI/CommonJS recipe variants ran in isolated temporary
-  directories against the local build. Generated Parquet files were validated;
-  row data, conversion outputs, and invalid-file CLI exit status were checked.
-- JavaScript syntax, HTML IDs/relative assets/section anchors, download fixtures,
-  Pages workflow YAML/permissions/upload directory, and `git diff --check` passed.
-- A local HTTP preview returned 200. Browser automation could not establish a
-  working session; responsive visual review and browser interaction checks remain
-  unverified. The preview server was stopped after validation.
-- GitHub Pages was not remotely enabled or deployed. Cross-platform and Node.js 18
-  checks were not run locally; the existing CI workflow retains those jobs.
+Website tests cover conversions, independent standard and legacy fixtures, nine
+static language pages, real local links, language alternatives, metadata, freshness,
+DOM controls, limits and WASM source hashes. Native tests cover cross-engine file
+exchange. DOM tests simulate worker transport; actual browser worker/download and
+responsive visual review still require a connected browser.
 
-Browser converter extension, verified on the same date:
+Remote deployment is separate from local validation. Push/merge to `main`, select
+GitHub Actions in Pages settings, run the workflow, then verify the public URLs.
+The security mitigation and outstanding upstream Dependabot limitation are documented
+in [dependency security](../docs/security-dependencies.md).
 
-- Full root `npm run ci` passed again (native/TypeScript builds, lint, 40 existing
-  tests, documentation check). All 32 converter/data/DOM/static-asset tests passed
-  with `npm test --prefix tools/site-converter` on Node.js 26.5.0.
-- Two successive dependency builds produced identical bundle and license-notice
-  hashes. Pages YAML, module syntax, relative paths, and `git diff --check` passed.
-  The converter page, worker, core, and bundle returned HTTP 200 in local preview.
-- DOM tests exercise real conversions with a simulated Worker transport; they do
-  not replace actual module-worker or visual browser review. No connected browser
-  provider was available. Desktop/mobile visual review and real browser downloads
-  remain unverified. The local preview server was stopped after checks.
-- Standard writer output was also tried against the current native reader; both
-  Snappy and uncompressed files failed as documented under interoperability above.
-  No native compatibility changes or remote Pages deployment were performed.
+### Verification record — 2026-10-28
 
-SEO / AI-search extension, verified on the same date:
-
-- `npm test --prefix tools/site-converter` passed all 40 website tests, including
-  metadata, JSON-LD/visible FAQ agreement, sitemap, canonical URLs, share-image PNG,
-  static recipes/Markdown, local links, and the existing converter/DOM tests.
-- Full root `npm run ci` passed: native/TypeScript builds, lint, 40 existing tests,
-  and docs checks. SEO freshness, browser bundle build, deterministic SEO generation,
-  JavaScript syntax, and `git diff --check` passed. The PNG share card was visually
-  inspected locally.
-- No connected browser provider was available for visual page review. External
-  production pages/root robots could not be retrieved with the web tool. Search
-  Console, Bing submission, real indexing/ranking and AI citations were not tested
-  or changed. No remote deployment was performed.
+- Clean root `npm ci` applied the bundled dependency mitigation; security check
+  verified both installed copies at 10.7.5.
+- Native/TypeScript build, lint, 8 Jest suites / 44 tests and docs check passed.
+- 50 website tests, SEO freshness and generated bundle build passed.
+- Independent PyArrow 17 read both native and WASM output, including Unicode,
+  nulls and booleans. All nine language pages and four engine assets returned 200
+  from a temporary HTTP server; WASM MIME type was correct.
+- No connected browser provider was available. Actual browser module workers,
+  downloads and responsive visual review, Node 18 and cross-platform CI were not
+  run locally. The test HTTP server was stopped.
+- Live root currently serves the repository/Jekyll site: `guide.html` returns 404,
+  while `site/guide.html` returns 200. Local changes have not been pushed/deployed;
+  select GitHub Actions as the Pages Source before deploying `site/`.

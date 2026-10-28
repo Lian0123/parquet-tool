@@ -1,0 +1,162 @@
+<!DOCTYPE html><html lang="en"><head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- SEO:START -->
+  <title>Parquet tools and examples: Node.js, CLI and browser conversion | parquet-tool</title>
+  <meta name="description" content="Read, write, convert and process Parquet with 12 Node.js / CLI examples, or convert CSV, JSON and Parquet in your browser without uploading files.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <link rel="canonical" href="https://lian0123.github.io/parquet-tool/en/">
+  <link rel="sitemap" type="application/xml" href="../sitemap.xml">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="parquet-tool">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:title" content="Parquet tools and examples: Node.js, CLI and browser conversion | parquet-tool">
+  <meta property="og:description" content="Read, write, convert and process Parquet with 12 Node.js / CLI examples, or convert CSV, JSON and Parquet in your browser without uploading files.">
+  <meta property="og:url" content="https://lian0123.github.io/parquet-tool/en/">
+  <meta property="og:image" content="https://lian0123.github.io/parquet-tool/social-card.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="parquet-tool: CSV, JSON and Parquet browser conversion and Node.js examples">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Parquet tools and examples: Node.js, CLI and browser conversion | parquet-tool">
+  <meta name="twitter:description" content="Read, write, convert and process Parquet with 12 Node.js / CLI examples, or convert CSV, JSON and Parquet in your browser without uploading files.">
+  <meta name="twitter:image" content="https://lian0123.github.io/parquet-tool/social-card.png">
+  <meta name="twitter:image:alt" content="parquet-tool: CSV, JSON and Parquet browser conversion and Node.js examples">
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://lian0123.github.io/parquet-tool/en/#website",
+      "url": "https://lian0123.github.io/parquet-tool/en/",
+      "name": "parquet-tool",
+      "inLanguage": "en"
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://lian0123.github.io/parquet-tool/en/#page",
+      "url": "https://lian0123.github.io/parquet-tool/en/",
+      "name": "Parquet tools and examples: Node.js, CLI and browser conversion | parquet-tool",
+      "description": "Read, write, convert and process Parquet with 12 Node.js / CLI examples, or convert CSV, JSON and Parquet in your browser without uploading files.",
+      "inLanguage": "en",
+      "isPartOf": {
+        "@id": "https://lian0123.github.io/parquet-tool/en/#website"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://lian0123.github.io/parquet-tool/en/#faq",
+      "isPartOf": {
+        "@id": "https://lian0123.github.io/parquet-tool/en/#page"
+      },
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is parquet-tool?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "parquet-tool is a TypeScript library and CLI for Node.js 18+. The browser compiles the same C++ Parquet core to WebAssembly. This site also provides 12 reading, writing, conversion and processing examples."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Which formats can the browser convert?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The browser converts between CSV, JSON and flat Parquet in all six directions. Use the Node.js / CLI examples for Arrow IPC and XML."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Do I need Node.js for the browser converter?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Open the converter in a modern browser with JavaScript modules and Web Workers. The Node.js and CLI recipes require Node.js 18+ and parquet-tool installed locally."
+          }
+        }
+      ]
+    }
+  ]
+}</script>
+  <!-- SEO:END -->
+  <meta name="theme-color" content="#183f35">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../styles.css">
+  <script src="./examples.js" defer=""></script>
+  <script src="../app.js" defer=""></script>
+<link rel="alternate" hreflang="zh-Hant" href="https://lian0123.github.io/parquet-tool/"><link rel="alternate" hreflang="en" href="https://lian0123.github.io/parquet-tool/en/"><link rel="alternate" hreflang="ja" href="https://lian0123.github.io/parquet-tool/ja/"><link rel="alternate" hreflang="x-default" href="https://lian0123.github.io/parquet-tool/"><script id="locale-data" type="application/json">{"language":"en","messages":{"基本讀寫":"Read and write","格式轉換":"Format conversion","資料處理":"Data processing","在工作資料夾的終端機執行。":"Run in a terminal in your working directory.","欄式儲存，適合資料分析與資料交換。":"Columnar storage for analytics and data exchange.","選擇檔案後，即可查看預覽並開始轉換。":"Choose a file to preview and convert it.","準備：":"Before you start: ","parquet-tool 是 Node.js 18 以上可用的 TypeScript 函式庫與 CLI，核心讀寫使用 C++ 原生模組。網站轉換工具透過 WebAssembly 共用相同的 C++ 核心，以及 12 個讀寫、轉換與資料處理範例。":"parquet-tool is a TypeScript library and CLI for Node.js 18+. The browser compiles the same C++ Parquet core to WebAssembly. This site also provides 12 reading, writing, conversion and processing examples.","選擇或拖入含標題列的 UTF-8 CSV，確認資料預覽，將輸出格式設為 Parquet，再按「開始轉換」與「下載檔案」。輸出使用本專案核心的無壓縮 PLAIN 編碼。":"Choose or drop a UTF-8 CSV with a header, check the preview, select Parquet, then convert and download. The project core writes uncompressed PLAIN encoding.","Parquet INT64 在 JSON／CSV 輸出為十進位字串。JSON 超出安全精度的數值會被拒絕，請改用帶引號的字串。CSV 空欄位與 JSON 缺少的欄位轉為 null；混合型別欄位以文字保存，日期欄位以文字保存。":"INT64 exports to JSON / CSV as decimal strings. Unsafe JSON numbers are rejected; use quoted strings. Empty CSV fields and missing JSON fields become null. Mixed-type columns and dates are stored as text.","可以。網頁版與 Node.js／CLI 共用本專案 C++ 核心，支援無壓縮 PLAIN 資料頁 v1。舊版專案的 schema 仍可讀取；不支援壓縮、巢狀欄位或其他 logical types，也不保留完整 metadata。":"Yes. The browser and Node.js / CLI share this project’s C++ core, supporting uncompressed PLAIN data page v1. Legacy project schemas remain readable. Compression, nested columns and other logical types are unsupported; full metadata is not preserved.","，不必安裝 Node.js。網頁與 Node.js／CLI 共用本專案 C++ 核心；Parquet 支援無壓縮 PLAIN 資料頁 v1。混合型別、空值與容量限制詳見":" without installing Node.js. Both use the project C++ core with uncompressed PLAIN data page v1. For mixed types, nulls and limits, see ","個範例":"examples","列":"rows","欄":"columns","儲存為 example.cjs，再執行 node example.cjs。":"Save as example.cjs, then run node example.cjs.","已複製程式碼":"Code copied","請按 Ctrl+C 或 ⌘C 複製已選取的程式碼":"Press Ctrl+C or ⌘C to copy the selected code","資料已就緒，選擇格式後按「開始轉換」。":"Data is ready. Select a format and click “Convert file”.","通用文字表格，可匯入試算表或其他資料工具。":"A text table for spreadsheets and other data tools.","易讀的物件陣列，適合程式與 API 資料交換。":"Readable object arrays for applications and APIs.","正在本機讀取與辨識資料…":"Reading and inspecting your local file…","資料已就緒，預覽確認後即可轉換。":"Data is ready. Check the preview, then convert.","轉換完成。按「下載檔案」儲存結果。":"Conversion complete. Click “Download file” to save it.","處理未完成，請檢查下方錯誤訊息。":"Processing failed. Check the error below.","轉換引擎無法執行。":"The conversion engine could not run.","請重新選擇檔案再試一次，並確認使用支援 JavaScript 模組與 Web Worker 的新版瀏覽器。":"Choose the file again and use a modern browser supporting JavaScript modules, WebAssembly and Web Workers.","無法讀取檔案。":"Could not read the file.","已取消處理並清除檔案。":"Processing canceled and file cleared.","選項已更新，請重新轉換。":"Options changed. Please convert again.","正在瀏覽器背景轉換，請稍候…":"Converting in the background. Please wait…","請一次選擇一個檔案。":"Please choose one file at a time.","請透過 GitHub Pages 或本機 HTTP 伺服器開啟此頁，並使用支援 Web Worker 的新版瀏覽器。直接開啟 HTML 檔案無法執行轉換。":"Open this page through GitHub Pages or a local HTTP server in a modern browser with Web Workers and WebAssembly. Conversion is unavailable from a file:// URL.","資料超過 100,000 列，請先切分檔案。":"The table exceeds 100,000 rows. Split the file first.","資料必須包含 1 至 200 個欄位。":"The table must contain 1 to 200 columns.","資料超過 2,000,000 個儲存格，請先切分檔案。":"The table exceeds 2,000,000 cells. Split it first.","欄位名稱不能空白，也不能使用 __proto__、prototype 或 constructor。":"Column names cannot be blank or use __proto__, prototype or constructor.","欄位名稱重複，請先修正 CSV 標題列。":"Duplicate column names. Fix the CSV header first.","找不到資料列。請提供至少一筆資料。":"No rows found. Provide at least one row.","JSON 必須是物件陣列，例如 [{\"id\":1,\"name\":\"Alice\"}]。":"JSON must be an object array, for example [{\"id\":1,\"name\":\"Alice\"}].","檔案超過 20 MiB，請先切分後再轉換。":"The file exceeds 20 MiB. Split it before converting.","檔案是空的。":"The file is empty.","文字編碼無法辨識，請先將檔案另存為 UTF-8。":"Unrecognized text encoding. Save the file as UTF-8.","JSON 格式錯誤，請檢查逗號、引號與括號。":"Invalid JSON. Check commas, quotes and brackets.","CSV 格式錯誤：":"Invalid CSV: ","CSV 沒有標題列。":"The CSV has no header row.","CSV 每一列的欄位數必須與標題列一致，請確認分隔符號。":"CSV row widths must match the header. Check the delimiter.","不支援這個輸出格式。":"Unsupported output format.","請先選擇檔案。":"Choose a file first.","請選擇 .csv、.json 或 .parquet 檔案。":"Choose a .csv, .json or .parquet file.","包含無效日期。":" contains an invalid date.","包含巢狀物件、陣列或二進位資料。目前僅支援平面資料表。":" contains nested objects, arrays or binary data. Only flat tables are supported.","的數值超出 JavaScript 安全精度。請改用帶引號的十進位字串。":" exceeds safe JavaScript numeric precision. Use a quoted decimal string.","超出 INT64 範圍。":" exceeds the INT64 range.","Only uncompressed Parquet is supported by the project engine":"Only uncompressed Parquet is supported by the project engine","Only PLAIN encoding and data page v1 are supported by the project engine":"Only PLAIN encoding and data page v1 are supported by the project engine","browser table limit exceeded":"Browser table limits exceeded (100,000 rows, 200 columns, 2,000,000 cells).","與本機版本共用核心":"Shared core with the local version","瀏覽器引擎：本專案 C++ 核心（WebAssembly） / Papa Parse":"Browser engine: project C++ core (WebAssembly) / Papa Parse","網頁版透過 WebAssembly 使用本專案的 C++ 核心，與 Node.js／CLI 共用 Parquet 實作。支援無壓縮、PLAIN 編碼與資料頁 v1；壓縮或其他編碼會明確回報不支援。":"The browser uses this project’s C++ core through WebAssembly, sharing the Parquet implementation with Node.js / CLI. It supports uncompressed PLAIN data page v1; other codecs and encodings are explicitly rejected.","輸出物件陣列。INT64 轉成十進位字串，避免 JSON 數值精度流失；日期欄位以文字保存。":"Exports an object array. INT64 becomes decimal text to preserve precision; date fields stay text.","混合型別欄位以文字保存；日期請以文字保存，超大整數請在 JSON 使用字串。暫不支援巢狀或二進位欄位。最多 200 欄、2,000,000 個儲存格。":"Mixed-type columns become text. Keep dates and very large JSON integers as strings. Nested and binary fields are not supported. Limit: 200 columns and 2,000,000 cells.","Invalid Parquet file. Check that it is complete and uses a supported format.":"Invalid Parquet file. Check that it is complete and uses a supported format.","nested and repeated Parquet columns are not supported":"Nested and repeated Parquet columns are not supported.","binary and non-UTF8 logical types are not supported by the project engine":"Binary and non-UTF8 logical types are not supported.","Multiple data pages per column are not supported by the project engine":"Multiple data pages per column are not supported.","unsupported Parquet physical type":"Unsupported Parquet physical type."}}</script><script id="site-i18n" src="../i18n.js"></script></head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="header">
+    <a class="brand" href="#" aria-label="parquet-tool home"><span class="brand-mark" aria-hidden="true">▥</span>parquet<span class="brand-light">-tool</span><span class="brand-label">EXAMPLES</span></a>
+    <nav aria-label="Main navigation"><a href="./guide.html">Complete guide</a><a href="#examples">Examples</a><a href="./converter.html">Converter</a><a class="github-link" href="https://github.com/Lian0123/parquet-tool">GitHub <span aria-hidden="true">↗</span></a></nav>
+  </header><nav class="language-switch wrap" aria-label="Language"><a href="../index.html" hreflang="zh-Hant" lang="zh-Hant">繁體中文</a><a href="./index.html" hreflang="en" lang="en" aria-current="page">English</a><a href="../ja/index.html" hreflang="ja" lang="ja">日本語</a></nav>
+  <main id="main">
+    <section class="hero wrap" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="eyebrow"><span class="status-dot"></span> NODE.JS LIBRARY &amp; CLI</p>
+        <h1 id="hero-title">Parquet conversion.<br><span>Start here.</span></h1>
+        <p class="hero-description">Tools for reading, writing, converting and processing Parquet.<br>Explore Node.js / CLI recipes, or convert CSV, JSON and Parquet directly in your browser.</p>
+        <div class="hero-actions"><a class="button primary" href="./converter.html">Convert a file <span aria-hidden="true">↗</span></a><a class="text-link" href="#examples">Explore examples <span aria-hidden="true">→</span></a></div>
+        <div class="hero-tags"><span>TypeScript API</span><span>Native C++ core</span><span>MIT License</span></div>
+      </div>
+      <div class="hero-demo" aria-label="CLI example: JSON to Parquet">
+        <div class="demo-heading"><span class="terminal-dots" aria-hidden="true">● ● ●</span><span>your next data workflow</span><span aria-hidden="true">↗</span></div>
+        <div class="demo-files"><div class="file-stack"><span class="file-type">{ }</span><strong>input.json</strong><small>Source data</small></div><div class="file-arrow" aria-hidden="true">⟶</div><div class="file-stack parquet-file"><span class="file-type">▥</span><strong>data.parquet</strong><small>Columnar storage</small></div></div>
+        <div class="demo-terminal"><p><span class="prompt">$</span> npx parquet-tool json-to-parquet \<br><span class="indent">input.json data.parquet</span></p><p class="terminal-success">Converted JSON to Parquet: data.parquet<br>Schema columns: id, name, active</p><p><span class="prompt">$</span> npx parquet-tool read data.parquet --json</p><pre>[
+  { <span>"id"</span>: 1, <span>"name"</span>: "Alice", <span>"active"</span>: true },
+  { <span>"id"</span>: 2, <span>"name"</span>: "Bob",   <span>"active"</span>: false },
+  { <span>"id"</span>: 3, <span>"name"</span>: "Carol", <span>"active"</span>: true }
+]</pre><span class="demo-caption">Illustrative commands and sample data</span></div>
+      </div>
+    </section>
+    <div class="format-strip"><div class="wrap"><span>Built for your data workflow</span><p>JSON <span>↔</span> CSV <span>↔</span> <strong>PARQUET</strong> <span>↔</span> ARROW <span>↔</span> XML</p><span>One toolkit, multiple formats</span></div></div>
+    <section id="start" class="start wrap" aria-labelledby="start-title">
+      <div class="section-intro"><p class="eyebrow">01 / GET STARTED</p><h2 id="start-title">Set up, then get started.</h2><p>Requires Node.js 18 or later. Run these examples in your local terminal.</p></div>
+      <div class="steps">
+        <article><span class="step-number">01</span><h3>Install the package</h3><p>Create a working directory and install the npm package.</p><pre><code>mkdir parquet-demo
+cd parquet-demo
+npm init -y
+npm install parquet-tool</code></pre><p class="small">If installation requires compiling the native addon, follow the <a href="https://github.com/Lian0123/parquet-tool/blob/main/docs/installation.md">installation guide</a> to prepare CMake and a C++ toolchain.</p></article>
+        <article><span class="step-number">02</span><h3>Get sample data</h3><p>Download the files into your working directory.</p><div class="download-links"><a href="../samples/input.json" download="">↓ input.json <span>3 rows</span></a><a href="../samples/input.csv" download="">↓ input.csv <span>Same data</span></a></div><p class="small">Columns: <code>id</code>、<code>name</code>、<code>active</code>. All sample data is fictional.</p></article>
+        <article><span class="step-number">03</span><h3>Pick an example</h3><p>Paste CLI commands into your terminal. Save Node.js code as  <code>example.cjs</code>  and run it.</p><pre><code>node example.cjs</code></pre><p class="small">Examples run in local Node.js. You can also use the <a href="./converter.html">browser converter</a> to convert CSV, JSON and Parquet without installing a package.</p></article>
+      </div>
+    </section>
+    <section id="examples" class="examples-section" aria-labelledby="examples-title">
+      <div class="wrap">
+        <div class="examples-heading"><div><p class="eyebrow">02 / THE RECIPE BOOK</p><h2 id="examples-title">Find your next task.</h2></div><p>From your first row to your next data workflow.<br>Choose a task, copy the recipe, and build.</p></div>
+        <p class="static-guide-link">Want all the code on one page? Read <a href="./guide.html">the complete guide to 12 Parquet tasks</a>, available without JavaScript.</p>
+        <noscript><div class="notice">Enable JavaScript for interactive recipes, or read the <a href="./guide.html">complete static guide</a>。</div></noscript>
+        <div class="recipe-layout">
+          <aside class="recipe-sidebar" aria-label="Choose an example">
+            <label class="search-label" for="search">Search examples</label><div class="search-box"><span aria-hidden="true">⌕</span><input id="search" type="search" placeholder="Search tasks, commands or formats…" autocomplete="off"></div>
+            <label class="visually-hidden" for="category">Example category</label><select id="category"><option value="all">All examples</option><option value="basics">Read and write</option><option value="conversion">Format conversion</option><option value="processing">Data processing</option></select>
+            <p id="result-count" class="result-count" role="status"></p><div id="recipe-list" class="recipe-list"></div><p id="empty-state" hidden="">No matching examples. Try “CSV” or clear your filters.</p>
+          </aside>
+          <article class="recipe-detail" id="recipe-detail" aria-labelledby="recipe-title">
+            <div class="recipe-meta"><span id="recipe-category">Read and write</span><a id="permalink" href="#example-write" aria-label="Permanent link to this example"># <span>Example link</span></a></div>
+            <h3 id="recipe-title">Create your first Parquet file</h3><p id="recipe-description">Write input.json to data.parquet with an explicit schema.</p>
+            <p class="prerequisite" id="prerequisite">Before you start: download input.json into your working directory.</p>
+            <div class="code-toolbar"><div class="code-tabs" role="tablist" aria-label="Code language"><button id="tab-cli" role="tab" aria-selected="true" aria-controls="code-panel" data-language="cli">CLI</button><button id="tab-node" role="tab" aria-selected="false" aria-controls="code-panel" tabindex="-1" data-language="node">Node.js</button></div><button id="copy" class="copy-button" type="button" hidden="">Copy code <span aria-hidden="true">⧉</span></button></div>
+            <div id="code-panel" role="tabpanel" aria-labelledby="tab-cli" tabindex="0"><pre><code id="recipe-code">npx parquet-tool write data.parquet -i input.json -s "id:INT32,name:STRING,active:BOOLEAN"</code></pre></div>
+            <div class="recipe-outcome"><span class="outcome-label">Result</span><p id="recipe-outcome">Creates data.parquet with 3 rows.</p></div>
+            <div class="recipe-footer"><span id="code-hint">Run in a terminal in your working directory.</span><a id="source-link" href="https://github.com/Lian0123/parquet-tool/blob/main/src/cli/index.ts">View source ↗</a></div>
+          </article>
+        </div>
+        <p class="examples-note">Each recipe lists its prerequisites. Appending modifies the existing file; run “Create a file” again to start over.</p>
+      </div>
+    </section>
+    <!-- FAQ:START -->
+<section id="faq" class="search-faq wrap" aria-labelledby="faq-title">
+      <p class="eyebrow">QUESTIONS &amp; ANSWERS</p><h2 id="faq-title">Parquet conversion FAQ</h2>
+      <details><summary>What is parquet-tool?</summary><p>parquet-tool is a TypeScript library and CLI for Node.js 18+. The browser compiles the same C++ Parquet core to WebAssembly. This site also provides 12 reading, writing, conversion and processing examples.</p></details>
+      <details><summary>Which formats can the browser convert?</summary><p>The browser converts between CSV, JSON and flat Parquet in all six directions. Use the Node.js / CLI examples for Arrow IPC and XML.</p></details>
+      <details><summary>Do I need Node.js for the browser converter?</summary><p>No. Open the converter in a modern browser with JavaScript modules and Web Workers. The Node.js and CLI recipes require Node.js 18+ and parquet-tool installed locally.</p></details>
+      <p class="content-review">Content reviewed: <time datetime="2026-10-28">2026-10-28</time> · <a href="https://github.com/Lian0123/parquet-tool">Source and maintenance history ↗</a> · <a href="./guide.html">Complete usage guide</a></p>
+    </section>
+  <!-- FAQ:END -->
+    <section class="resources wrap" aria-labelledby="resources-title"><div><p class="eyebrow">03 / GO FURTHER</p><h2 id="resources-title">Build your next data workflow.</h2></div><div class="resource-links"><a href="./guide.html"><span>Complete Guide<small>12 Parquet tasks with complete code</small></span><span aria-hidden="true">↗</span></a><a href="https://github.com/Lian0123/parquet-tool/blob/main/docs/api.md"><span>API Reference<small>Methods, parameters and types</small></span><span aria-hidden="true">↗</span></a><a href="https://github.com/Lian0123/parquet-tool/blob/main/docs/cli.md"><span>CLI Reference<small>All commands and options</small></span><span aria-hidden="true">↗</span></a><a href="https://github.com/Lian0123/parquet-tool/tree/main/examples"><span>Runnable Examples<small>Runnable examples in the repository</small></span><span aria-hidden="true">↗</span></a></div></section>
+  </main>
+  <footer class="wrap footer"><a class="brand" href="#">parquet<span class="brand-light">-tool</span></a><span>Built with TypeScript and C++ · MIT License</span><a href="https://github.com/Lian0123/parquet-tool/issues">Report an issue ↗</a></footer>
+  <p id="copy-status" class="toast" role="status" aria-live="polite"></p>
+</body></html>

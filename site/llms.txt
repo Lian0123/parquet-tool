@@ -12,4 +12,10 @@
 
 ## Accuracy notes
 
-The browser engine is separate from the Node.js C++ addon. Current native Parquet files and standard browser-engine files have interoperability limitations: exchange CSV/JSON between the two. The browser does not support nested/binary columns or preserve all source schema/metadata. INT64 exports to JSON/CSV as decimal strings. CLI recipes need Node.js 18+. This optional index does not grant crawling permissions or guarantee inclusion in AI search.
+The browser compiles the same project C++ core as the Node addon to WebAssembly. Parquet support is limited to uncompressed PLAIN data page v1; unsupported codecs/encodings are rejected. The browser does not support nested/binary columns or preserve all source schema/metadata. INT64 exports to JSON/CSV as decimal strings. CLI recipes need Node.js 18+. This optional index does not grant crawling permissions or guarantee inclusion in AI search.
+
+## Language versions
+
+- [繁體中文 guide](https://lian0123.github.io/parquet-tool/guide.html)
+- [English guide](https://lian0123.github.io/parquet-tool/en/guide.html)
+- [日本語 guide](https://lian0123.github.io/parquet-tool/ja/guide.html)
