@@ -17,7 +17,7 @@
   "scripts": {
     "install": "node scripts/install.cjs",
     "postinstall": "node scripts/patch-bundled-ip-address.cjs",
-    "security:check": "node scripts/check-ip-address.cjs",
+    "security:check": "node scripts/check-security-dependencies.cjs",
     "build": "npm run build:native && npm run build:ts",
     "build:ts": "tsc -p tsconfig.build.json",
     "build:native": "cmake-js compile",
@@ -106,5 +106,8 @@
     "arrow",
     "data"
   ],
-  "license": "MIT"
+  "license": "MIT",
+  "overrides": {
+    "npm": "^11.21.1"
+  }
 }

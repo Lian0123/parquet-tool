@@ -105,3 +105,12 @@ not claimed as remotely verified.
 Search Console/Bing ownership verification, sitemap submission, live indexing,
 production robots policy and external AI citations were not changed or verified.
 No analytics or tracking script was added.
+
+## Existing branch Pages publishing
+
+Root HTML entry points now forward main-root branch deployments to `site/` instead
+of letting Jekyll render the repository README. The language-specific guide and
+converter links work in both publishing modes. Actions publishing remains the
+preferred canonical layout: its artifact directly places the website at the project
+root, matching the canonical URLs. Entry points redirect to the full static content. Deployment verification rejects
+stale HTML or assets.

@@ -1,4 +1,4 @@
-# Release-tool dependency mitigation
+# Release-tool dependency security
 
 The reported `ip-address <10.7.4` is bundled inside the development-only `npm`
 package used by `@semantic-release/npm`. It is not part of the browser bundle or
@@ -22,3 +22,18 @@ workaround once a supported upstream npm release ships `ip-address >=10.7.4`, th
 refresh the lockfile and verify a clean install without the patch.
 
 Validation: `npm ci`, `npm run security:check`. Do not commit `node_modules`.
+
+## postcss-selector-parser (fixed in the dependency graph)
+
+The vulnerable 7.1.4 copy was bundled inside npm 11.19.1, through
+`@semantic-release/npm -> npm -> @npmcli/arborist -> @npmcli/query`.
+The root npm override now requires `^11.21.1`, whose official tarball bundles
+postcss-selector-parser 7.1.6. The lockfile records that actual upstream version;
+no postinstall rewriting or invented lock metadata is used for this dependency.
+
+After any dependency refresh, run `npm ci`, `npm run security:check` and
+`npm ls npm postcss-selector-parser`. The check rejects vulnerable locked or
+installed selector-parser versions. This addresses the selector-parser Dependabot
+update conflict after the new lockfile reaches the default branch. It does not
+claim all other npm audit alerts are resolved. The separate ip-address workaround
+above is still needed: npm 11.21.1 bundles ip-address 10.7.2.

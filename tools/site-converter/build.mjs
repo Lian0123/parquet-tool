@@ -3,6 +3,7 @@ import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { generateSeo } from './seo.mjs';
+import { generateBranchEntries } from './branch-entrypoints.mjs';
 
 const directory = path.dirname(fileURLToPath(import.meta.url));
 const output = path.resolve(directory, '../../site/vendor');
@@ -41,3 +42,4 @@ for (const dir of [...packages].sort()) {
 await writeFile(path.join(output, 'THIRD_PARTY_LICENSES.txt'), notices.join('\n\n----------------------------------------\n\n'));
 console.log(`Bundled browser dependencies and ${packages.size} license notices.`);
 await generateSeo();
+await generateBranchEntries();

@@ -10,6 +10,11 @@ on:
       - 'src/wasm/**'
       - 'tests/fixtures/**'
       - '.github/workflows/pages.yml'
+      - 'index.html'
+      - 'guide.html'
+      - 'converter.html'
+      - 'en/**'
+      - 'ja/**'
   workflow_dispatch:
 
 permissions:
@@ -22,13 +27,14 @@ concurrency:
 jobs:
   deploy:
     runs-on: ubuntu-24.04
+    timeout-minutes: 20
     permissions:
       contents: read
       pages: write
       id-token: write
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      url: ${{ steps.source.outputs.page_url }}
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v6
@@ -39,7 +45,9 @@ jobs:
       - name: Install browser build dependencies
         run: npm ci --prefix tools/site-converter
       - name: Verify generated search metadata and static guide
-        run: npm run seo:check --prefix tools/site-converter
+        run: |
+          npm run seo:check --prefix tools/site-converter
+          node tools/site-converter/branch-entrypoints.mjs --check
       - name: Rebuild browser bundle and verify reproducibility
         run: |
           npm run build --prefix tools/site-converter
@@ -52,24 +60,33 @@ jobs:
           node --check site/app.js
           for file in site/converter*.mjs; do node --check "$file"; done
           npm run docs:check
-      - name: Verify Pages publishes this workflow's site artifact
+      - name: Detect Pages publishing mode
+        id: source
         env:
           GH_TOKEN: ${{ github.token }}
-        run: |
-          if ! gh api "repos/$GITHUB_REPOSITORY/pages" --jq '.build_type' > "$RUNNER_TEMP/pages-source"; then
-            echo "::error::Cannot read Pages configuration. Enable Pages in Settings > Pages and choose GitHub Actions as Source."
-            exit 1
-          fi
-          if [ "$(cat "$RUNNER_TEMP/pages-source")" != "workflow" ]; then
-            echo "::error::Set Settings > Pages > Source to GitHub Actions. Branch/Jekyll publishing serves the repository root and breaks guide.html."
-            exit 1
-          fi
+        run: node tools/site-converter/pages-mode.mjs
       - name: Configure Pages
+        if: steps.source.outputs.mode == 'workflow'
         uses: actions/configure-pages@v6
       - name: Upload static website
+        if: steps.source.outputs.mode == 'workflow'
         uses: actions/upload-pages-artifact@v5
         with:
           path: site
       - name: Deploy to GitHub Pages
+        if: steps.source.outputs.mode == 'workflow'
         id: deployment
         uses: actions/deploy-pages@v5
+      - name: Rebuild the existing branch Pages site
+        if: steps.source.outputs.mode == 'branch'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if ! gh api --method POST "repos/$GITHUB_REPOSITORY/pages/builds" > "$RUNNER_TEMP/pages-build.json" 2> "$RUNNER_TEMP/pages-build-error"; then
+            cat "$RUNNER_TEMP/pages-build-error"
+            echo "::warning::Pages rebuild request was not accepted. The automatic branch build may already be running; live website verification below will determine success."
+          fi
+      - name: Verify the live website and project WASM engine
+        env:
+          PAGE_URL: ${{ steps.source.outputs.page_url }}
+        run: node tools/site-converter/verify-deployment.mjs "$PAGE_URL"
