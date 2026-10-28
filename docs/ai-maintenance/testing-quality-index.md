@@ -15,8 +15,16 @@
 
 Normal, boundary, and error paths need evidence. Check handles, temporary files, buffers, generated artifacts, secrets, and `git diff --check` before completion.
 
-Security: `npm run security:check` validates the installed release-tool bundle after
+Security: `npm run security:check` validates the locked/installed selector-parser
+and installed ip-address release-tool dependencies after
 a clean install. Website tests also cover all nine static language pages, reciprocal
 `hreflang`, real local links, translated statuses and WASM source hashes.
 
 Test map: `roundtrip`, `append`, `features`, `cli`, `splitter`, `parallel`, and `buffer`.
+
+Deployment changes: website tests cover Actions vs main-root branch publishing,
+all nine redirect destinations with query/hash preservation, stale/missing assets,
+incorrect HTML/JavaScript/WASM MIME/content, and a directory URL serving an old
+README while `index.html` is correct. Run `node tools/site-converter/branch-entrypoints.mjs
+--check`. After publishing, `node tools/site-converter/verify-deployment.mjs URL`
+checks actual HTTP pages and project engine bytes; the workflow enforces it.

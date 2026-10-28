@@ -16,7 +16,8 @@ Addon lookup order is `prebuilds/{platform}-{arch}`, `build/Release`, then `buil
 `site/` contains static Traditional Chinese, English (`en/`) and Japanese (`ja/`)
 guides and converters. `src/wasm/browser.cpp` compiles the same `src/native/parquet.h`
 and `thrift.h` core as the addon to local WebAssembly. Only flat uncompressed PLAIN
-runtime is used. Browser/native cross-engine and independent PyArrow fixtures cover
+v1 pages are supported; old project schema layouts remain readable. Browser/native
+cross-engine and independent PyArrow fixtures cover
 format compatibility. See `site/README.md` for rebuild instructions and limits.
 
 `tools/site-converter/` owns a separate lockfile and Node.js 24.15+ build/test tools.
@@ -27,7 +28,18 @@ license notices. Serving the checked-in website needs no build or npm dependenci
 `.github/workflows/pages.yml` uploads only `site/` to GitHub Pages on matching
 `main` pushes or manual dispatch, after rebuilding/verifying the bundle, converter
 tests, syntax checks, and docs check. Changes to `tools/site-converter/` also trigger
-deployment. Repository Settings → Pages must use GitHub Actions.
+deployment. Actions publishing uploads `site/` directly. Existing `main /(root)`
+branch publishing is also supported: nine root HTML entry points forward to the
+matching `site/` page, preserving the query and recipe hash. `pages-mode.mjs` chooses
+the configured publisher; the workflow requests a branch rebuild rather than
+racing it with an artifact deployment. Missing `build_type` is handled using the
+explicit main-root source. Other source branches/directories require configuration.
+`verify-deployment.mjs` checks the live nine pages and exact engine asset hashes
+with bounded CDN retries before the workflow reports success. It checks the actual
+directory URL as well as `index.html`, requires HTML/JavaScript/WASM MIME types,
+and resolves branch redirect destinations before locating engine assets. A rejected
+branch rebuild request is logged; live verification still decides success because
+the automatic branch publisher can already be running.
 Deployment needs `pages: write`, `id-token: write`, and the `github-pages` environment.
 Expected project prefix: `/parquet-tool/`; assets must stay relative.
 
@@ -59,3 +71,9 @@ patched direct development dependency into that bundle after installation. Run
 `npm run security:check` after `npm ci`; CI/release enforce this. Do not disable
 install scripts for release tooling. This mitigation does not change the upstream
 npm tarball; see `docs/security-dependencies.md` for Dependabot implications.
+
+The root override `npm: ^11.21.1` upgrades the actual bundled
+`postcss-selector-parser` from 7.1.4 to 7.1.6. `scripts/check-security-dependencies.cjs`
+checks both locked and installed selector-parser versions and the installed
+ip-address mitigation. See `docs/security-dependencies.md` for the remaining
+upstream ip-address limitation.

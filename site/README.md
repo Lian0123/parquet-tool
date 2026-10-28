@@ -61,28 +61,36 @@ npm run build --prefix tools/site-converter
 npm test --prefix tools/site-converter
 ```
 
-Commit `project-parquet.mjs`, `.wasm` and `.sources.json` together. The source-hash
-manifest makes website tests fail if shared C++ or the build script changes without
-recompiling. Pages serves the committed local WASM and rebuilds the Papa Parse bundle.
+Commit `project-parquet.mjs`, `.wasm` and `.sources.json` together. Check the source-hash
+manifest when shared C++ or the build script changes, and recompile before publishing. Pages serves the committed local WASM and rebuilds the Papa Parse bundle.
 The WASM compiler is a development dependency only, outside npm runtime installs.
 
 ## Publish to GitHub Pages
 
-1. Push these files to the `main` branch of `Lian0123/parquet-tool`.
-2. In the repository's **Settings → Pages → Build and deployment**, set **Source**
-   to **GitHub Actions**.
-3. Run **Deploy examples to GitHub Pages** from the Actions tab for the first
-   deployment, or push a subsequent change under `site/` to trigger it automatically.
-4. After deployment succeeds, the expected project URL is
-   <https://lian0123.github.io/parquet-tool/>.
+The workflow supports both existing publishing configurations:
 
-The workflow uploads only `site/`. Relative asset and sample paths work under the
-`/parquet-tool/` project prefix, as well as on a standalone domain. `.nojekyll`
-does not make a repository-root branch deployment publish `site/`. A branch-based
-Jekyll deployment serves README at `/parquet-tool/` and places the real website at
-`/parquet-tool/site/`, causing `/parquet-tool/guide.html` to return 404. Select GitHub
-Actions as the source; the workflow now checks this explicitly.
-The website is independent of the npm package and the Flask viewer.
+- **GitHub Actions**: uploads only `site/`, then deploys that artifact at the project
+  root. This is the preferred canonical layout.
+- **Deploy from a branch — main /(root)**: the root `index.html`, `guide.html`,
+  `converter.html` and their `en/` / `ja/` equivalents forward to the real pages in
+  `site/`. Query strings and recipe hashes survive. A visible link and meta refresh
+  also work without JavaScript. The workflow requests the existing branch publisher
+  to rebuild and verifies the result; it does not run a competing artifact deployment.
+
+Push/merge changes to `main` and run **Deploy examples to GitHub Pages**. The previous
+hard failure on a branch publishing configuration has been removed. The mode check
+only rejects unknown sources, such as a different branch or `/docs`, which do not
+contain these root entry points. No admin token or expanded repository permissions
+are needed for supported existing configurations. Pages must already be enabled.
+
+Both modes verify all nine public pages, script/style HTTP links, the WASM MIME
+type, and exact converter/engine asset hashes against this checkout. Stale README
+or error pages returning HTTP 200 do not pass. Bounded retries allow CDN refresh.
+
+When changing publishing mode, use Settings → Pages → Source → GitHub Actions.
+The workflow's standard token cannot change that administrative setting itself.
+The expected URL is <https://lian0123.github.io/parquet-tool/>. In branch mode the
+browser forwards to `/parquet-tool/site/`; in Actions mode it stays at the root.
 
 See the [official custom-workflow guide](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages)
 for Pages permissions and configuration.
@@ -156,3 +164,31 @@ in [dependency security](../docs/security-dependencies.md).
 - Live root currently serves the repository/Jekyll site: `guide.html` returns 404,
   while `site/guide.html` returns 200. Local changes have not been pushed/deployed;
   select GitHub Actions as the Pages Source before deploying `site/`.
+
+### Deployment and selector-parser fix — 2026-10-28
+
+- Clean root install, security check, native/TypeScript build, lint and all 44 native
+  tests passed. The actual npm 11.21.1 tarball/lock/installation use selector-parser
+  7.1.6. The separate installed ip-address mitigation remains at 10.7.5.
+- Website build, 54 website tests, SEO freshness, redirect freshness, docs check and
+  diff whitespace checks passed. Both publishing modes passed real temporary HTTP
+  checks of all nine pages and exact engine assets, including module/WASM MIME.
+- The existing production `https://lian0123.github.io/parquet-tool/site/` passed the
+  same nine-page and exact asset verification. Root entry points and the workflow
+  fix still need to reach `main` before the root URL uses the new behavior.
+- Browser inventory had no connected provider; native Brave access timed out after
+  20 seconds. Responsive visual review and actual browser module-worker/download
+  interaction remain unverified. Cross-platform and Node 18 checks remain in CI.
+
+### Recheck — 2026-10-28
+
+The public root still serves old content and fails the live verification; `/site/`
+passes. The verifier now explicitly checks the directory URL and HTML MIME type,
+closing the gap where correct `index.html` content could hide a broken root URL.
+Branch rebuild-request errors no longer prevent the authoritative live check.
+
+A separate QA harness loaded the actual production worker modules and fetched the
+production WASM with the browser execution branch, in an isolated JS VM without
+Node process/filesystem. Unicode/null/boolean JSON → Parquet → JSON passed. This
+covers module/WASM loading and conversion logic; it is not a visual browser test.
+Root entry/workflow changes still have to reach `main` and pass the real workflow.
